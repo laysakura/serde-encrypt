@@ -78,13 +78,17 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
         let nonce = encrypted_message.nonce();
         let encrypted = encrypted_message.encrypted();
 
-        let serial_plain = receiver_box.decrypt(nonce.into(), encrypted).expect("TODO");
+        let serial_plain = receiver_box
+            .decrypt(nonce.into(), encrypted)
+            .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
+
         let decrypted = serde_cbor::from_slice(&serial_plain).map_err(|e| {
             Error::deserialization_error(&format!(
-                "error on deserialization after decryption: {:?}",
+                "error on serde_cbor deserialization after decryption: {:?}",
                 e
             ))
         })?;
+
         Ok(decrypted)
     }
 }

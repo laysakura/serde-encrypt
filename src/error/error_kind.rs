@@ -7,6 +7,7 @@ use core::fmt::Display;
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum ErrorKind {
     DeserializationError,
+    DecryptionError,
 }
 
 impl Display for ErrorKind {
@@ -15,6 +16,7 @@ impl Display for ErrorKind {
             ErrorKind::DeserializationError => {
                 "DeserializationError: Failed to deserialize data received."
             }
+            ErrorKind::DecryptionError => "DecryptionError: Failed to decrypt data received",
         };
         write!(f, "{}", s)
     }
