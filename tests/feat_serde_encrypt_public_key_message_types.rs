@@ -25,11 +25,16 @@ fn test_serde_encrypt_public_key_message_types() -> Result<(), Error> {
     {
         // struct with reference
         #[derive(PartialEq, Debug, Serialize, Deserialize)]
-        struct I32Ref<'a>(&'a i32);
-        impl<'a> SerdeEncryptPublicKey for I32Ref<'a> {}
+        struct Str<'a>(&'a str);
+        impl<'a> SerdeEncryptPublicKey for Str<'a> {}
 
-        let msg = I32Ref(&42);
-        enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+        let msg = Str("hi");
+        let encrypted_msg = msg.encrypt(&sender_combined_key)?;
+
+        let x = Str::decrypt_to_serialized(&encrypted_msg, &receiver_combined_key)?;
+        let r_msg = x.finalize()?;
+
+        pretty_assertions::assert_eq!(msg, r_msg);
     }
 
     Ok(())

@@ -1,18 +1,17 @@
 //! Traits to enable encrypted-serialization to your struct/enum.
 
-use alloc::format;
-use crypto_box::{
-    aead::{Aead, Payload},
-    ChaChaBox,
-};
-use rand::SeedableRng;
-use serde::{de::DeserializeOwned, Serialize};
-
 use crate::{
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
     msg::EncryptedMessage,
 };
+use alloc::{format, vec::Vec};
+use crypto_box::{
+    aead::{Aead, Payload},
+    ChaChaBox,
+};
+use rand::SeedableRng;
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
@@ -130,5 +129,44 @@ pub trait SerdeEncryptPublicKey {
         })?;
 
         Ok(decrypted)
+    }
+
+    /// TBD
+    fn decrypt_to_serialized(
+        encrypted_message: &EncryptedMessage,
+        combined_key: &ReceiverCombinedKey,
+    ) -> Result<PlainSerialized, Error> {
+        let receiver_box = ChaChaBox::new(
+            combined_key.sender_public_key().as_ref(),
+            combined_key.receiver_private_key().as_ref(),
+        );
+
+        let nonce = encrypted_message.nonce();
+        let encrypted = encrypted_message.encrypted();
+
+        let serial_plain = receiver_box
+            .decrypt(nonce.into(), encrypted)
+            .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
+
+        Ok(PlainSerialized(serial_plain))
+    }
+}
+
+/// a
+#[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+pub struct PlainSerialized(Vec<u8>);
+
+impl PlainSerialized {
+    ///
+    pub fn finalize<'de, T>(&'de self) -> Result<T, Error>
+    where
+        T: Sized + Deserialize<'de>,
+    {
+        serde_cbor::from_slice(&self.0).map_err(|e| {
+            Error::deserialization_error(&format!(
+                "error on serde_cbor deserialization after decryption: {:?}",
+                e
+            ))
+        })
     }
 }
