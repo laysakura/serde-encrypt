@@ -1,6 +1,11 @@
 //! Encrypted message structure.
 
+use core::convert::TryInto;
+
 use alloc::vec::Vec;
+
+/// 192-bit / 24-byte nonce used in XChaCha20 / XSalsa20
+const NONCE_SIZE: usize = 24;
 
 /// Encrypted message structure.
 ///
@@ -14,19 +19,25 @@ pub struct EncryptedMessage {
     encrypted: Vec<u8>,
 
     /// XChaCha20 nonce (192-bit / 24-byte)
-    nonce: [u8; 24],
+    nonce: [u8; NONCE_SIZE],
 }
 
 impl EncryptedMessage {
     /// Serialize this encrypted message into binary in order to send it to a remote receiver.
-    pub fn serialize(self) -> Vec<u8> {
-        todo!()
+    pub fn serialize(mut self) -> Vec<u8> {
+        let mut serialized: Vec<u8> = self.nonce.to_vec();
+        serialized.append(&mut self.encrypted);
+        serialized
     }
 
     /// Deserializer function for a receiver.
     /// TODO return Result when nonce not found
-    pub fn deserialize(serialized_encrypted_message: Vec<u8>) -> Self {
-        todo!()
+    pub fn deserialize(mut serialized_encrypted_message: Vec<u8>) -> Self {
+        let encrypted = serialized_encrypted_message.split_off(NONCE_SIZE);
+        Self {
+            encrypted,
+            nonce: serialized_encrypted_message.try_into().expect("TODO"),
+        }
     }
 
     pub(crate) fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
@@ -39,5 +50,17 @@ impl EncryptedMessage {
 
     pub(crate) fn encrypted(&self) -> &[u8] {
         &self.encrypted
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_serialization() {
+        let encrypted_message = EncryptedMessage::new(b"*ENCRYPTED*".to_vec(), [42u8; 24]);
+        let bin = encrypted_message.clone().serialize();
+        assert_eq!(EncryptedMessage::deserialize(bin), encrypted_message);
     }
 }
