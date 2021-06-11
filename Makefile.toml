@@ -32,3 +32,10 @@ script = ['''
 cargo clean --doc
 cargo doc --no-deps --all-features
 ''']
+
+[tasks.os-less-build]
+script = ['''
+#!/usr/bin/env bash -eux
+rustup target add aarch64-unknown-none
+RUSTFLAGS='-D warnings' cargo build --all-features --target=aarch64-unknown-none
+''']
