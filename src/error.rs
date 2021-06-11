@@ -2,11 +2,10 @@
 
 mod error_kind;
 
-use core::fmt::Display;
+pub use self::error_kind::ErrorKind;
 
 use alloc::string::{String, ToString};
-
-use self::error_kind::ErrorKind;
+use core::fmt::Display;
 
 /// Error type.
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]

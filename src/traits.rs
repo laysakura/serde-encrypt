@@ -65,7 +65,12 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
         EncryptedMessage::new(encrypted, nonce.into())
     }
 
-    /// Deserialize and decrypt.
+    /// Decrypt and deserialize.
+    ///
+    /// # Errors
+    ///
+    /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
+    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
     fn decrypt(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
