@@ -24,6 +24,11 @@ impl Display for Error {
 }
 
 impl Error {
+    /// Ref to error kind.
+    pub fn kind(&self) -> &ErrorKind {
+        &self.kind
+    }
+
     fn new(kind: ErrorKind, reason: &str) -> Self {
         Self {
             kind,
