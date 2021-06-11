@@ -38,6 +38,7 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
     ///
     /// # Failures
     ///
+    /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
     /// - [EncryptionError](crate::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
     fn encrypt(&self, combined_key: &SenderCombinedKey) -> Result<EncryptedMessage, Error> {
         // TODO stop creating rand generator for every func call (share the same rng with key-pair generation)
@@ -51,7 +52,9 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
         );
 
         // TODO cbor?
-        let serial_plain = serde_cbor::to_vec(&self).unwrap();
+        let serial_plain = serde_cbor::to_vec(&self).map_err(|e| {
+            Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
+        })?;
 
         // TODO https://github.com/laysakura/serde-encrypt/issues/19
         let aad = b"".as_ref();

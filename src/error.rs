@@ -31,6 +31,10 @@ impl Error {
         }
     }
 
+    pub(crate) fn serialization_error(reason: &str) -> Self {
+        Self::new(ErrorKind::SerializationError, reason)
+    }
+
     pub(crate) fn deserialization_error(reason: &str) -> Self {
         Self::new(ErrorKind::DeserializationError, reason)
     }
