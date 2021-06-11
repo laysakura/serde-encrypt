@@ -76,7 +76,7 @@ fn gen_key_pair() -> (SecretKey, PublicKey) {
     let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
 
     let secret_key = SecretKey::generate(&mut rng);
-    let public_key = secret_key.public_key().clone();
+    let public_key = secret_key.public_key();
 
     (secret_key, public_key)
 }

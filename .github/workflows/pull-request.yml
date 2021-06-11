@@ -1,0 +1,95 @@
+name: pull_request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
+
+jobs:
+  job-matrix:
+    name: ${{ matrix.make.name }} (${{ matrix.rust }}; ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        rust:
+          - nightly
+          - stable
+          - 1.51.0  # MSRV
+        make:
+          - name: format
+            task: format
+          - name: lint
+            task: lint
+          - name: test
+            task: build test
+          - name: doc
+            task: doc
+        exclude:
+          - rust: nightly
+            make:
+              name: format
+          - rust: 1.51.0
+            make:
+              name: format
+          - rust: nightly
+            make:
+              name: lint
+          - rust: 1.51.0
+            make:
+              name: lint
+          - rust: nightly
+            make:
+              name: doc
+          - rust: 1.51.0
+            make:
+              name: doc
+    env:
+      RUST_BACKTRACE: full
+      CACHE_RESET_KEY: 20210611-01
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust ${{ matrix.rust }}
+        if: ${{ ! matrix.rust-free }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          profile: minimal
+          components: rustfmt, clippy
+          override: true
+
+      - name: Cache cargo registry
+        if: ${{ ! matrix.rust-free }}
+        uses: actions/cache@v2
+        continue-on-error: false
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ env.CACHE_RESET_KEY }}-${{ runner.os }}-${{ matrix.rust }}-cargo-${{ matrix.make.name }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ env.CACHE_RESET_KEY }}-${{ runner.os }}-${{ matrix.rust }}-cargo-${{ matrix.make.name }}-
+            ${{ env.CACHE_RESET_KEY }}-${{ runner.os }}-${{ matrix.rust }}-cargo-
+
+      - name: Install cargo-make
+        env:
+          BASE_URL: https://github.com/sagiegurari/cargo-make/releases/download
+          CARGO_MAKE_VERSION: 0.33.0
+        run: |
+          CARGO_MAKE_FILE_BASE=cargo-make-v${CARGO_MAKE_VERSION}-x86_64-unknown-linux-musl
+          mkdir -p ${HOME}/.local/bin
+          curl -L "${BASE_URL}/${CARGO_MAKE_VERSION}/${CARGO_MAKE_FILE_BASE}.zip" --output /tmp/cargo-make.zip
+          unzip /tmp/cargo-make.zip -d /tmp/cargo-make
+          mv -f /tmp/cargo-make/${CARGO_MAKE_FILE_BASE}/cargo-make $HOME/.local/bin/cargo-make
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: ${{ matrix.make.name }}
+        run: |
+          for task in ${{ matrix.make.task }} ; do
+            cargo make ${task}
+          done
