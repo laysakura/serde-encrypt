@@ -64,10 +64,16 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
     }
 
     /// Deserialize and decrypt.
-    fn decrypt(
-        encrypted_serialized: &EncryptedMessage,
-        combined_key: &ReceiverCombinedKey,
-    ) -> Self {
-        todo!()
+    fn decrypt(encrypted_message: &EncryptedMessage, combined_key: &ReceiverCombinedKey) -> Self {
+        let receiver_box = ChaChaBox::new(
+            combined_key.sender_public_key().as_ref(),
+            combined_key.receiver_private_key().as_ref(),
+        );
+
+        let nonce = encrypted_message.nonce();
+        let encrypted = encrypted_message.encrypted();
+
+        let serial_plain = receiver_box.decrypt(nonce.into(), encrypted).expect("TODO");
+        serde_cbor::from_slice(&serial_plain).expect("TODO")
     }
 }

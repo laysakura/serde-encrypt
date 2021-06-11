@@ -29,9 +29,15 @@ impl EncryptedMessage {
         todo!()
     }
 
-
     pub(crate) fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
         Self { encrypted, nonce }
     }
 
+    pub(crate) fn nonce(&self) -> &[u8] {
+        &self.nonce
+    }
+
+    pub(crate) fn encrypted(&self) -> &[u8] {
+        &self.encrypted
+    }
 }

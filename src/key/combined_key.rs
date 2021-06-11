@@ -59,4 +59,12 @@ impl<'s, 'r> ReceiverCombinedKey<'s, 'r> {
             receiver_private_key,
         }
     }
+
+    pub(crate) fn receiver_private_key(&self) -> &ReceiverPrivateKey {
+        &self.receiver_private_key
+    }
+
+    pub(crate) fn sender_public_key(&self) -> &SenderPublicKey {
+        &self.sender_public_key
+    }
 }
