@@ -1,0 +1,34 @@
+[config]
+default_to_workspace = false
+skip_core_tasks = true
+
+[tasks.format]
+script = ['''
+#!/usr/bin/env bash -eux
+cargo fmt --all
+''']
+
+[tasks.lint]
+script = ['''
+#!/usr/bin/env bash -eux
+RUSTFLAGS='-D warnings' cargo clippy --all-targets --all-features
+''']
+
+[tasks.build]
+script = ['''
+#!/usr/bin/env bash -eux
+RUSTFLAGS='-D warnings' cargo build --all-targets --all-features
+''']
+
+[tasks.test]
+script = ['''
+#!/usr/bin/env bash -eux
+cargo test --all-targets --all-features
+''']
+
+[tasks.doc]
+script = ['''
+#!/usr/bin/env bash -eux
+cargo clean --doc
+cargo doc --no-deps --all-features
+''']
