@@ -21,14 +21,14 @@ fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> EncryptedMess
         content: "I ❤️ you.".to_string(),
         sender: "Alice".to_string(),
     };
-    msg.encrypt(combined_key)
+    msg.encrypt(combined_key).unwrap()
 }
 
 fn bob_receives_secret_message(
     enc_ser: &EncryptedMessage,
     combined_key: &ReceiverCombinedKey,
 ) -> Message {
-    Message::decrypt(enc_ser, combined_key)
+    Message::decrypt(enc_ser, combined_key).unwrap()
 }
 
 #[test]
