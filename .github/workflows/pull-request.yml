@@ -29,6 +29,9 @@ jobs:
             task: build test
           - name: doc
             task: doc
+          - name: os-less-build
+            task: os-less-build
+            rust-free: true  # Rust is installed inside task
         exclude:
           - rust: nightly
             make:
