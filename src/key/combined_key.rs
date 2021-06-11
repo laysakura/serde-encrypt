@@ -29,6 +29,14 @@ impl<'s, 'r> SenderCombinedKey<'s, 'r> {
             receiver_public_key,
         }
     }
+
+    pub(crate) fn sender_private_key(&self) -> &SenderPrivateKey {
+        &self.sender_private_key
+    }
+
+    pub(crate) fn receiver_public_key(&self) -> &ReceiverPublicKey {
+        &self.receiver_public_key
+    }
 }
 
 /// (`Alice's public key`, `Bob's private key`) pair.

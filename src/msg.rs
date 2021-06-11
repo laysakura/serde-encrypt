@@ -16,3 +16,9 @@ pub struct EncryptedMessage {
     /// XChaCha20 nonce (192-bit / 24-byte)
     nonce: [u8; 24],
 }
+
+impl EncryptedMessage {
+    pub(crate) fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
+        Self { encrypted, nonce }
+    }
+}
