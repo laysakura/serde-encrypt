@@ -18,7 +18,17 @@ fn test_serde_encrypt_public_key_message_types() -> Result<(), Error> {
         struct I32(i32);
         impl SerdeEncryptPublicKey for I32 {}
 
-        let msg: I32 = I32(42);
+        let msg = I32(42);
+        enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    }
+
+    {
+        // struct with reference
+        #[derive(PartialEq, Debug, Serialize, Deserialize)]
+        struct I32Ref<'a>(&'a i32);
+        impl<'a> SerdeEncryptPublicKey for I32Ref<'a> {}
+
+        let msg = I32Ref(&42);
         enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     }
 
