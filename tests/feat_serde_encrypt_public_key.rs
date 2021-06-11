@@ -5,7 +5,7 @@ use serde_encrypt::{
         key_pair::{ReceiverKeyPair, SenderKeyPair},
     },
     msg::EncryptedMessage,
-    traits::SerdeEncrypt,
+    traits::SerdeEncryptPublicKey,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -14,7 +14,7 @@ struct Message {
     sender: String,
 }
 
-impl SerdeEncrypt for Message {}
+impl SerdeEncryptPublicKey for Message {}
 
 fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> Vec<u8> {
     let msg = Message {

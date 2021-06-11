@@ -14,12 +14,27 @@ use crate::{
     msg::EncryptedMessage,
 };
 
-/// Enable encrypted-serialization to your struct/enum.
+/// Public-key authenticated encryption for serde-serializable types.
+///
+/// # Features
+///
+/// - Safe and bidirectional public-key exchange.
+/// - Message authentication.
+/// - Different cipher-text for the same plain-text to avoid attacks such as statistical analysis of cipher-text.
+///
+/// # Anti-features
+///
+/// - Identity authentication of sender nor receiver.
+///
+/// # Popular use cases
+///
+/// - Shared-key exchange.
+/// - Encryption for relatively small and non-frequent messages (shared-key encryption is faster than public-key).
 ///
 /// # Examples
 ///
 /// ```
-/// use serde_encrypt::traits::SerdeEncrypt;
+/// use serde_encrypt::traits::SerdeEncryptPublicKey;
 /// use serde::{Deserialize, Serialize};
 ///
 /// #[derive(Serialize, Deserialize)]
@@ -28,11 +43,17 @@ use crate::{
 ///     sender: String,
 /// }
 ///
-/// impl SerdeEncrypt for Message {}
+/// impl SerdeEncryptPublicKey for Message {}
 ///
 /// // then `Message::encrypt()` to serialize message and `Message::decrypt()` to deserialize.
 /// ```
-pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` required?
+///
+/// # Algorithm
+///
+/// - Public-key exchange: X25519
+/// - Encryption: XChaCha20
+/// - Message authentication: Poly1305 MAC
+pub trait SerdeEncryptPublicKey: Sized + Serialize + DeserializeOwned // TODO `Owned` required?
 {
     /// Serialize and encrypt.
     ///
