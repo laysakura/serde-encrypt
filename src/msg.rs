@@ -64,6 +64,10 @@ impl EncryptedMessage {
 
 #[cfg(test)]
 mod tests {
+    use alloc::vec;
+
+    use crate::error::ErrorKind;
+
     use super::*;
 
     #[test]
@@ -72,5 +76,12 @@ mod tests {
         let bin = encrypted_message.clone().serialize();
         assert_eq!(EncryptedMessage::deserialize(bin)?, encrypted_message);
         Ok(())
+    }
+
+    #[test]
+    fn test_decryption_error_on_no_nonce() {
+        let bin = vec![42u8; NONCE_SIZE - 1];
+        let e = EncryptedMessage::deserialize(bin).unwrap_err();
+        assert_eq!(e.kind(), &ErrorKind::DecryptionError);
     }
 }
