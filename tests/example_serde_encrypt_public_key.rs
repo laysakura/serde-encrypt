@@ -1,3 +1,5 @@
+//! Shows how to use SerdeEncryptPublicKey.
+
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
     key::{
@@ -34,7 +36,7 @@ fn bob_receives_secret_message(
 }
 
 #[test]
-fn test_serde_encrypt() {
+fn test_serde_encrypt_public_key() {
     let alice_key_pair = SenderKeyPair::generate();
     let bob_key_pair = ReceiverKeyPair::generate();
 

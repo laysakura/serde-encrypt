@@ -53,8 +53,7 @@ use crate::{
 /// - Public-key exchange: X25519
 /// - Encryption: XChaCha20
 /// - Message authentication: Poly1305 MAC
-pub trait SerdeEncryptPublicKey: Sized + Serialize + DeserializeOwned // TODO `Owned` required?
-{
+pub trait SerdeEncryptPublicKey: Sized + Serialize + DeserializeOwned {
     /// Serialize and encrypt.
     ///
     /// # Failures
