@@ -7,6 +7,8 @@ use core::fmt::Display;
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum ErrorKind {
     DeserializationError,
+
+    EncryptionError,
     DecryptionError,
 }
 
@@ -15,6 +17,9 @@ impl Display for ErrorKind {
         let s = match self {
             ErrorKind::DeserializationError => {
                 "DeserializationError: Failed to deserialize data received."
+            }
+            ErrorKind::EncryptionError => {
+                "EncryptionError: Failed to encrypt serialized data to send"
             }
             ErrorKind::DecryptionError => "DecryptionError: Failed to decrypt data received",
         };

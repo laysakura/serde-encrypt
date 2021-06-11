@@ -35,7 +35,11 @@ use crate::{
 pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` required?
 {
     /// Serialize and encrypt.
-    fn encrypt(&self, combined_key: &SenderCombinedKey) -> EncryptedMessage {
+    ///
+    /// # Failures
+    ///
+    /// - [EncryptionError](crate::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
+    fn encrypt(&self, combined_key: &SenderCombinedKey) -> Result<EncryptedMessage, Error> {
         // TODO stop creating rand generator for every func call (share the same rng with key-pair generation)
         let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
 
@@ -60,14 +64,16 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
                     aad,
                 },
             )
-            .expect("TODO");
+            .map_err(|_| {
+                Error::encryption_error("failed to encrypt serialized data into ChaChaBox")
+            })?;
 
-        EncryptedMessage::new(encrypted, nonce.into())
+        Ok(EncryptedMessage::new(encrypted, nonce.into()))
     }
 
     /// Decrypt and deserialize.
     ///
-    /// # Errors
+    /// # Failures
     ///
     /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
     /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.

@@ -35,6 +35,10 @@ impl Error {
         Self::new(ErrorKind::DeserializationError, reason)
     }
 
+    pub(crate) fn encryption_error(reason: &str) -> Self {
+        Self::new(ErrorKind::EncryptionError, reason)
+    }
+
     pub(crate) fn decryption_error(reason: &str) -> Self {
         Self::new(ErrorKind::DecryptionError, reason)
     }
