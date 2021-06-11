@@ -11,11 +11,23 @@ impl AsRef<SecretKey> for SenderPrivateKey {
     }
 }
 
+impl From<SecretKey> for SenderPrivateKey {
+    fn from(s: SecretKey) -> Self {
+        Self(s)
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct ReceiverPrivateKey(SecretKey);
 
 impl AsRef<SecretKey> for ReceiverPrivateKey {
     fn as_ref(&self) -> &SecretKey {
         &self.0
+    }
+}
+
+impl From<SecretKey> for ReceiverPrivateKey {
+    fn from(s: SecretKey) -> Self {
+        Self(s)
     }
 }

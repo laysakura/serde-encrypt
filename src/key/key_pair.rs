@@ -1,5 +1,8 @@
 //! X25519 key-pair (public-key and private-key).
 
+use crypto_box::{PublicKey, SecretKey};
+use rand::SeedableRng;
+
 use self::{
     private_key::{ReceiverPrivateKey, SenderPrivateKey},
     public_key::{ReceiverPublicKey, SenderPublicKey},
@@ -18,7 +21,13 @@ pub struct SenderKeyPair {
 impl SenderKeyPair {
     /// Generates a key-pair for message sender.
     pub fn generate() -> Self {
-        todo!()
+        let (private_key, public_key) = gen_key_pair();
+        let sender_private_key = SenderPrivateKey::from(private_key);
+        let sender_public_key = SenderPublicKey::from(public_key);
+        Self {
+            sender_private_key,
+            sender_public_key,
+        }
     }
 
     /// Ref to private key.
@@ -42,7 +51,13 @@ pub struct ReceiverKeyPair {
 impl ReceiverKeyPair {
     /// Generates a key-pair for message receiver.
     pub fn generate() -> Self {
-        todo!()
+        let (private_key, public_key) = gen_key_pair();
+        let receiver_private_key = ReceiverPrivateKey::from(private_key);
+        let receiver_public_key = ReceiverPublicKey::from(public_key);
+        Self {
+            receiver_private_key,
+            receiver_public_key,
+        }
     }
 
     /// Ref to private key.
@@ -54,4 +69,14 @@ impl ReceiverKeyPair {
     pub fn public_key(&self) -> &ReceiverPublicKey {
         &self.receiver_public_key
     }
+}
+
+fn gen_key_pair() -> (SecretKey, PublicKey) {
+    // TODO stop creating rand generator for every func call
+    let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
+
+    let secret_key = SecretKey::generate(&mut rng);
+    let public_key = secret_key.public_key().clone();
+
+    (secret_key, public_key)
 }

@@ -34,7 +34,7 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
 {
     /// Serialize and encrypt.
     fn encrypt(&self, combined_key: &SenderCombinedKey) -> EncryptedMessage {
-        // TODO stop creating rand generator for every func call
+        // TODO stop creating rand generator for every func call (share the same rng with key-pair generation)
         let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
 
         let nonce = crypto_box::generate_nonce(&mut rng);
