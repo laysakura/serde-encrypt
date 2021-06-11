@@ -1,5 +1,6 @@
 //! Traits to enable encrypted-serialization to your struct/enum.
 
+use alloc::format;
 use crypto_box::{
     aead::{Aead, Payload},
     ChaChaBox,
@@ -8,6 +9,7 @@ use rand::SeedableRng;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::{
+    error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
     msg::EncryptedMessage,
 };
@@ -64,7 +66,10 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
     }
 
     /// Deserialize and decrypt.
-    fn decrypt(encrypted_message: &EncryptedMessage, combined_key: &ReceiverCombinedKey) -> Self {
+    fn decrypt(
+        encrypted_message: &EncryptedMessage,
+        combined_key: &ReceiverCombinedKey,
+    ) -> Result<Self, Error> {
         let receiver_box = ChaChaBox::new(
             combined_key.sender_public_key().as_ref(),
             combined_key.receiver_private_key().as_ref(),
@@ -74,6 +79,12 @@ pub trait SerdeEncrypt: Sized + Serialize + DeserializeOwned // TODO `Owned` req
         let encrypted = encrypted_message.encrypted();
 
         let serial_plain = receiver_box.decrypt(nonce.into(), encrypted).expect("TODO");
-        serde_cbor::from_slice(&serial_plain).expect("TODO")
+        let decrypted = serde_cbor::from_slice(&serial_plain).map_err(|e| {
+            Error::deserialization_error(&format!(
+                "error on deserialization after decryption: {:?}",
+                e
+            ))
+        })?;
+        Ok(decrypted)
     }
 }

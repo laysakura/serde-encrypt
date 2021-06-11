@@ -28,7 +28,7 @@ fn bob_receives_secret_message(
     enc_ser: &EncryptedMessage,
     combined_key: &ReceiverCombinedKey,
 ) -> Message {
-    Message::decrypt(enc_ser, combined_key)
+    Message::decrypt(enc_ser, combined_key).unwrap()
 }
 
 #[test]
