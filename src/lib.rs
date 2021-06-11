@@ -1,7 +1,10 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+//! TBD
+
+#![deny(missing_debug_implementations, missing_docs)]
+#![no_std]
+
+extern crate alloc;
+
+pub mod key;
+pub mod msg;
+pub mod traits;

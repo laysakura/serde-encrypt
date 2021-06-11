@@ -1,10 +1,17 @@
 [package]
-name = "serde-encrypt"
-version = "0.1.0"
 authors = ["Sho Nakatani <lay.sakura@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+name = "serde-encrypt"
+version = "0.1.0"
 
 [dependencies]
+crypto_box = {version = "0.6"}
+
+rand = {version = "0.8", default_features = false, features = ["std_rng"]}
+
+serde = {version = "1.0", default-features = false}
+serde_cbor = {version = "0.11", default_features = false, features = ["alloc"]}
+
+[dev-dependencies]
+serde = {version = "1.0", default-features = false, features = ["derive", "alloc"]}# alloc for Vec, String
