@@ -1,5 +1,6 @@
 use core::fmt;
 
+use serde::{de::DeserializeOwned, Serialize};
 use serde_encrypt::{
     error::Error,
     key::{
@@ -37,7 +38,7 @@ pub fn enc_dec<T>(
     receiver_combined_key: &ReceiverCombinedKey,
 ) -> Result<T, Error>
 where
-    T: SerdeEncryptPublicKey,
+    T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned,
 {
     let enc = sender_msg.encrypt(sender_combined_key)?;
     T::decrypt(&enc, receiver_combined_key)
@@ -49,7 +50,7 @@ pub fn enc_dec_assert_eq<T>(
     receiver_combined_key: &ReceiverCombinedKey,
 ) -> Result<(), Error>
 where
-    T: SerdeEncryptPublicKey + PartialEq + fmt::Debug,
+    T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned + PartialEq + fmt::Debug,
 {
     let receiver_msg = enc_dec(sender_msg, sender_combined_key, receiver_combined_key)?;
     pretty_assertions::assert_eq!(sender_msg, &receiver_msg);

@@ -53,14 +53,17 @@ use crate::{
 /// - Public-key exchange: X25519
 /// - Encryption: XChaCha20
 /// - Message authentication: Poly1305 MAC
-pub trait SerdeEncryptPublicKey: Sized + Serialize + DeserializeOwned {
+pub trait SerdeEncryptPublicKey {
     /// Serialize and encrypt.
     ///
     /// # Failures
     ///
     /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
     /// - [EncryptionError](crate::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
-    fn encrypt(&self, combined_key: &SenderCombinedKey) -> Result<EncryptedMessage, Error> {
+    fn encrypt(&self, combined_key: &SenderCombinedKey) -> Result<EncryptedMessage, Error>
+    where
+        Self: Serialize,
+    {
         // TODO stop creating rand generator for every func call (share the same rng with key-pair generation)
         let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
 
@@ -103,7 +106,10 @@ pub trait SerdeEncryptPublicKey: Sized + Serialize + DeserializeOwned {
     fn decrypt(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
-    ) -> Result<Self, Error> {
+    ) -> Result<Self, Error>
+    where
+        Self: Sized + DeserializeOwned,
+    {
         let receiver_box = ChaChaBox::new(
             combined_key.sender_public_key().as_ref(),
             combined_key.receiver_private_key().as_ref(),
