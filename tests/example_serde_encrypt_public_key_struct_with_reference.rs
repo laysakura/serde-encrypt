@@ -25,7 +25,7 @@ struct Message<'a> {
 
 impl<'a> SerdeEncryptPublicKey for Message<'a> {}
 
-fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> Vec<u8> {
+fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> Result<Vec<u8>, Error> {
     let msg = Message {
         content: Content {
             title: "my heart",
@@ -33,8 +33,8 @@ fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> Vec<u8> {
         },
         sender: "Alice",
     };
-    let encrypted_message = msg.encrypt(combined_key).unwrap();
-    encrypted_message.serialize()
+    let encrypted_message = msg.encrypt(combined_key)?;
+    Ok(encrypted_message.serialize())
 }
 
 fn bob_reads_secret_message(
@@ -67,6 +67,6 @@ fn test_serde_encrypt_public_key() -> Result<(), Error> {
     let bob_combined_key =
         ReceiverCombinedKey::new(alice_key_pair.public_key(), bob_key_pair.private_key());
 
-    let secret_message = alice_sends_secret_message(&alice_combined_key);
+    let secret_message = alice_sends_secret_message(&alice_combined_key)?;
     bob_reads_secret_message(secret_message, &bob_combined_key)
 }
