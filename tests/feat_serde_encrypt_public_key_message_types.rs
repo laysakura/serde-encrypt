@@ -4,13 +4,19 @@
 
 mod test_util;
 
+use std::{fmt, marker::PhantomData, str::FromStr};
+
 use pretty_assertions::assert_eq;
-use serde::{Deserialize, Serialize};
+use serde::{
+    de::{self, MapAccess, Visitor},
+    Deserialize, Deserializer, Serialize,
+};
 use serde_encrypt::{
     error::{Error, ErrorKind},
     traits::SerdeEncryptPublicKey,
 };
 use test_util::serde_encrypt_public_key::*;
+use void::Void;
 
 #[test]
 fn test_serde_encrypt_public_key_unit_struct() -> Result<(), Error> {
@@ -445,5 +451,336 @@ fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<()
     .unwrap_err();
 
     assert_eq!(e.kind(), &ErrorKind::DeserializationError);
+    Ok(())
+}
+
+#[test]
+fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
+    use std::collections::BTreeMap as Map;
+
+    keygen!(sender_combined_key, receiver_combined_key);
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Resource {
+        name: String,
+
+        #[serde(skip_serializing_if = "Map::is_empty")]
+        metadata: Map<String, String>,
+    }
+    impl SerdeEncryptPublicKey for Resource {}
+
+    let msg_with_metadata = Resource {
+        name: "a.txt".into(),
+        metadata: vec![("size".into(), "123".into())].into_iter().collect(),
+    };
+    enc_dec_assert_eq(
+        &msg_with_metadata,
+        &sender_combined_key,
+        &receiver_combined_key,
+    )?;
+
+    let msg_without_metadata = Resource {
+        name: "a.txt".into(),
+        metadata: Map::new(),
+    };
+
+    let e = enc_dec(
+        &msg_without_metadata,
+        &sender_combined_key,
+        &receiver_combined_key,
+    )
+    .unwrap_err();
+
+    assert_eq!(e.kind(), &ErrorKind::DeserializationError);
+    Ok(())
+}
+
+#[test]
+fn test_serde_encrypt_public_key_remote_crate() -> Result<(), Error> {
+    keygen!(sender_combined_key, receiver_combined_key);
+
+    // Pretend that this is somebody else's crate, not a module.
+    mod other_crate {
+        // Neither Serde nor the other crate provides Serialize and Deserialize
+        // impls for this struct.
+        #[derive(PartialEq, Debug)]
+        pub struct Duration {
+            pub secs: i64,
+            pub nanos: i32,
+        }
+    }
+
+    use other_crate::Duration;
+
+    // Serde calls this the definition of the remote type. It is just a copy of the
+    // remote data structure. The `remote` attribute gives the path to the actual
+    // type we intend to derive code for.
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    #[serde(remote = "Duration")]
+    struct DurationDef {
+        secs: i64,
+        nanos: i32,
+    }
+
+    // Now the remote type can be used almost like it had its own Serialize and
+    // Deserialize impls all along. The `with` attribute gives the path to the
+    // definition for the remote type. Note that the real type of the field is the
+    // remote type, not the definition type.
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Process {
+        command_line: String,
+
+        #[serde(with = "DurationDef")]
+        wall_time: Duration,
+    }
+
+    impl SerdeEncryptPublicKey for Process {}
+
+    let msg = Process {
+        command_line: "sl".into(),
+        wall_time: Duration { secs: 33, nanos: 4 },
+    };
+    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    Ok(())
+}
+
+#[test]
+fn test_serde_encrypt_public_key_remote_crate_with_priv_fields() -> Result<(), Error> {
+    keygen!(sender_combined_key, receiver_combined_key);
+
+    // Pretend that this is somebody else's crate, not a module.
+    mod other_crate {
+        // Neither Serde nor the other crate provides Serialize and Deserialize
+        // impls for this struct. Oh, and the fields are private.
+        #[derive(PartialEq, Debug)]
+        pub struct Duration {
+            secs: i64,
+            nanos: i32,
+        }
+
+        impl Duration {
+            pub fn new(secs: i64, nanos: i32) -> Self {
+                Duration { secs, nanos }
+            }
+
+            pub fn seconds(&self) -> i64 {
+                self.secs
+            }
+
+            pub fn subsec_nanos(&self) -> i32 {
+                self.nanos
+            }
+        }
+    }
+
+    use other_crate::Duration;
+
+    // Provide getters for every private field of the remote struct. The getter must
+    // return either `T` or `&T` where `T` is the type of the field.
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    #[serde(remote = "Duration")]
+    struct DurationDef {
+        #[serde(getter = "Duration::seconds")]
+        secs: i64,
+        #[serde(getter = "Duration::subsec_nanos")]
+        nanos: i32,
+    }
+
+    // Provide a conversion to construct the remote type.
+    impl From<DurationDef> for Duration {
+        fn from(def: DurationDef) -> Duration {
+            Duration::new(def.secs, def.nanos)
+        }
+    }
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Process {
+        command_line: String,
+
+        #[serde(with = "DurationDef")]
+        wall_time: Duration,
+    }
+    impl SerdeEncryptPublicKey for Process {}
+
+    let msg = Process {
+        command_line: "sl".into(),
+        wall_time: Duration::new(33, 4),
+    };
+    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    Ok(())
+}
+
+#[test]
+fn test_serde_encrypt_public_key_remote_crate_with_helper() -> Result<(), Error> {
+    keygen!(sender_combined_key, receiver_combined_key);
+
+    // Pretend that this is somebody else's crate, not a module.
+    mod other_crate {
+        // Neither Serde nor the other crate provides Serialize and Deserialize
+        // impls for this struct. Oh, and the fields are private.
+        #[derive(PartialEq, Debug)]
+        pub struct Duration {
+            secs: i64,
+            nanos: i32,
+        }
+
+        impl Duration {
+            pub fn new(secs: i64, nanos: i32) -> Self {
+                Duration { secs, nanos }
+            }
+
+            pub fn seconds(&self) -> i64 {
+                self.secs
+            }
+
+            pub fn subsec_nanos(&self) -> i32 {
+                self.nanos
+            }
+        }
+    }
+
+    use other_crate::Duration;
+
+    // Provide getters for every private field of the remote struct. The getter must
+    // return either `T` or `&T` where `T` is the type of the field.
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    #[serde(remote = "Duration")]
+    struct DurationDef {
+        #[serde(getter = "Duration::seconds")]
+        secs: i64,
+        #[serde(getter = "Duration::subsec_nanos")]
+        nanos: i32,
+    }
+
+    // Provide a conversion to construct the remote type.
+    impl From<DurationDef> for Duration {
+        fn from(def: DurationDef) -> Duration {
+            Duration::new(def.secs, def.nanos)
+        }
+    }
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Helper(#[serde(with = "DurationDef")] Duration);
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Process {
+        command_line: String,
+        wall_time: Helper,
+    }
+    impl SerdeEncryptPublicKey for Process {}
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Unit;
+    impl SerdeEncryptPublicKey for Unit {}
+
+    let msg = Unit;
+    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    Ok(())
+}
+
+#[test]
+fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
+    use std::collections::BTreeMap as Map;
+
+    keygen!(sender_combined_key, receiver_combined_key);
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Service {
+        // The `string_or_struct` function delegates deserialization to a type's
+        // `FromStr` impl if given a string, and to the type's `Deserialize` impl if
+        // given a struct. The function is generic over the field type T (here T is
+        // `Build`) so it can be reused for any field that implements both `FromStr`
+        // and `Deserialize`.
+        #[serde(deserialize_with = "string_or_struct")]
+        build: Build,
+    }
+    impl SerdeEncryptPublicKey for Service {}
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Build {
+        // This is the only required field.
+        context: String,
+
+        dockerfile: Option<String>,
+
+        // When `args` is not present in the input, this attribute tells Serde to
+        // use `Default::default()` which in this case is an empty map. See the
+        // "default value for a field" example for more about `#[serde(default)]`.
+        #[serde(default)]
+        args: Map<String, String>,
+    }
+
+    // The `string_or_struct` function uses this impl to instantiate a `Build` if
+    // the input file contains a string and not a struct. According to the
+    // docker-compose.yml documentation, a string by itself represents a `Build`
+    // with just the `context` field set.
+    //
+    // > `build` can be specified either as a string containing a path to the build
+    // > context, or an object with the path specified under context and optionally
+    // > dockerfile and args.
+    impl FromStr for Build {
+        // This implementation of `from_str` can never fail, so use the impossible
+        // `Void` type as the error type.
+        type Err = Void;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            Ok(Build {
+                context: s.to_string(),
+                dockerfile: None,
+                args: Map::new(),
+            })
+        }
+    }
+
+    fn string_or_struct<'de, T, D>(deserializer: D) -> Result<T, D::Error>
+    where
+        T: Deserialize<'de> + FromStr<Err = Void>,
+        D: Deserializer<'de>,
+    {
+        // This is a Visitor that forwards string types to T's `FromStr` impl and
+        // forwards map types to T's `Deserialize` impl. The `PhantomData` is to
+        // keep the compiler from complaining about T being an unused generic type
+        // parameter. We need T in order to know the Value type for the Visitor
+        // impl.
+        struct StringOrStruct<T>(PhantomData<fn() -> T>);
+
+        impl<'de, T> Visitor<'de> for StringOrStruct<T>
+        where
+            T: Deserialize<'de> + FromStr<Err = Void>,
+        {
+            type Value = T;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("string or map")
+            }
+
+            fn visit_str<E>(self, value: &str) -> Result<T, E>
+            where
+                E: de::Error,
+            {
+                Ok(FromStr::from_str(value).unwrap())
+            }
+
+            fn visit_map<M>(self, map: M) -> Result<T, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                // `MapAccessDeserializer` is a wrapper that turns a `MapAccess`
+                // into a `Deserializer`, allowing it to be used as the input to T's
+                // `Deserialize` implementation. T then deserializes itself using
+                // the entries from the map visitor.
+                Deserialize::deserialize(de::value::MapAccessDeserializer::new(map))
+            }
+        }
+
+        deserializer.deserialize_any(StringOrStruct(PhantomData))
+    }
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Unit;
+    impl SerdeEncryptPublicKey for Unit {}
+
+    let msg = Unit;
+    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
