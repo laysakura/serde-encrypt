@@ -89,39 +89,21 @@ pub trait SerdeEncryptPublicKey {
         Ok(EncryptedMessage::new(encrypted, nonce.into()))
     }
 
-    /// Decrypt and deserialize.
+    /// Decrypt and deserialize into DeserializeOwned type.
     ///
     /// # Failures
     ///
     /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
     /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
-    fn decrypt(
+    fn decrypt_owned(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
     ) -> Result<Self, Error>
     where
         Self: Sized + DeserializeOwned,
     {
-        let receiver_box = ChaChaBox::new(
-            combined_key.sender_public_key().as_ref(),
-            combined_key.receiver_private_key().as_ref(),
-        );
-
-        let nonce = encrypted_message.nonce();
-        let encrypted = encrypted_message.encrypted();
-
-        let serial_plain = receiver_box
-            .decrypt(nonce.into(), encrypted)
-            .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
-
-        let decrypted = serde_cbor::from_slice(&serial_plain).map_err(|e| {
-            Error::deserialization_error(&format!(
-                "error on serde_cbor deserialization after decryption: {:?}",
-                e
-            ))
-        })?;
-
-        Ok(decrypted)
+        let serial_plain = Self::decrypt_to_serialized(encrypted_message, combined_key)?;
+        serial_plain.finalize()
     }
 
     /// TBD

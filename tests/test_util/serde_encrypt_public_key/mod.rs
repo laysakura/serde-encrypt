@@ -50,7 +50,7 @@ where
     T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned,
 {
     let enc = sender_msg.encrypt(sender_combined_key)?;
-    T::decrypt(&enc, receiver_combined_key)
+    T::decrypt_owned(&enc, receiver_combined_key)
 }
 
 pub fn enc_dec_assert_eq<T>(

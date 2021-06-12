@@ -33,7 +33,7 @@ fn bob_receives_secret_message(
     combined_key: &ReceiverCombinedKey,
 ) -> Result<Message, Error> {
     let encrypted_message = EncryptedMessage::deserialize(encrypted_serialized)?;
-    Message::decrypt(&encrypted_message, combined_key)
+    Message::decrypt_owned(&encrypted_message, combined_key)
 }
 
 #[test]
