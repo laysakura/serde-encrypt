@@ -355,5 +355,56 @@ fn test_serde_encrypt_public_key_message_types() -> Result<(), Error> {
         let msg_seven = SmallPrime::Seven;
         enc_dec_assert_eq(&msg_seven, &sender_combined_key, &receiver_combined_key)?;
     }
+    {
+        // serialize fields as camelCase
+
+        #[derive(PartialEq, Debug, Serialize, Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Person {
+            first_name: String,
+            last_name: String,
+        }
+        impl SerdeEncryptPublicKey for Person {}
+
+        let msg = Person {
+            first_name: "John".into(),
+            last_name: "Doe".into(),
+        };
+        enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    }
+    {
+        // skip_serializing
+        use std::collections::BTreeMap as Map;
+
+        #[derive(PartialEq, Debug, Serialize, Deserialize)]
+        struct Resource {
+            // Always serialized.
+            name: String,
+
+            // Never serialized.
+            #[serde(skip_serializing)]
+            hash: String,
+
+            // Use a method to decide whether the field should be skipped.
+            #[serde(skip_serializing_if = "Map::is_empty")]
+            metadata: Map<String, String>,
+        }
+        impl SerdeEncryptPublicKey for Resource {}
+
+        let msg_with_metadata = Resource {
+            name: "a.txt".into(),
+            hash: "deadc0de".into(),
+            metadata: vec![("size".into(), "123".into())].into_iter().collect(),
+        };
+        let r_msg_with_metadata = enc_dec(
+            &msg_with_metadata,
+            &sender_combined_key,
+            &receiver_combined_key,
+        )?;
+
+        assert_eq!(r_msg_with_metadata.name, msg_with_metadata.name);
+        assert_eq!(r_msg_with_metadata.hash, String::default());
+        assert_eq!(r_msg_with_metadata.metadata, msg_with_metadata.metadata);
+    }
     Ok(())
 }
