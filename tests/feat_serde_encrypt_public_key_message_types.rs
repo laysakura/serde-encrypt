@@ -6,7 +6,10 @@ mod test_util;
 
 use pretty_assertions::assert_eq;
 use serde::{Deserialize, Serialize};
-use serde_encrypt::{error::Error, traits::SerdeEncryptPublicKey};
+use serde_encrypt::{
+    error::{Error, ErrorKind},
+    traits::SerdeEncryptPublicKey,
+};
 use test_util::serde_encrypt_public_key::*;
 
 #[test]
@@ -420,39 +423,27 @@ fn test_serde_encrypt_public_key_serialize_field_as_camel_case() -> Result<(), E
 }
 
 #[test]
-fn test_serde_encrypt_public_key_skip_serializing() -> Result<(), Error> {
-    use std::collections::BTreeMap as Map;
-
+fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<(), Error> {
     keygen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {
-        // Always serialized.
-        name: String,
-
-        // Never serialized.
         #[serde(skip_serializing)]
+        // #[serde(default)] here prevents DeserializationError
         hash: String,
-
-        // Use a method to decide whether the field should be skipped.
-        #[serde(skip_serializing_if = "Map::is_empty")]
-        metadata: Map<String, String>,
     }
     impl SerdeEncryptPublicKey for Resource {}
 
     let msg_with_metadata = Resource {
-        name: "a.txt".into(),
         hash: "deadc0de".into(),
-        metadata: vec![("size".into(), "123".into())].into_iter().collect(),
     };
-    let r_msg_with_metadata = enc_dec(
+    let e = enc_dec(
         &msg_with_metadata,
         &sender_combined_key,
         &receiver_combined_key,
-    )?;
+    )
+    .unwrap_err();
 
-    assert_eq!(r_msg_with_metadata.name, msg_with_metadata.name);
-    assert_eq!(r_msg_with_metadata.hash, String::default());
-    assert_eq!(r_msg_with_metadata.metadata, msg_with_metadata.metadata);
+    assert_eq!(e.kind(), &ErrorKind::DeserializationError);
     Ok(())
 }
