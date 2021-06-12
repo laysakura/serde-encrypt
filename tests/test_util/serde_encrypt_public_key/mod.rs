@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use core::fmt;
 
 use serde::{de::DeserializeOwned, Serialize};
