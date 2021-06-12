@@ -32,20 +32,9 @@ use serde::{de::DeserializeOwned, Deserialize, Serialize};
 ///
 /// # Examples
 ///
-/// ```
-/// use serde_encrypt::traits::SerdeEncryptPublicKey;
-/// use serde::{Deserialize, Serialize};
+/// ## Encrypting owned data
 ///
-/// #[derive(Serialize, Deserialize)]
-/// struct Message {
-///     content: String,
-///     sender: String,
-/// }
-///
-/// impl SerdeEncryptPublicKey for Message {}
-///
-/// // then `Message::encrypt()` to serialize message and `Message::decrypt()` to deserialize.
-/// ```
+/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_public_key_owned_data.rs).
 ///
 /// # Algorithm
 ///
