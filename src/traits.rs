@@ -1,5 +1,7 @@
 //! Traits to enable encrypted-serialization to your struct/enum.
 
+use core::marker::PhantomData;
+
 use crate::{
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
@@ -113,10 +115,13 @@ pub trait SerdeEncryptPublicKey {
     /// # Failures
     ///
     /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
-    fn decrypt_ref(
+    fn decrypt_ref<'de>(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
-    ) -> Result<ToDeserialize, Error> {
+    ) -> Result<ToDeserialize<Self>, Error>
+    where
+        Self: Sized + Deserialize<'de>,
+    {
         let receiver_box = ChaChaBox::new(
             combined_key.sender_public_key().as_ref(),
             combined_key.receiver_private_key().as_ref(),
@@ -129,25 +134,35 @@ pub trait SerdeEncryptPublicKey {
             .decrypt(nonce.into(), encrypted)
             .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
 
-        Ok(ToDeserialize(serial_plain))
+        Ok(ToDeserialize::new(serial_plain))
     }
 }
 
 /// Serialized plain-text.
 #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub struct ToDeserialize(Vec<u8>);
+pub struct ToDeserialize<T> {
+    serialized_plain: Vec<u8>,
+    _type: PhantomData<T>,
+}
 
-impl ToDeserialize {
+impl<T> ToDeserialize<T> {
+    fn new(serialized_plain: Vec<u8>) -> Self {
+        Self {
+            serialized_plain,
+            _type: PhantomData::default(),
+        }
+    }
+
     /// Deserialize to get plain message.
     ///
     /// # Failures
     ///
     /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
-    pub fn deserialize<'de, T>(&'de self) -> Result<T, Error>
+    pub fn deserialize<'de>(&'de self) -> Result<T, Error>
     where
         T: Sized + Deserialize<'de>,
     {
-        serde_cbor::from_slice(&self.0).map_err(|e| {
+        serde_cbor::from_slice(&self.serialized_plain).map_err(|e| {
             Error::deserialization_error(&format!(
                 "error on serde_cbor deserialization after decryption: {:?}",
                 e
