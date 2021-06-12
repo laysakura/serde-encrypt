@@ -102,15 +102,21 @@ pub trait SerdeEncryptPublicKey {
     where
         Self: Sized + DeserializeOwned,
     {
-        let serial_plain = Self::decrypt_to_serialized(encrypted_message, combined_key)?;
-        serial_plain.finalize()
+        let serial_plain = Self::decrypt_ref(encrypted_message, combined_key)?;
+        serial_plain.deserialize()
     }
 
-    /// TBD
-    fn decrypt_to_serialized(
+    /// Just decrypts cipher-text. Returned data must be deserialized later.
+    /// Types implementing `serde::Deserialize<'de>` (not `serde::de::DeserializeOwned`) should use
+    /// this function to resolve lifetime.
+    ///
+    /// # Failures
+    ///
+    /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
+    fn decrypt_ref(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
-    ) -> Result<PlainSerialized, Error> {
+    ) -> Result<ToDeserialize, Error> {
         let receiver_box = ChaChaBox::new(
             combined_key.sender_public_key().as_ref(),
             combined_key.receiver_private_key().as_ref(),
@@ -123,17 +129,21 @@ pub trait SerdeEncryptPublicKey {
             .decrypt(nonce.into(), encrypted)
             .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
 
-        Ok(PlainSerialized(serial_plain))
+        Ok(ToDeserialize(serial_plain))
     }
 }
 
-/// a
+/// Serialized plain-text.
 #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub struct PlainSerialized(Vec<u8>);
+pub struct ToDeserialize(Vec<u8>);
 
-impl PlainSerialized {
+impl ToDeserialize {
+    /// Deserialize to get plain message.
     ///
-    pub fn finalize<'de, T>(&'de self) -> Result<T, Error>
+    /// # Failures
+    ///
+    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
+    pub fn deserialize<'de, T>(&'de self) -> Result<T, Error>
     where
         T: Sized + Deserialize<'de>,
     {

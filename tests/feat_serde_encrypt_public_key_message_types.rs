@@ -377,8 +377,8 @@ fn test_serde_encrypt_public_key_struct_with_reference() -> Result<(), Error> {
     let msg = Str("Str");
     let encrypted_msg = msg.encrypt(&sender_combined_key)?;
 
-    let x = Str::decrypt_to_serialized(&encrypted_msg, &receiver_combined_key)?;
-    let r_msg = x.finalize()?;
+    let decrypted = Str::decrypt_ref(&encrypted_msg, &receiver_combined_key)?;
+    let r_msg = decrypted.deserialize()?;
 
     pretty_assertions::assert_eq!(msg, r_msg);
     Ok(())

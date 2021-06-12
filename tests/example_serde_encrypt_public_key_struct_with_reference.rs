@@ -43,8 +43,8 @@ fn bob_reads_secret_message(
 ) -> Result<(), Error> {
     let encrypted_message = EncryptedMessage::deserialize(encrypted_serialized)?;
 
-    let x = Message::decrypt_to_serialized(&encrypted_message, &combined_key)?;
-    let revealed_message: Message = x.finalize()?;
+    let decrypted = Message::decrypt_ref(&encrypted_message, &combined_key)?;
+    let revealed_message: Message = decrypted.deserialize()?;
 
     // Note that you cannot return `revealed_message` from this function
     // because it has the same lifetime as local-scoped `x`.
