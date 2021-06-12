@@ -1,5 +1,6 @@
 use core::fmt;
 
+use serde::{de::DeserializeOwned, Serialize};
 use serde_encrypt::{
     error::Error,
     key::{
@@ -8,6 +9,15 @@ use serde_encrypt::{
     },
     traits::SerdeEncryptPublicKey,
 };
+
+#[macro_export]
+macro_rules! keygen {
+    ($sender_combined_key:ident, $receiver_combined_key:ident) => {
+        let (sender_key_pair, receiver_key_pair) = gen_key_pairs();
+        let ($sender_combined_key, $receiver_combined_key) =
+            mk_combined_keys(&sender_key_pair, &receiver_key_pair);
+    };
+}
 
 pub fn gen_key_pairs() -> (SenderKeyPair, ReceiverKeyPair) {
     let sender_key_pair = SenderKeyPair::generate();
@@ -37,10 +47,10 @@ pub fn enc_dec<T>(
     receiver_combined_key: &ReceiverCombinedKey,
 ) -> Result<T, Error>
 where
-    T: SerdeEncryptPublicKey,
+    T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned,
 {
     let enc = sender_msg.encrypt(sender_combined_key)?;
-    T::decrypt(&enc, receiver_combined_key)
+    T::decrypt_owned(&enc, receiver_combined_key)
 }
 
 pub fn enc_dec_assert_eq<T>(
@@ -49,7 +59,7 @@ pub fn enc_dec_assert_eq<T>(
     receiver_combined_key: &ReceiverCombinedKey,
 ) -> Result<(), Error>
 where
-    T: SerdeEncryptPublicKey + PartialEq + fmt::Debug,
+    T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned + PartialEq + fmt::Debug,
 {
     let receiver_msg = enc_dec(sender_msg, sender_combined_key, receiver_combined_key)?;
     pretty_assertions::assert_eq!(sender_msg, &receiver_msg);
