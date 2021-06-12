@@ -37,5 +37,5 @@ cargo doc --no-deps --all-features
 script = ['''
 #!/usr/bin/env bash -eux
 rustup target add aarch64-unknown-none
-RUSTFLAGS='-D warnings' cargo build --all-features --target=aarch64-unknown-none
+RUSTFLAGS='-D warnings' cargo build --no-default-features --target=aarch64-unknown-none
 ''']
