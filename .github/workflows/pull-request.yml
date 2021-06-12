@@ -29,9 +29,10 @@ jobs:
             task: build test
           - name: doc
             task: doc
-          - name: os-less-build
-            task: os-less-build
-            rust-free: true  # Rust is installed inside task
+          - name: check-nostd
+            task: check-nostd
+            rust-free: true
+            install-cargo-nono: true
         exclude:
           - rust: nightly
             make:
@@ -90,6 +91,11 @@ jobs:
           unzip /tmp/cargo-make.zip -d /tmp/cargo-make
           mv -f /tmp/cargo-make/${CARGO_MAKE_FILE_BASE}/cargo-make $HOME/.local/bin/cargo-make
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install cargo-nono
+        if: ${{ ! matrix.install-cargo-nono }}
+        run: |
+          curl -LSfs https://japaric.github.io/trust/install.sh | sh -s -- --git hobofan/cargo-nono
 
       - name: ${{ matrix.make.name }}
         run: |
