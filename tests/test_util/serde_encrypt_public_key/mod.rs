@@ -64,6 +64,6 @@ where
     T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned + PartialEq + fmt::Debug,
 {
     let receiver_msg = enc_dec(sender_msg, sender_combined_key, receiver_combined_key)?;
-    pretty_assertions::assert_eq!(sender_msg, &receiver_msg);
+    assert_eq!(sender_msg, &receiver_msg);
     Ok(())
 }
