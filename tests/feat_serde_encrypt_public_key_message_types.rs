@@ -784,3 +784,67 @@ fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
     enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
+
+#[test]
+fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
+    keygen!(sender_combined_key, receiver_combined_key);
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Resource {
+        name: String,
+
+        #[serde(with = "as_json_string")]
+        policy: Policy,
+    }
+
+    impl SerdeEncryptPublicKey for Resource {}
+
+    #[derive(PartialEq, Debug, Serialize, Deserialize)]
+    struct Policy {
+        effect: String,
+        action: String,
+        resource: String,
+    }
+
+    // Serialize and deserialize logic for dealing with nested values represented as
+    // JSON strings.
+    mod as_json_string {
+        use serde::de::{Deserialize, DeserializeOwned, Deserializer};
+        use serde::ser::{Serialize, Serializer};
+
+        // Serialize to a JSON string, then serialize the string to the output
+        // format.
+        pub fn serialize<T, S>(value: &T, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            T: Serialize,
+            S: Serializer,
+        {
+            use serde::ser::Error;
+            let j = serde_json::to_string(value).map_err(Error::custom)?;
+            j.serialize(serializer)
+        }
+
+        // Deserialize a string from the input format, then deserialize the content
+        // of that string as JSON.
+        pub fn deserialize<'de, T, D>(deserializer: D) -> Result<T, D::Error>
+        where
+            T: DeserializeOwned,
+            D: Deserializer<'de>,
+        {
+            use serde::de::Error;
+            let j = String::deserialize(deserializer)?;
+            serde_json::from_str(&j).map_err(Error::custom)
+        }
+    }
+
+    let msg = Resource {
+        name: "a.txt".into(),
+        policy: Policy {
+            effect: "Allow".to_owned(),
+            action: "s3:ListBucket".to_owned(),
+            resource: "arn:aws:s3:::example_bucket".to_owned(),
+        },
+    };
+    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    Ok(())
+}
