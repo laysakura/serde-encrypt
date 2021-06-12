@@ -35,5 +35,4 @@ fn test_serde_encrypt_public_key_in_a_process() -> Result<(), Error> {
     Ok(())
 }
 
-// Difficult to test "separate processes produce different cipher-text".
-// Unit test in [random.rs](https://github.com/laysakura/serde-encrypt/blob/main/src/random.rs) assures it.
+// TODO Test "separate processes produce different cipher-text".
