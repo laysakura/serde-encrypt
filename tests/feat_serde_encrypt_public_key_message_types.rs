@@ -11,9 +11,7 @@ use test_util::serde_encrypt_public_key::*;
 
 #[test]
 fn test_serde_encrypt_public_key_message_types() -> Result<(), Error> {
-    let (sender_key_pair, receiver_key_pair) = gen_key_pairs();
-    let (sender_combined_key, receiver_combined_key) =
-        mk_combined_keys(&sender_key_pair, &receiver_key_pair);
+    keygen!(sender_combined_key, receiver_combined_key);
 
     {
         // unit struct
