@@ -9,3 +9,5 @@ pub mod error;
 pub mod key;
 pub mod msg;
 pub mod traits;
+
+pub(crate) mod random;

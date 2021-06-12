@@ -1,18 +1,18 @@
 //! Traits to enable encrypted-serialization to your struct/enum.
 
-use core::marker::PhantomData;
+use core::{marker::PhantomData, ops::DerefMut};
 
 use crate::{
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
     msg::EncryptedMessage,
+    random::global_rng,
 };
 use alloc::{format, vec::Vec};
 use crypto_box::{
     aead::{Aead, Payload},
     ChaChaBox,
 };
-use rand::SeedableRng;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 /// Public-key authenticated encryption for serde-serializable types.
@@ -58,11 +58,9 @@ pub trait SerdeEncryptPublicKey {
     where
         Self: Serialize,
     {
-        // TODO stop creating rand generator for every func call (share the same rng with key-pair generation)
-        let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
+        let mut rng = global_rng().lock();
 
-        let nonce = crypto_box::generate_nonce(&mut rng);
-
+        let nonce = crypto_box::generate_nonce(rng.deref_mut());
         let sender_box = ChaChaBox::new(
             combined_key.receiver_public_key().as_ref(),
             combined_key.sender_private_key().as_ref(),
