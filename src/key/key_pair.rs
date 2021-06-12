@@ -1,12 +1,14 @@
 //! X25519 key-pair (public-key and private-key).
 
-use crypto_box::{PublicKey, SecretKey};
-use rand::SeedableRng;
+use core::ops::DerefMut;
+
+use crate::random::global_rng;
 
 use self::{
     private_key::{ReceiverPrivateKey, SenderPrivateKey},
     public_key::{ReceiverPublicKey, SenderPublicKey},
 };
+use crypto_box::{PublicKey, SecretKey};
 
 pub(in crate::key) mod private_key;
 pub(in crate::key) mod public_key;
@@ -72,10 +74,9 @@ impl ReceiverKeyPair {
 }
 
 fn gen_key_pair() -> (SecretKey, PublicKey) {
-    // TODO stop creating rand generator for every func call
-    let mut rng = rand::rngs::StdRng::from_seed([0; 32]);
+    let mut rng = global_rng().lock();
 
-    let secret_key = SecretKey::generate(&mut rng);
+    let secret_key = SecretKey::generate(rng.deref_mut());
     let public_key = secret_key.public_key();
 
     (secret_key, public_key)
