@@ -23,6 +23,9 @@ impl Display for Error {
     }
 }
 
+#[cfg(feature = "std")]
+impl std::error::Error for Error {}
+
 impl Error {
     /// Ref to error kind.
     pub fn kind(&self) -> &ErrorKind {
