@@ -811,7 +811,6 @@ fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
     mod as_json_string {
         use serde::de::{Deserialize, DeserializeOwned, Deserializer};
         use serde::ser::{Serialize, Serializer};
-        use serde_json;
 
         // Serialize to a JSON string, then serialize the string to the output
         // format.
