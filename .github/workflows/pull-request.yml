@@ -52,6 +52,12 @@ jobs:
           - rust: 1.51.0
             make:
               name: doc
+          - rust: nightly
+            make:
+              name: check-nostd
+          - rust: 1.51.0
+            make:
+              name: check-nostd
     env:
       RUST_BACKTRACE: full
       CACHE_RESET_KEY: 20210611-01
