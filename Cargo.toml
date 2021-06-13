@@ -2,7 +2,7 @@
 authors = ["Sho Nakatani <lay.sakura@gmail.com>"]
 categories = ["no-std", "cryptography", "encoding"]
 description = "Encrypts all the Serialize"
-documentation = "https://docs.rs/crate/serde-encrypt"
+documentation = "https://docs.rs/serde-encrypt"
 edition = "2018"
 keywords = ["libsodium", "xsalsa20poly1305", "x25519", "serde", "serialization"] # up to 5 keywords, each keyword should have <= 20 chars
 license = "MIT OR Apache-2.0"
