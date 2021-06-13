@@ -5,7 +5,7 @@ use core::{convert::TryInto, ops::DerefMut};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
-use crate::random::global_rng;
+use crate::{random::global_rng, traits::SerdeEncryptPublicKey};
 
 /// 32-byte key shared among sender and receiver secretly.
 ///
@@ -13,6 +13,9 @@ use crate::random::global_rng;
 /// to exchange this shared key.
 #[derive(Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
 pub struct SharedKey([u8; 32]);
+
+// Enable key-exchange.
+impl SerdeEncryptPublicKey for SharedKey {}
 
 impl SharedKey {
     /// Constructor from known secret bytes.

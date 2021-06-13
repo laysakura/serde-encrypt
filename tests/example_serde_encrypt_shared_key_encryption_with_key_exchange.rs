@@ -23,7 +23,7 @@ use serde_encrypt::{
         shared_key::SharedKey,
     },
     msg::EncryptedMessage,
-    traits::SerdeEncryptSharedKey,
+    traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
 
 impl<'a> SerdeEncryptSharedKey for Message<'a> {}
