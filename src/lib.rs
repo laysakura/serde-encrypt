@@ -37,6 +37,14 @@
 //! - `SerdeEncryptedSharedKey`
 //!   - To exchange `SharedKey`.
 //!   - Quickly sends/receive small amounts of messages without secret shared key.
+//!
+//! # Examples
+//!
+//! - :woman-tipping-hand: [Good first: encrypts with known shared key](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_owned_data.rs)
+//! - :eyes: [Encrypts struct with reference fields](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_public_key_struct_with_reference.rs)
+//! - :key: [Generates shared-key and safely exchange it to your peer. And then, encrypt/decrypt messages using the shared-key.](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_encryption_with_key_exchange.rs)
+//! - :books: [Encrypts/Decrypts complex serde types](https://github.com/laysakura/serde-encrypt/blob/main/tests/feat_serde_types.rs)
+
 
 #![deny(missing_debug_implementations, missing_docs)]
 #![cfg_attr(not(feature = "std"), no_std)]
