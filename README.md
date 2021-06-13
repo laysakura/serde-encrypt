@@ -81,7 +81,7 @@ After your peer gets the binary, he or she can decrypt and deserialize it to `Me
 
 - :eyes: [Encrypts struct with reference fields](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_public_key_struct_with_reference.rs)
 - :key: [Generates shared-key and safely exchange it to your peer. And then, encrypt/decrypt messages using the shared-key.](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_encryption_with_key_exchange.rs)
-- :books: [Encrypts/Decrypts complex serde types](https://github.com/laysakura/serde-encrypt/blob/main/tests/feat_serde_encrypt_public_key_message_types.rs)
+- :books: [Encrypts/Decrypts complex serde types](https://github.com/laysakura/serde-encrypt/blob/main/tests/feat_serde_types.rs)
 
 ## License
 

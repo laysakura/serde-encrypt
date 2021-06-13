@@ -1,4 +1,4 @@
-//! SerdeEncryptPublicKey to various types.
+//! Encrypt/Decrypt various serde types.
 //!
 //! Some types are from [Examples in Serde document](https://serde.rs/examples.html).
 
@@ -13,66 +13,80 @@ use serde::{
 };
 use serde_encrypt::{
     error::{Error, ErrorKind},
-    traits::SerdeEncryptPublicKey,
+    key::shared_key::SharedKey,
+    traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
-use test_util::serde_encrypt_public_key::*;
+use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 use void::Void;
 
 #[test]
-fn test_serde_encrypt_public_key_unit_struct() -> Result<(), Error> {
+fn test_unit_struct() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Unit;
     impl SerdeEncryptPublicKey for Unit {}
+    impl SerdeEncryptSharedKey for Unit {}
 
     let msg = Unit;
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_primitive_type_fixed_len() -> Result<(), Error> {
+fn test_primitive_type_fixed_len() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct I32(i32);
     impl SerdeEncryptPublicKey for I32 {}
+    impl SerdeEncryptSharedKey for I32 {}
 
     let msg = I32(42);
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_primitive_type_unbound_len() -> Result<(), Error> {
+fn test_primitive_type_unbound_len() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct MyString(String);
     impl SerdeEncryptPublicKey for MyString {}
+    impl SerdeEncryptSharedKey for MyString {}
 
     let msg = MyString("MyString".to_string());
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_tuple_struct() -> Result<(), Error> {
+fn test_tuple_struct() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Tuple(i16, i32, i64);
     impl SerdeEncryptPublicKey for Tuple {}
+    impl SerdeEncryptSharedKey for Tuple {}
 
     let msg = Tuple(42, 4242, 424242);
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_enum() -> Result<(), Error> {
+fn test_enum() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -93,6 +107,7 @@ fn test_serde_encrypt_public_key_enum() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {}
+    impl SerdeEncryptSharedKey for Message {}
 
     let msg_request = Message::Request {
         id: "1".into(),
@@ -100,18 +115,21 @@ fn test_serde_encrypt_public_key_enum() -> Result<(), Error> {
         params: Params,
     };
     public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_request, &shared_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
     public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_response, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_enum_tagged() -> Result<(), Error> {
+fn test_enum_tagged() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -133,6 +151,7 @@ fn test_serde_encrypt_public_key_enum_tagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {}
+    impl SerdeEncryptSharedKey for Message {}
 
     let msg_request = Message::Request {
         id: "1".into(),
@@ -140,18 +159,21 @@ fn test_serde_encrypt_public_key_enum_tagged() -> Result<(), Error> {
         params: Params,
     };
     public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_request, &shared_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
     public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_response, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_enum_adjacently_tagged() -> Result<(), Error> {
+fn test_enum_adjacently_tagged() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -173,6 +195,7 @@ fn test_serde_encrypt_public_key_enum_adjacently_tagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {}
+    impl SerdeEncryptSharedKey for Message {}
 
     let msg_request = Message::Request {
         id: "1".into(),
@@ -180,18 +203,21 @@ fn test_serde_encrypt_public_key_enum_adjacently_tagged() -> Result<(), Error> {
         params: Params,
     };
     public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_request, &shared_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
     public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_response, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_enum_untagged() -> Result<(), Error> {
+fn test_enum_untagged() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -213,6 +239,7 @@ fn test_serde_encrypt_public_key_enum_untagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {}
+    impl SerdeEncryptSharedKey for Message {}
 
     let msg_request = Message::Request {
         id: "1".into(),
@@ -220,18 +247,21 @@ fn test_serde_encrypt_public_key_enum_untagged() -> Result<(), Error> {
         params: Params,
     };
     public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_request, &shared_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
     public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_response, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_skip_deserializing() -> Result<(), Error> {
+fn test_skip_deserializing() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Struct {
@@ -241,26 +271,37 @@ fn test_serde_encrypt_public_key_skip_deserializing() -> Result<(), Error> {
         c: i32,
     }
     impl SerdeEncryptPublicKey for Struct {}
+    impl SerdeEncryptSharedKey for Struct {}
 
     let msg = Struct {
         a: 42,
         b: 42,
         c: 42,
     };
-    let receive_msg = public_key_enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
 
+    let receive_msg = public_key_enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
     assert_eq!(msg.a, receive_msg.a);
     assert_eq!(msg.b, receive_msg.b);
     assert_eq!(
         receive_msg.c, 0,
         "deserialization skipped and got default value"
     );
+
+    let receive_msg = shared_key_enc_dec(&msg, &shared_key)?;
+    assert_eq!(msg.a, receive_msg.a);
+    assert_eq!(msg.b, receive_msg.b);
+    assert_eq!(
+        receive_msg.c, 0,
+        "deserialization skipped and got default value"
+    );
+
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_skip_deserializing_and_custom_default() -> Result<(), Error> {
+fn test_skip_deserializing_and_custom_default() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Request {
@@ -281,6 +322,7 @@ fn test_serde_encrypt_public_key_skip_deserializing_and_custom_default() -> Resu
         "/".to_string()
     }
     impl SerdeEncryptPublicKey for Request {}
+    impl SerdeEncryptSharedKey for Request {}
 
     /// Timeout in seconds.
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
@@ -310,18 +352,26 @@ fn test_serde_encrypt_public_key_skip_deserializing_and_custom_default() -> Resu
         timeout: Timeout(12345),
         priority: Priority::ExtraHigh,
     };
-    let receive_msg = public_key_enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
 
+    let receive_msg = public_key_enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
     // all fields from sender are skipped deserialization
     assert_eq!(receive_msg.resource, default_resource());
     assert_eq!(receive_msg.timeout, Timeout::default());
     assert_eq!(receive_msg.priority, Priority::lowest());
+
+    let receive_msg = shared_key_enc_dec(&msg, &shared_key)?;
+    // all fields from sender are skipped deserialization
+    assert_eq!(receive_msg.resource, default_resource());
+    assert_eq!(receive_msg.timeout, Timeout::default());
+    assert_eq!(receive_msg.priority, Priority::lowest());
+
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_flatten() -> Result<(), Error> {
+fn test_flatten() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Pagination {
@@ -344,6 +394,7 @@ fn test_serde_encrypt_public_key_flatten() -> Result<(), Error> {
         pagination: Pagination,
     }
     impl SerdeEncryptPublicKey for Users {}
+    impl SerdeEncryptSharedKey for Users {}
 
     let msg = Users {
         users: vec![
@@ -363,30 +414,39 @@ fn test_serde_encrypt_public_key_flatten() -> Result<(), Error> {
         },
     };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_struct_with_reference() -> Result<(), Error> {
+fn test_struct_with_reference() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Str<'a>(&'a str);
     impl<'a> SerdeEncryptPublicKey for Str<'a> {}
+    impl<'a> SerdeEncryptSharedKey for Str<'a> {}
 
     let msg = Str("Str");
-    let encrypted_msg = msg.encrypt(&sender_combined_key)?;
 
-    let decrypted = Str::decrypt_ref(&encrypted_msg, &receiver_combined_key)?;
+    let encrypted_msg = SerdeEncryptPublicKey::encrypt(&msg, &sender_combined_key)?;
+    let decrypted = SerdeEncryptPublicKey::decrypt_ref(&encrypted_msg, &receiver_combined_key)?;
     let r_msg = decrypted.deserialize()?;
-
     pretty_assertions::assert_eq!(msg, r_msg);
+
+    let encrypted_msg = SerdeEncryptSharedKey::encrypt(&msg, &shared_key)?;
+    let decrypted = SerdeEncryptSharedKey::decrypt_ref(&encrypted_msg, &shared_key)?;
+    let r_msg = decrypted.deserialize()?;
+    pretty_assertions::assert_eq!(msg, r_msg);
+
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_serialize_enum_as_number() -> Result<(), Error> {
+fn test_serialize_enum_as_number() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     use serde_repr::*;
 
@@ -399,18 +459,23 @@ fn test_serde_encrypt_public_key_serialize_enum_as_number() -> Result<(), Error>
         Seven = 7,
     }
     impl SerdeEncryptPublicKey for SmallPrime {}
+    impl SerdeEncryptSharedKey for SmallPrime {}
 
     let msg_two = SmallPrime::Two;
     public_key_enc_dec_assert_eq(&msg_two, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_two, &shared_key)?;
 
     let msg_seven = SmallPrime::Seven;
     public_key_enc_dec_assert_eq(&msg_seven, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg_seven, &shared_key)?;
+
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_serialize_field_as_camel_case() -> Result<(), Error> {
+fn test_serialize_field_as_camel_case() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
@@ -419,18 +484,21 @@ fn test_serde_encrypt_public_key_serialize_field_as_camel_case() -> Result<(), E
         last_name: String,
     }
     impl SerdeEncryptPublicKey for Person {}
+    impl SerdeEncryptSharedKey for Person {}
 
     let msg = Person {
         first_name: "John".into(),
         last_name: "Doe".into(),
     };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<(), Error> {
+fn test_skip_serializing_without_default() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {
@@ -439,26 +507,32 @@ fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<()
         hash: String,
     }
     impl SerdeEncryptPublicKey for Resource {}
+    impl SerdeEncryptSharedKey for Resource {}
 
     let msg_with_metadata = Resource {
         hash: "deadc0de".into(),
     };
+
     let e = public_key_enc_dec(
         &msg_with_metadata,
         &sender_combined_key,
         &receiver_combined_key,
     )
     .unwrap_err();
-
     assert_eq!(e.kind(), &ErrorKind::DeserializationError);
+
+    let e = shared_key_enc_dec(&msg_with_metadata, &shared_key).unwrap_err();
+    assert_eq!(e.kind(), &ErrorKind::DeserializationError);
+
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
+fn test_skip_serializing_if() -> Result<(), Error> {
     use std::collections::BTreeMap as Map;
 
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {
@@ -468,6 +542,7 @@ fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
         metadata: Map<String, String>,
     }
     impl SerdeEncryptPublicKey for Resource {}
+    impl SerdeEncryptSharedKey for Resource {}
 
     let msg_with_metadata = Resource {
         name: "a.txt".into(),
@@ -490,14 +565,18 @@ fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
         &receiver_combined_key,
     )
     .unwrap_err();
-
     assert_eq!(e.kind(), &ErrorKind::DeserializationError);
+
+    let e = shared_key_enc_dec(&msg_without_metadata, &shared_key).unwrap_err();
+    assert_eq!(e.kind(), &ErrorKind::DeserializationError);
+
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_remote_crate() -> Result<(), Error> {
+fn test_remote_crate() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     // Pretend that this is somebody else's crate, not a module.
     mod other_crate {
@@ -535,18 +614,21 @@ fn test_serde_encrypt_public_key_remote_crate() -> Result<(), Error> {
     }
 
     impl SerdeEncryptPublicKey for Process {}
+    impl SerdeEncryptSharedKey for Process {}
 
     let msg = Process {
         command_line: "sl".into(),
         wall_time: Duration { secs: 33, nanos: 4 },
     };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_remote_crate_with_priv_fields() -> Result<(), Error> {
+fn test_remote_crate_with_priv_fields() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     // Pretend that this is somebody else's crate, not a module.
     mod other_crate {
@@ -601,18 +683,21 @@ fn test_serde_encrypt_public_key_remote_crate_with_priv_fields() -> Result<(), E
         wall_time: Duration,
     }
     impl SerdeEncryptPublicKey for Process {}
+    impl SerdeEncryptSharedKey for Process {}
 
     let msg = Process {
         command_line: "sl".into(),
         wall_time: Duration::new(33, 4),
     };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_remote_crate_with_helper() -> Result<(), Error> {
+fn test_remote_crate_with_helper() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     // Pretend that this is somebody else's crate, not a module.
     mod other_crate {
@@ -668,21 +753,23 @@ fn test_serde_encrypt_public_key_remote_crate_with_helper() -> Result<(), Error>
         wall_time: Helper,
     }
     impl SerdeEncryptPublicKey for Process {}
+    impl SerdeEncryptSharedKey for Process {}
 
-    #[derive(PartialEq, Debug, Serialize, Deserialize)]
-    struct Unit;
-    impl SerdeEncryptPublicKey for Unit {}
-
-    let msg = Unit;
+    let msg = Process {
+        command_line: "sl".into(),
+        wall_time: Helper(Duration::new(33, 4)),
+    };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
+fn test_string_or_struct() -> Result<(), Error> {
     use std::collections::BTreeMap as Map;
 
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Service {
@@ -695,6 +782,7 @@ fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
         build: Build,
     }
     impl SerdeEncryptPublicKey for Service {}
+    impl SerdeEncryptSharedKey for Service {}
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Build {
@@ -776,18 +864,22 @@ fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
         deserializer.deserialize_any(StringOrStruct(PhantomData))
     }
 
-    #[derive(PartialEq, Debug, Serialize, Deserialize)]
-    struct Unit;
-    impl SerdeEncryptPublicKey for Unit {}
-
-    let msg = Unit;
+    let msg = Service {
+        build: Build {
+            context: "./dir".into(),
+            dockerfile: Some("Dockerfile".into()),
+            args: vec![("buildno".into(), "1".into())].into_iter().collect(),
+        },
+    };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
 
 #[test]
-fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
+fn test_convert_error_types() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
+    let shared_key = SharedKey::generate();
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {
@@ -798,6 +890,7 @@ fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
     }
 
     impl SerdeEncryptPublicKey for Resource {}
+    impl SerdeEncryptSharedKey for Resource {}
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Policy {
@@ -846,5 +939,6 @@ fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
         },
     };
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    shared_key_enc_dec_assert_eq(&msg, &shared_key)?;
     Ok(())
 }
