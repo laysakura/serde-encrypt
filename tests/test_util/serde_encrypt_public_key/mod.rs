@@ -13,7 +13,7 @@ use serde_encrypt::{
 };
 
 #[macro_export]
-macro_rules! keygen {
+macro_rules! combined_keys_gen {
     ($sender_combined_key:ident, $receiver_combined_key:ident) => {
         let (sender_key_pair, receiver_key_pair) = gen_key_pairs();
         let ($sender_combined_key, $receiver_combined_key) =

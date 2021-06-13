@@ -20,7 +20,7 @@ use void::Void;
 
 #[test]
 fn test_serde_encrypt_public_key_unit_struct() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Unit;
@@ -33,7 +33,7 @@ fn test_serde_encrypt_public_key_unit_struct() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_primitive_type_fixed_len() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct I32(i32);
@@ -46,7 +46,7 @@ fn test_serde_encrypt_public_key_primitive_type_fixed_len() -> Result<(), Error>
 
 #[test]
 fn test_serde_encrypt_public_key_primitive_type_unbound_len() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct MyString(String);
@@ -59,7 +59,7 @@ fn test_serde_encrypt_public_key_primitive_type_unbound_len() -> Result<(), Erro
 
 #[test]
 fn test_serde_encrypt_public_key_tuple_struct() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Tuple(i16, i32, i64);
@@ -72,7 +72,7 @@ fn test_serde_encrypt_public_key_tuple_struct() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_enum() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -111,7 +111,7 @@ fn test_serde_encrypt_public_key_enum() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_enum_tagged() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -151,7 +151,7 @@ fn test_serde_encrypt_public_key_enum_tagged() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_enum_adjacently_tagged() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -191,7 +191,7 @@ fn test_serde_encrypt_public_key_enum_adjacently_tagged() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_enum_untagged() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Params;
@@ -231,7 +231,7 @@ fn test_serde_encrypt_public_key_enum_untagged() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_skip_deserializing() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Struct {
@@ -260,7 +260,7 @@ fn test_serde_encrypt_public_key_skip_deserializing() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_skip_deserializing_and_custom_default() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Request {
@@ -321,7 +321,7 @@ fn test_serde_encrypt_public_key_skip_deserializing_and_custom_default() -> Resu
 
 #[test]
 fn test_serde_encrypt_public_key_flatten() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Pagination {
@@ -368,7 +368,7 @@ fn test_serde_encrypt_public_key_flatten() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_struct_with_reference() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Str<'a>(&'a str);
@@ -386,7 +386,7 @@ fn test_serde_encrypt_public_key_struct_with_reference() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_serialize_enum_as_number() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     use serde_repr::*;
 
@@ -410,7 +410,7 @@ fn test_serde_encrypt_public_key_serialize_enum_as_number() -> Result<(), Error>
 
 #[test]
 fn test_serde_encrypt_public_key_serialize_field_as_camel_case() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     #[serde(rename_all = "camelCase")]
@@ -430,7 +430,7 @@ fn test_serde_encrypt_public_key_serialize_field_as_camel_case() -> Result<(), E
 
 #[test]
 fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {
@@ -458,7 +458,7 @@ fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<()
 fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
     use std::collections::BTreeMap as Map;
 
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {
@@ -497,7 +497,7 @@ fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_remote_crate() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     // Pretend that this is somebody else's crate, not a module.
     mod other_crate {
@@ -546,7 +546,7 @@ fn test_serde_encrypt_public_key_remote_crate() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_remote_crate_with_priv_fields() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     // Pretend that this is somebody else's crate, not a module.
     mod other_crate {
@@ -612,7 +612,7 @@ fn test_serde_encrypt_public_key_remote_crate_with_priv_fields() -> Result<(), E
 
 #[test]
 fn test_serde_encrypt_public_key_remote_crate_with_helper() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     // Pretend that this is somebody else's crate, not a module.
     mod other_crate {
@@ -682,7 +682,7 @@ fn test_serde_encrypt_public_key_remote_crate_with_helper() -> Result<(), Error>
 fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
     use std::collections::BTreeMap as Map;
 
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Service {
@@ -787,7 +787,7 @@ fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
 
 #[test]
 fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Resource {

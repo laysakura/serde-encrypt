@@ -13,7 +13,7 @@ use test_util::serde_encrypt_public_key::*;
 
 #[test]
 fn test_serde_encrypt_public_key_nostd() -> Result<(), Error> {
-    keygen!(sender_combined_key, receiver_combined_key);
+    combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Pagination {
