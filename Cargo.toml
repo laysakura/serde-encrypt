@@ -6,6 +6,7 @@ name = "serde-encrypt"
 version = "0.1.0"
 
 [dependencies]
+chacha20poly1305 = {version = "0.8", default-features = false, features = ["alloc", "xchacha20poly1305"]}
 crypto_box = {version = "0.6"}
 
 rand_chacha = {version = "0.3", default_features = false}
@@ -27,6 +28,7 @@ void = "1.0"
 [features]
 default = ["std"]
 std = [
+  "chacha20poly1305/std",
   "rand_chacha/std",
   "serde/std",
   "serde_cbor/std",
