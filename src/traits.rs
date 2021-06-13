@@ -66,10 +66,7 @@ pub trait SerdeEncryptPublicKey {
             combined_key.sender_private_key().as_ref(),
         );
 
-        // TODO cbor?
-        let serial_plain = serde_cbor::to_vec(&self).map_err(|e| {
-            Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
-        })?;
+        let serial_plain = self.inner_serialize()?;
 
         // TODO https://github.com/laysakura/serde-encrypt/issues/19
         let aad = b"".as_ref();
@@ -133,6 +130,18 @@ pub trait SerdeEncryptPublicKey {
             .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
 
         Ok(ToDeserialize::new(serial_plain))
+    }
+
+    /// # Failures
+    ///
+    /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
+    fn inner_serialize(&self) -> Result<Vec<u8>, Error>
+    where
+        Self: Serialize,
+    {
+        serde_cbor::to_vec(&self).map_err(|e| {
+            Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
+        })
     }
 }
 
