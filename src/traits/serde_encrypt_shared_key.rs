@@ -1,10 +1,13 @@
 use crate::{error::Error, key::shared_key::SharedKey, msg::EncryptedMessage};
-use alloc::{format, vec::Vec};
+use alloc::format;
 use chacha20poly1305::XChaCha20Poly1305;
 use crypto_box::aead::{Aead, NewAead};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use super::{impl_detail::nonce::generate_nonce, SerializedPlain};
+use super::{
+    impl_detail::{self, nonce::generate_nonce},
+    SerializedPlain,
+};
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -57,7 +60,7 @@ pub trait SerdeEncryptSharedKey {
         let nonce = generate_nonce();
         let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
 
-        let serial_plain = self.inner_serialize()?;
+        let serial_plain = impl_detail::serialize(&self)?;
 
         let encrypted = chacha.encrypt(&nonce, serial_plain.as_ref()).map_err(|e| {
             Error::encryption_error(&format!(
@@ -113,17 +116,5 @@ pub trait SerdeEncryptSharedKey {
         })?;
 
         Ok(SerializedPlain::new(serial_plain))
-    }
-
-    /// # Failures
-    ///
-    /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
-    fn inner_serialize(&self) -> Result<Vec<u8>, Error>
-    where
-        Self: Serialize,
-    {
-        serde_cbor::to_vec(&self).map_err(|e| {
-            Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
-        })
     }
 }

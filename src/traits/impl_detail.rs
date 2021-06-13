@@ -1,5 +1,7 @@
 pub(in crate::traits) mod nonce;
 
-mod serialized_plain;
+mod serialize;
 
-pub use serialized_plain::SerializedPlain;
+pub use serialize::SerializedPlain;
+
+pub(in crate::traits) use serialize::serialize;

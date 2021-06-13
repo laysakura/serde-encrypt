@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::error::Error;
 
@@ -35,4 +35,16 @@ impl<T> SerializedPlain<T> {
             ))
         })
     }
+}
+
+/// # Failures
+///
+/// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
+pub(in crate::traits) fn serialize<T>(v: &T) -> Result<Vec<u8>, Error>
+where
+    T: Serialize,
+{
+    serde_cbor::to_vec(v).map_err(|e| {
+        Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
+    })
 }

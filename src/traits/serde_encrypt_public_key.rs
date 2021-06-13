@@ -3,14 +3,16 @@ use crate::{
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
     msg::EncryptedMessage,
 };
-use alloc::{format, vec::Vec};
 use crypto_box::{
     aead::{Aead, Payload},
     ChaChaBox,
 };
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use super::{impl_detail::nonce::generate_nonce, SerializedPlain};
+use super::{
+    impl_detail::{self, nonce::generate_nonce},
+    SerializedPlain,
+};
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
@@ -61,7 +63,7 @@ pub trait SerdeEncryptPublicKey {
             combined_key.sender_private_key().as_ref(),
         );
 
-        let serial_plain = self.inner_serialize()?;
+        let serial_plain = impl_detail::serialize(&self)?;
 
         // TODO https://github.com/laysakura/serde-encrypt/issues/19
         let aad = b"".as_ref();
@@ -125,17 +127,5 @@ pub trait SerdeEncryptPublicKey {
             .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
 
         Ok(SerializedPlain::new(serial_plain))
-    }
-
-    /// # Failures
-    ///
-    /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
-    fn inner_serialize(&self) -> Result<Vec<u8>, Error>
-    where
-        Self: Serialize,
-    {
-        serde_cbor::to_vec(&self).map_err(|e| {
-            Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
-        })
     }
 }
