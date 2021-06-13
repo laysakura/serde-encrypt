@@ -34,7 +34,7 @@ fn bob_receives_secret_message(
 fn test_serde_encrypt_shared_key() -> Result<(), Error> {
     // Both Alice and Bob have this key secretly.
     const SHARED_KEY: [u8; 32] = [42; 32];
-    let shared_key = SharedKey::from_slice(&SHARED_KEY);
+    let shared_key = SharedKey::from_array(SHARED_KEY);
 
     let secret_message = alice_sends_secret_message(&shared_key)?;
     let revealed_message = bob_receives_secret_message(secret_message, &shared_key)?;
