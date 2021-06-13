@@ -1,13 +1,9 @@
 name: release
 
 on:
-  # push:
-  #   tags:
-  #     - '*'
-  pull_request:
-    types:
-      - opened
-      - synchronize
+  push:
+    tags:
+      - '*'
 
 jobs:
   release-crate:
