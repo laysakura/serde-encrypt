@@ -1,6 +1,7 @@
 //! Traits to enable encrypted-serialization to your struct/enum.
 
-mod impl_detail;
+pub(in crate::traits) mod impl_detail;
+
 mod serde_encrypt_public_key;
 mod serde_encrypt_shared_key;
 

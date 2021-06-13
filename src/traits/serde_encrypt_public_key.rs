@@ -1,10 +1,7 @@
-use core::ops::DerefMut;
-
 use crate::{
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
     msg::EncryptedMessage,
-    random::global_rng,
 };
 use alloc::{format, vec::Vec};
 use crypto_box::{
@@ -13,7 +10,7 @@ use crypto_box::{
 };
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use super::SerializedPlain;
+use super::{impl_detail::nonce::generate_nonce, SerializedPlain};
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
@@ -58,9 +55,7 @@ pub trait SerdeEncryptPublicKey {
     where
         Self: Serialize,
     {
-        let mut rng = global_rng().lock();
-
-        let nonce = crypto_box::generate_nonce(rng.deref_mut());
+        let nonce = generate_nonce();
         let sender_box = ChaChaBox::new(
             combined_key.receiver_public_key().as_ref(),
             combined_key.sender_private_key().as_ref(),

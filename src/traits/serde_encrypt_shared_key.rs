@@ -1,12 +1,10 @@
-use core::ops::DerefMut;
-
-use crate::{error::Error, key::shared_key::SharedKey, msg::EncryptedMessage, random::global_rng};
+use crate::{error::Error, key::shared_key::SharedKey, msg::EncryptedMessage};
 use alloc::{format, vec::Vec};
 use chacha20poly1305::XChaCha20Poly1305;
 use crypto_box::aead::{Aead, NewAead};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use super::SerializedPlain;
+use super::{impl_detail::nonce::generate_nonce, SerializedPlain};
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -56,9 +54,7 @@ pub trait SerdeEncryptSharedKey {
     where
         Self: Serialize,
     {
-        let mut rng = global_rng().lock();
-
-        let nonce = crypto_box::generate_nonce(rng.deref_mut());
+        let nonce = generate_nonce();
         let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
 
         let serial_plain = self.inner_serialize()?;
