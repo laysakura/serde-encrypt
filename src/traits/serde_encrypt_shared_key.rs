@@ -1,10 +1,12 @@
-use core::{marker::PhantomData, ops::DerefMut};
+use core::ops::DerefMut;
 
 use crate::{error::Error, key::shared_key::SharedKey, msg::EncryptedMessage, random::global_rng};
 use alloc::{format, vec::Vec};
 use chacha20poly1305::XChaCha20Poly1305;
 use crypto_box::aead::{Aead, NewAead};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
+
+use super::SerializedPlain;
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -98,7 +100,7 @@ pub trait SerdeEncryptSharedKey {
     fn decrypt_ref<'de>(
         encrypted_message: &EncryptedMessage,
         shared_key: &SharedKey,
-    ) -> Result<ToDeserialize<Self>, Error>
+    ) -> Result<SerializedPlain<Self>, Error>
     where
         Self: Sized + Deserialize<'de>,
     {
@@ -114,7 +116,7 @@ pub trait SerdeEncryptSharedKey {
             ))
         })?;
 
-        Ok(ToDeserialize::new(serial_plain))
+        Ok(SerializedPlain::new(serial_plain))
     }
 
     /// # Failures
@@ -126,39 +128,6 @@ pub trait SerdeEncryptSharedKey {
     {
         serde_cbor::to_vec(&self).map_err(|e| {
             Error::serialization_error(&format!("failed to serialize data by serde_cbor: {:?}", e))
-        })
-    }
-}
-
-/// TODO use in common with *_public_key.rs
-#[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub struct ToDeserialize<T> {
-    serialized_plain: Vec<u8>,
-    _type: PhantomData<T>,
-}
-
-impl<T> ToDeserialize<T> {
-    fn new(serialized_plain: Vec<u8>) -> Self {
-        Self {
-            serialized_plain,
-            _type: PhantomData::default(),
-        }
-    }
-
-    /// Deserialize to get plain message.
-    ///
-    /// # Failures
-    ///
-    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
-    pub fn deserialize<'de>(&'de self) -> Result<T, Error>
-    where
-        T: Sized + Deserialize<'de>,
-    {
-        serde_cbor::from_slice(&self.serialized_plain).map_err(|e| {
-            Error::deserialization_error(&format!(
-                "error on serde_cbor deserialization after decryption: {:?}",
-                e
-            ))
         })
     }
 }
