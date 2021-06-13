@@ -43,7 +43,7 @@ impl EncryptedMessage {
             let encrypted = serialized_encrypted_message.split_off(NONCE_SIZE);
             Self {
                 encrypted,
-                nonce: serialized_encrypted_message.try_into().expect("TODO"),
+                nonce: serialized_encrypted_message.try_into().expect("length already checked"),
             }
         }).ok_or_else(||
             Error::decryption_error("binary data to decrypt (and then deserialize) does not seem to have nonce data"))
