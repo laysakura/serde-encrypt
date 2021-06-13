@@ -9,7 +9,7 @@ license = "MIT OR Apache-2.0"
 name = "serde-encrypt"
 readme = "README.md"
 repository = "https://github.com/laysakura/serde-encrypt"
-version = "0.1.0-a2"
+version = "0.1.0"
 
 [dependencies]
 chacha20poly1305 = {version = "0.8", default-features = false, features = ["alloc", "xchacha20poly1305"]}
