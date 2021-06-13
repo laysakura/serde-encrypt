@@ -1,8 +1,7 @@
-use std::marker::PhantomData;
-
-use serde::{Deserialize, Serialize};
-
 use crate::error::Error;
+use alloc::{format, vec::Vec};
+use core::marker::PhantomData;
+use serde::{Deserialize, Serialize};
 
 /// Serialized plain-text to hold determine lifetime of `serde::Deserialize<'de>`.
 #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]

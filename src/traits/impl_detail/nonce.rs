@@ -1,8 +1,6 @@
-use std::ops::DerefMut;
-
-use chacha20poly1305::XNonce;
-
 use crate::random::global_rng;
+use chacha20poly1305::XNonce;
+use core::ops::DerefMut;
 
 pub(in crate::traits) fn generate_nonce() -> XNonce {
     let mut rng = global_rng().lock();
