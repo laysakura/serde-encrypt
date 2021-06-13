@@ -40,7 +40,7 @@ use super::{
 ///
 /// ## Generate and exchange shared key and encrypt struct with reference fields
 ///
-/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_shared_key_excryption_with_key_exchange.rs).
+/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_encryption_with_key_exchange.rs).
 ///
 /// # Algorithm
 ///
