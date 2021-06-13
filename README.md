@@ -1,8 +1,8 @@
 # serde-encrypt
 
 [![crates.io](https://img.shields.io/crates/v/serde-encrypt.svg)](https://crates.io/crates/serde-encrypt)
-[![CI](https://github.com/laysakura/serde-encrypt/workflows/CI/badge.svg?branch=main)](https://github.com/laysakura/serde-encrypt/actions)
 [![Crates.io](https://img.shields.io/crates/d/serde-encrypt?label=cargo%20installs)](https://crates.io/crates/serde-encrypt)
+[![ci](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml)
 ![MSRV](https://img.shields.io/badge/rustc-1.51+-lightgray.svg)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-APACHE)
