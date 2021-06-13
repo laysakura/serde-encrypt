@@ -1,0 +1,35 @@
+name: release
+
+on:
+  # push:
+  #   tags:
+  #     - '*'
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  release-crate:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+
+    - name: Check Git tag vs crate version
+      run: |
+        TAG=${GITHUB_REF/refs\/tags\//}
+        VERSION=$(grep '^version = ".*"$' Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
+        echo "Git tag: $TAG"
+        echo "Package version: $VERSION"
+        test "$VERSION" = "$TAG"
+
+    - name: Install stable Rust
+      uses: actions-rs/toolchain@v1
+      with:
+          toolchain: stable
+          override: true
+
+    - name: publish to crate.io
+      uses: katyo/publish-crates@v1
+      with:
+          registry-token: ${{ secrets.CRATE_IO_SECRET }}
