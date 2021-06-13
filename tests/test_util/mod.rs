@@ -6,6 +6,7 @@ use alloc::vec::Vec;
 use core::fmt::Debug;
 
 pub mod serde_encrypt_public_key;
+pub mod serde_encrypt_shared_key;
 
 pub fn assert_no_duplicate<T>(generator: impl Fn() -> T, n_generate: usize)
 where

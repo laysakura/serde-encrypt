@@ -27,7 +27,7 @@ fn test_serde_encrypt_public_key_unit_struct() -> Result<(), Error> {
     impl SerdeEncryptPublicKey for Unit {}
 
     let msg = Unit;
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -40,7 +40,7 @@ fn test_serde_encrypt_public_key_primitive_type_fixed_len() -> Result<(), Error>
     impl SerdeEncryptPublicKey for I32 {}
 
     let msg = I32(42);
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -53,7 +53,7 @@ fn test_serde_encrypt_public_key_primitive_type_unbound_len() -> Result<(), Erro
     impl SerdeEncryptPublicKey for MyString {}
 
     let msg = MyString("MyString".to_string());
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -66,7 +66,7 @@ fn test_serde_encrypt_public_key_tuple_struct() -> Result<(), Error> {
     impl SerdeEncryptPublicKey for Tuple {}
 
     let msg = Tuple(42, 4242, 424242);
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -99,13 +99,13 @@ fn test_serde_encrypt_public_key_enum() -> Result<(), Error> {
         method: "get_foo".into(),
         params: Params,
     };
-    enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
-    enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -139,13 +139,13 @@ fn test_serde_encrypt_public_key_enum_tagged() -> Result<(), Error> {
         method: "get_foo".into(),
         params: Params,
     };
-    enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
-    enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -179,13 +179,13 @@ fn test_serde_encrypt_public_key_enum_adjacently_tagged() -> Result<(), Error> {
         method: "get_foo".into(),
         params: Params,
     };
-    enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
-    enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -219,13 +219,13 @@ fn test_serde_encrypt_public_key_enum_untagged() -> Result<(), Error> {
         method: "get_foo".into(),
         params: Params,
     };
-    enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_request, &sender_combined_key, &receiver_combined_key)?;
 
     let msg_response = Message::Response {
         id: "1".into(),
         result: Value,
     };
-    enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_response, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -247,7 +247,7 @@ fn test_serde_encrypt_public_key_skip_deserializing() -> Result<(), Error> {
         b: 42,
         c: 42,
     };
-    let receive_msg = enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
+    let receive_msg = public_key_enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
 
     assert_eq!(msg.a, receive_msg.a);
     assert_eq!(msg.b, receive_msg.b);
@@ -310,7 +310,7 @@ fn test_serde_encrypt_public_key_skip_deserializing_and_custom_default() -> Resu
         timeout: Timeout(12345),
         priority: Priority::ExtraHigh,
     };
-    let receive_msg = enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
+    let receive_msg = public_key_enc_dec(&msg, &sender_combined_key, &receiver_combined_key)?;
 
     // all fields from sender are skipped deserialization
     assert_eq!(receive_msg.resource, default_resource());
@@ -362,7 +362,7 @@ fn test_serde_encrypt_public_key_flatten() -> Result<(), Error> {
             total: 256,
         },
     };
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -401,10 +401,10 @@ fn test_serde_encrypt_public_key_serialize_enum_as_number() -> Result<(), Error>
     impl SerdeEncryptPublicKey for SmallPrime {}
 
     let msg_two = SmallPrime::Two;
-    enc_dec_assert_eq(&msg_two, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_two, &sender_combined_key, &receiver_combined_key)?;
 
     let msg_seven = SmallPrime::Seven;
-    enc_dec_assert_eq(&msg_seven, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg_seven, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -424,7 +424,7 @@ fn test_serde_encrypt_public_key_serialize_field_as_camel_case() -> Result<(), E
         first_name: "John".into(),
         last_name: "Doe".into(),
     };
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -443,7 +443,7 @@ fn test_serde_encrypt_public_key_skip_serializing_without_default() -> Result<()
     let msg_with_metadata = Resource {
         hash: "deadc0de".into(),
     };
-    let e = enc_dec(
+    let e = public_key_enc_dec(
         &msg_with_metadata,
         &sender_combined_key,
         &receiver_combined_key,
@@ -473,7 +473,7 @@ fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
         name: "a.txt".into(),
         metadata: vec![("size".into(), "123".into())].into_iter().collect(),
     };
-    enc_dec_assert_eq(
+    public_key_enc_dec_assert_eq(
         &msg_with_metadata,
         &sender_combined_key,
         &receiver_combined_key,
@@ -484,7 +484,7 @@ fn test_serde_encrypt_public_key_skip_serializing_if() -> Result<(), Error> {
         metadata: Map::new(),
     };
 
-    let e = enc_dec(
+    let e = public_key_enc_dec(
         &msg_without_metadata,
         &sender_combined_key,
         &receiver_combined_key,
@@ -540,7 +540,7 @@ fn test_serde_encrypt_public_key_remote_crate() -> Result<(), Error> {
         command_line: "sl".into(),
         wall_time: Duration { secs: 33, nanos: 4 },
     };
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -606,7 +606,7 @@ fn test_serde_encrypt_public_key_remote_crate_with_priv_fields() -> Result<(), E
         command_line: "sl".into(),
         wall_time: Duration::new(33, 4),
     };
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -674,7 +674,7 @@ fn test_serde_encrypt_public_key_remote_crate_with_helper() -> Result<(), Error>
     impl SerdeEncryptPublicKey for Unit {}
 
     let msg = Unit;
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -781,7 +781,7 @@ fn test_serde_encrypt_public_key_string_or_struct() -> Result<(), Error> {
     impl SerdeEncryptPublicKey for Unit {}
 
     let msg = Unit;
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }
 
@@ -845,6 +845,6 @@ fn test_serde_encrypt_public_key_convert_error_types() -> Result<(), Error> {
             resource: "arn:aws:s3:::example_bucket".to_owned(),
         },
     };
-    enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
+    public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key)?;
     Ok(())
 }

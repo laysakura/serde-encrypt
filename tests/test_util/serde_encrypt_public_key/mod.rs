@@ -43,7 +43,7 @@ pub fn mk_combined_keys<'s, 'r>(
     (sender_combined_key, receiver_combined_key)
 }
 
-pub fn enc_dec<T>(
+pub fn public_key_enc_dec<T>(
     sender_msg: &T,
     sender_combined_key: &SenderCombinedKey,
     receiver_combined_key: &ReceiverCombinedKey,
@@ -55,7 +55,7 @@ where
     T::decrypt_owned(&enc, receiver_combined_key)
 }
 
-pub fn enc_dec_assert_eq<T>(
+pub fn public_key_enc_dec_assert_eq<T>(
     sender_msg: &T,
     sender_combined_key: &SenderCombinedKey,
     receiver_combined_key: &ReceiverCombinedKey,
@@ -63,7 +63,7 @@ pub fn enc_dec_assert_eq<T>(
 where
     T: SerdeEncryptPublicKey + Sized + Serialize + DeserializeOwned + PartialEq + fmt::Debug,
 {
-    let receiver_msg = enc_dec(sender_msg, sender_combined_key, receiver_combined_key)?;
+    let receiver_msg = public_key_enc_dec(sender_msg, sender_combined_key, receiver_combined_key)?;
     assert_eq!(sender_msg, &receiver_msg);
     Ok(())
 }
