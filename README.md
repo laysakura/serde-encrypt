@@ -141,7 +141,7 @@ Here is a list of what `std` featue brings to you.
 
 ## Changelog
 
-See [CHANGES.md](https://github.com/laysakura/serde-encrypt/blob/master/CHANGES.md).
+See [CHANGELOG.md](https://github.com/laysakura/serde-encrypt/blob/master/CHANGELOG.md).
 
 ## License
 
