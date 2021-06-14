@@ -32,6 +32,9 @@ jobs:
             task: build test
           - name: doc
             task: doc
+          - name: codecov
+            task: lcov
+            install-grcov: true
           - name: os-less-build
             task: os-less-build
             rust-free: true  # Rust is installed inside task
@@ -54,6 +57,12 @@ jobs:
           - rust: 1.51.0
             make:
               name: doc
+          - rust: stable
+            make:
+              name: codecov
+          - rust: 1.51.0
+            make:
+              name: codecov
     env:
       RUST_BACKTRACE: full
       CACHE_RESET_KEY: 20210611-01
@@ -94,8 +103,19 @@ jobs:
           mv -f /tmp/cargo-make/${CARGO_MAKE_FILE_BASE}/cargo-make $HOME/.local/bin/cargo-make
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Install grcov
+        if: ${{ ! matrix.install-grcov }}
+        run: |
+          rustup component add llvm-tools-preview
+          cargo install grcov
+
       - name: ${{ matrix.make.name }}
         run: |
           for task in ${{ matrix.make.task }} ; do
             cargo make ${task}
           done
+
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_SECRET }}
+          files: ./lcov.info
