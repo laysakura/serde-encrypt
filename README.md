@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-APACHE)
 
-:closed_lock_with_key: **Encrypts all the `Serialize`.**
+🔐 **Encrypts all the `Serialize`.**
 
 ```text
                Alice                                         Bob
