@@ -32,4 +32,5 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Unreleased]: https://github.com/laysakura/serde-encrypt/compare/0.1.1...HEAD
 [Released]: https://github.com/laysakura/serde-encrypt/releases
+[0.2.0]: https://github.com/laysakura/serde-encrypt/compare/0.1.1...0.2.0
 [0.1.1]: https://github.com/laysakura/serde-encrypt/releases/0.1.1
