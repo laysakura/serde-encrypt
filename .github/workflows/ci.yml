@@ -110,7 +110,7 @@ jobs:
           GRCOV_VERSION: 0.8.0
         run: |
           GRCOV_FILE_BASE=grcov-linux-x86_64
-          curl -L ${BASE_URL}/v${GRCOV_VERSION}/${GRCOV_FILE_BASE}.tar.bz2 -- output /tmp/grcov.tar.bz2
+          curl -L "${BASE_URL}/v${GRCOV_VERSION}/${GRCOV_FILE_BASE}.tar.bz2" --output /tmp/grcov.tar.bz2
           tar xvf /tmp/grcov.tar.bz2 --directory=$HOME/.local/bin/
           grcov --version
 
