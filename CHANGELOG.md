@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [0.2.0] - 2021-06-14
+
+### Added
+
+- `EncryptedMessage::nonce()` getter method.
+- `EncryptedMessage::encrypted()` getter method.
+
 ## [0.1.1] - 2021-06-14
 
 ### Added
