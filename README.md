@@ -139,6 +139,10 @@ Here is a list of what `std` featue brings to you.
 
 - `std::error::Error` trait implementation to `serde_encrypt::error::Error`.
 
+## Changelog
+
+See [CHANGES.md](https://github.com/laysakura/serde-encrypt/blob/master/CHANGES.md).
+
 ## License
 
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or [MIT license](LICENSE-MIT) at your option.
