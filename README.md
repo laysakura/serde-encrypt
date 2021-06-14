@@ -3,8 +3,9 @@
 [![crates.io](https://img.shields.io/crates/v/serde-encrypt.svg)](https://crates.io/crates/serde-encrypt)
 [![Crates.io](https://img.shields.io/crates/d/serde-encrypt?label=cargo%20installs)](https://crates.io/crates/serde-encrypt)
 [![docs.rs](https://img.shields.io/badge/API%20doc-docs.rs-blueviolet)](https://docs.rs/serde-encrypt)
-[![ci](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml)
 ![MSRV](https://img.shields.io/badge/rustc-1.51+-lightgray.svg)
+[![ci](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/laysakura/serde-encrypt/branch/main/graph/badge.svg?token=XI0IR5QVU3)](https://codecov.io/gh/laysakura/serde-encrypt)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-APACHE)
 
