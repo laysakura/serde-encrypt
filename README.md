@@ -94,7 +94,7 @@ After your peer gets the binary, he or she can decrypt and deserialize it to `Me
 | deterministic? _(*1)_ | no                      | no                      |
 | performance           | high                    | low                     |
 
-(*1) Deterministic encryptions always produce the same cipher-text from a given plain-text. Usable for equal-matching in cipher-text (e.g. RDBMS's encrypted index eq-search).
+_(*1) Deterministic encryptions always produce the same cipher-text from a given plain-text. Usable for equal-matching in cipher-text (e.g. RDBMS's encrypted index eq-search)._
 
 ### Encryption algorithm
 
@@ -107,7 +107,7 @@ After your peer gets the binary, he or she can decrypt and deserialize it to `Me
 | Rng _(*3)_ for nonce | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html)                       | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html) |
 | Implementation       | [XChaCha20Poly1305](https://docs.rs/chacha20poly1305/0.8.0/chacha20poly1305/struct.XChaCha20Poly1305.html) | [ChaChaBox](https://docs.rs/crypto_box/0.6.0/crypto_box/struct.ChaChaBox.html)       |
 
-_(*2) "Number used once": to make encryption non-deterministic. Although nonce for each encryption is not secret, nonce among different encryption must be different in order for attackers to harder to guess plain-text._
+_(*2) "Number used once": to make encryption non-deterministic. Although nonce for each encryption is not secret, nonce among different encryption must be different in order for attackers to get harder to guess plain-text._
 
 _(*3) Random number generator._
 
