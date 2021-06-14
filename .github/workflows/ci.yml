@@ -121,7 +121,7 @@ jobs:
           done
 
       - name: Upload lcov to codecov
-        if: ${{ matrix.install-grcov }}
+        if: ${{ matrix.make.install-grcov }}
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_SECRET }}
