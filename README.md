@@ -32,7 +32,7 @@
 
 serde-encrypt encrypts/decrypts any `strct`s and `enum`s that implements `serde::{Serialize, Deserialize`}.
 
-serde-encrypt supports both **shared-key encryption** (XChaCha20Poly1305) and **public-key encryption** (X25519XChaCha20Poly1305), both of which are considered to be secure enough.
+serde-encrypt supports both **shared-key encryption** (XChaCha20-Poly1305) and **public-key encryption** (XChaCha20-Poly1305 with X25513 key-exchange), both of which are considered to be secure enough.
 
 serde-encrypt is optionally available in **no_std** environments.
 
@@ -83,6 +83,61 @@ After your peer gets the binary, he or she can decrypt and deserialize it to `Me
 - 👀 [Encrypts struct with reference fields](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_public_key_struct_with_reference.rs)
 - 🔑 [Generates shared-key and safely exchange it to your peer. And then, encrypt/decrypt messages using the shared-key.](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_encryption_with_key_exchange.rs)
 - 📚 [Encrypts/Decrypts complex serde types](https://github.com/laysakura/serde-encrypt/blob/main/tests/feat_serde_types.rs)
+
+## Features and uses cases
+
+### Feature comparison
+
+|                       | `SerdeEncryptSharedKey` | `SerdeEncryptPublicKey` |
+| --------------------- | ----------------------- | ----------------------- |
+| (a)symmetric?         | symmetric               | asymmetric              |
+| deterministic? _(*1)_ | no                      | no                      |
+| performance           | high                    | low                     |
+
+(*1) Deterministic encryptions always produce the same cipher-text from a given plain-text. Usable for equal-matching in cipher-text (e.g. RDBMS's encrypted index eq-search).
+
+### Encryption algorithm
+
+|                      | `SerdeEncryptSharedKey`                                                                                    | `SerdeEncryptPublicKey`                                                              |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| key exchange         | -                                                                                                          | X25519                                                                               |
+| encryption           | XChaCha20                                                                                                  | XChaCha20                                                                            |
+| message auth         | Poly1305                                                                                                   | Poly1305                                                                             |
+| nonce _(*2)_         | XSalsa20 (random 24-byte)                                                                                  | XSalsa20 (random 24-byte)                                                            |
+| Rng _(*3)_ for nonce | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html)                       | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html) |
+| Implementation       | [XChaCha20Poly1305](https://docs.rs/chacha20poly1305/0.8.0/chacha20poly1305/struct.XChaCha20Poly1305.html) | [ChaChaBox](https://docs.rs/crypto_box/0.6.0/crypto_box/struct.ChaChaBox.html)       |
+
+_(*2) "Number used once": to make encryption non-deterministic. Although nonce for each encryption is not secret, nonce among different encryption must be different in order for attackers to harder to guess plain-text._
+
+_(*3) Random number generator._
+
+### Serialization
+
+|               | `SerdeEncryptSharedKey`                               | `SerdeEncryptPublicKey`                               |
+| ------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| serialization | [CBOR](https://docs.rs/serde_cbor/0.11.1/serde_cbor/) | [CBOR](https://docs.rs/serde_cbor/0.11.1/serde_cbor/) |
+
+### Use cases
+
+- `SerdeEncryptedSharedKey`
+  - Both message sender and receiver already hold shared key.
+  - Needs shared-key exchange via any safe way but wants high-speed encryption/decryption (e.g. communicates large amounts of messages).
+- `SerdeEncryptedSharedKey`
+  - To exchange `SharedKey`.
+  - Quickly sends/receive small amounts of messages without secret shared key.
+
+### std vs no_std
+
+This crate comes with `std` feature by default. To enable `no_std` mode, specify `default-features = false` in your `Cargo.toml`.
+
+```toml Cargo.toml
+[dependencies]
+serde-encrypt = {version = "(version)", default-features = false}
+```
+
+Here is a list of what `std` featue brings to you.
+
+- `std::error::Error` trait implementation to `serde_encrypt::error::Error`.
 
 ## License
 
