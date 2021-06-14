@@ -70,7 +70,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Rust ${{ matrix.rust }}
-        if: ${{ ! matrix.rust-free }}
+        if: ${{ ! matrix.make.rust-free }}
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
@@ -79,7 +79,7 @@ jobs:
           override: true
 
       - name: Cache cargo registry
-        if: ${{ ! matrix.rust-free }}
+        if: ${{ ! matrix.make.rust-free }}
         uses: actions/cache@v2
         continue-on-error: false
         with:
@@ -104,7 +104,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install grcov
-        if: ${{ matrix.install-grcov }}
+        if: ${{ matrix.make.install-grcov }}
         env:
           BASE_URL: https://github.com/mozilla/grcov/releases/download
           GRCOV_VERSION: 0.8.0
