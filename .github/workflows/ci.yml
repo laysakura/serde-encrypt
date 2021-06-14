@@ -75,7 +75,7 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           profile: minimal
-          components: rustfmt, clippy
+          components: rustfmt, clippy, llvm-tools-preview
           override: true
 
       - name: Cache cargo registry
@@ -105,9 +105,14 @@ jobs:
 
       - name: Install grcov
         if: ${{ ! matrix.install-grcov }}
+        env:
+          BASE_URL: https://github.com/mozilla/grcov/releases/download
+          GRCOV_VERSION: 0.8.0
         run: |
-          rustup component add llvm-tools-preview
-          cargo install grcov
+          GRCOV_FILE_BASE=grcov-linux-x86_64
+          curl -L ${BASE_URL}/${GRCOV_VERSION}/${GRCOV_FILE_BASE}.tar.bz2 -- output /tmp/grcov.tar.bz2
+          tar xvf /tmp/grcov.tar.bz2 --directory=$HOME/.local/bin/
+          grcov --version
 
       - name: ${{ matrix.make.name }}
         run: |
@@ -115,7 +120,9 @@ jobs:
             cargo make ${task}
           done
 
-      - uses: codecov/codecov-action@v1
+      - name: Upload lcov to codecov
+        if: ${{ ! matrix.install-grcov }}
+        uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_SECRET }}
           files: ./lcov.info
