@@ -2,6 +2,9 @@
 default_to_workspace = false
 skip_core_tasks = true
 
+[env]
+PROJ_NAME = "serde-encrypt"
+
 [tasks.format]
 script = ['''
 #!/usr/bin/env bash -eux
@@ -38,4 +41,17 @@ script = ['''
 #!/usr/bin/env bash -eux
 rustup target add aarch64-unknown-none
 RUSTFLAGS='-D warnings' cargo build --no-default-features --target=aarch64-unknown-none
+''']
+
+[tasks.lcov]
+script = ['''
+#!/usr/bin/env bash -eux
+rm -rf target/debug/deps/${PROJ_NAME}-*
+export CARGO_INCREMENTAL=0
+export RUSTFLAGS="-Zprofile"
+
+cargo +nightly build --verbose
+cargo +nightly test --verbose
+
+grcov ./target/debug/deps -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info
 ''']

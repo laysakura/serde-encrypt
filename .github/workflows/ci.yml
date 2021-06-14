@@ -32,6 +32,9 @@ jobs:
             task: build test
           - name: doc
             task: doc
+          - name: codecov
+            task: lcov
+            install-grcov: true
           - name: os-less-build
             task: os-less-build
             rust-free: true  # Rust is installed inside task
@@ -54,6 +57,12 @@ jobs:
           - rust: 1.51.0
             make:
               name: doc
+          - rust: stable
+            make:
+              name: codecov
+          - rust: 1.51.0
+            make:
+              name: codecov
     env:
       RUST_BACKTRACE: full
       CACHE_RESET_KEY: 20210611-01
@@ -61,16 +70,16 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Rust ${{ matrix.rust }}
-        if: ${{ ! matrix.rust-free }}
+        if: ${{ ! matrix.make.rust-free }}
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
           profile: minimal
-          components: rustfmt, clippy
+          components: rustfmt, clippy, llvm-tools-preview
           override: true
 
       - name: Cache cargo registry
-        if: ${{ ! matrix.rust-free }}
+        if: ${{ ! matrix.make.rust-free }}
         uses: actions/cache@v2
         continue-on-error: false
         with:
@@ -94,8 +103,26 @@ jobs:
           mv -f /tmp/cargo-make/${CARGO_MAKE_FILE_BASE}/cargo-make $HOME/.local/bin/cargo-make
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Install grcov
+        if: ${{ matrix.make.install-grcov }}
+        env:
+          BASE_URL: https://github.com/mozilla/grcov/releases/download
+          GRCOV_VERSION: 0.8.0
+        run: |
+          GRCOV_FILE_BASE=grcov-linux-x86_64
+          curl -L "${BASE_URL}/v${GRCOV_VERSION}/${GRCOV_FILE_BASE}.tar.bz2" --output /tmp/grcov.tar.bz2
+          tar xvf /tmp/grcov.tar.bz2 --directory=$HOME/.local/bin/
+          grcov --version
+
       - name: ${{ matrix.make.name }}
         run: |
           for task in ${{ matrix.make.task }} ; do
             cargo make ${task}
           done
+
+      - name: Upload lcov to codecov
+        if: ${{ matrix.make.install-grcov }}
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_SECRET }}
+          files: ./lcov.info
