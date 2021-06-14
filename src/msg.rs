@@ -49,16 +49,18 @@ impl EncryptedMessage {
             Error::decryption_error("binary data to decrypt (and then deserialize) does not seem to have nonce data"))
     }
 
-    pub(crate) fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
-        Self { encrypted, nonce }
-    }
-
-    pub(crate) fn nonce(&self) -> &[u8] {
+    /// Ref to XChaCha20 nonce (192-bit / 24-byte) used to create this encrypted message.
+    pub fn nonce(&self) -> &[u8] {
         &self.nonce
     }
 
-    pub(crate) fn encrypted(&self) -> &[u8] {
+    /// Ref to encrypted message.
+    pub fn encrypted(&self) -> &[u8] {
         &self.encrypted
+    }
+
+    pub(crate) fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
+        Self { encrypted, nonce }
     }
 }
 
