@@ -1,0 +1,35 @@
+[package]
+authors = ["Sho Nakatani <lay.sakura@gmail.com>"]
+categories = ["no-std", "cryptography", "encoding"]
+description = "Encrypts all the Serialize"
+documentation = "https://docs.rs/serde-encrypt"
+edition = "2018"
+keywords = ["libsodium", "xsalsa20poly1305", "x25519", "serde", "serde-encrypt"] # up to 5 keywords, each keyword should have <= 20 chars
+license = "MIT OR Apache-2.0"
+name = "serde-encrypt"
+readme = "../README.md"
+repository = "https://github.com/laysakura/serde-encrypt"
+version = "0.2.0"
+
+[dependencies]
+serde-encrypt-core = {path = "../serde-encrypt-core", default-features = false}
+
+serde = {version = "1.0", default-features = false}
+serde_cbor = {version = "0.11", default-features = false, features = ["alloc"]}
+
+[dev-dependencies]
+serde = {version = "1.0", default-features = false, features = ["derive", "alloc"]}# alloc for Vec, String
+serde_json = {version = "1.0", default-features = false, features = ["alloc"]}
+serde_repr = "0.1"
+
+pretty_assertions = "0.7"
+
+void = "1.0"
+
+[features]
+default = ["std"]
+std = [
+  "serde-encrypt-core/std",
+  "serde/std",
+  "serde_cbor/std",
+]

@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Changed
+
+- `serde-encrypt` crate is split into `serde-encrypt-core` (no dependencies to serde) and `serde-encrypt` (serde dependent layer). Users should depend only on `serde-encrypt` (structures from `-core` are re-exported).
+
+- `SerdeEncryptPublicKey` and `SerdeEncryptSharedKey` takes associated type `S` (serializer). Currently `CborSerializer` is available. Crate users can implement serializers by themselves if necessary.
+
+- Some `struct`s/`enum`s moved into differently named modules. Shows where into they are moved.
+  - `serde_encrypt::Error`
+  - `serde_encrypt::ErrorKind`
+  - `serde_encrypt::EncryptedMessages`
+  - `serde_encrypt::SenderCombinedKey`
+  - `serde_encrypt::ReceiverCombinedKey`
+  - `serde_encrypt::SenderKeyPair`
+  - `serde_encrypt::ReceiverKeyPair`
+  - `serde_encrypt::AsSharedKey`
+
 ---
 
 ## [Released]
