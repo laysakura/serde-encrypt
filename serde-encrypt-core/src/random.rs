@@ -1,4 +1,4 @@
-//! no_std random number generator
+//! no_std random seed.
 
 use core::convert::TryInto;
 
@@ -7,13 +7,18 @@ use rand_chacha::{rand_core::SeedableRng, ChaCha12Rng};
 use spin::{Lazy, Mutex};
 
 static GLOBAL_RNG: Lazy<Mutex<ChaCha12Rng>> =
-    Lazy::new(|| Mutex::new(ChaCha12Rng::from_seed(gen_seed())));
+    Lazy::new(|| Mutex::new(ChaCha12Rng::from_seed(gen_seed_mem_addr())));
 
 pub(crate) fn global_rng() -> &'static Mutex<ChaCha12Rng> {
     &*GLOBAL_RNG
 }
 
-fn gen_seed() -> [u8; 32] {
+/// Generate random seed from memory address.
+///
+/// Note that this is for no_std env.
+/// If you use `SeedableRng::from_entropy` would more secure.
+/// E.g. Single process environments may have deterministic memory address.
+fn gen_seed_mem_addr() -> [u8; 32] {
     let a0 = gen_rand_u64_mem_addr();
     let a1 = a0 ^ a0.rotate_right(13);
     let a2 = a1 ^ a1.rotate_right(17);
