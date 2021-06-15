@@ -11,4 +11,4 @@ pub mod serialize;
 pub mod shared_key;
 pub mod traits;
 
-pub use serde_encrypt_core::error::Error;
+pub use serde_encrypt_core::{encrypt::encrypted_message::EncryptedMessage, error::Error};

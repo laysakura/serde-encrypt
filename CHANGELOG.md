@@ -8,7 +8,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ### Changed
 
-- `serde_error::error::Error` to `serde_error::Error`.
+- Some `struct`s/`enum`s moved into differently named modules. Shows where into they are moved.
+  - `serde_encrypt::Error`
+  - `serde_encrypt::EncryptedMessages`
 
 ---
 

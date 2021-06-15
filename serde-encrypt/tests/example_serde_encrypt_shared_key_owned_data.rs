@@ -2,11 +2,10 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
-    serialize::impls::CborSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey, Error,
+    serialize::impls::CborSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey,
+    EncryptedMessage, Error,
 };
-use serde_encrypt_core::{
-    encrypt::encrypted_message::EncryptedMessage, key::as_shared_key::AsSharedKey,
-};
+use serde_encrypt_core::key::as_shared_key::AsSharedKey;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Message {

@@ -19,15 +19,12 @@ use serde_encrypt::{
     serialize::{impls::CborSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
-    Error,
+    EncryptedMessage, Error,
 };
-use serde_encrypt_core::{
-    encrypt::encrypted_message::EncryptedMessage,
-    key::{
-        as_shared_key::AsSharedKey,
-        combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-        key_pair::{ReceiverKeyPair, SenderKeyPair},
-    },
+use serde_encrypt_core::key::{
+    as_shared_key::AsSharedKey,
+    combined_key::{ReceiverCombinedKey, SenderCombinedKey},
+    key_pair::{ReceiverKeyPair, SenderKeyPair},
 };
 
 impl<'a> SerdeEncryptSharedKey for Message<'a> {

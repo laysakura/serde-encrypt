@@ -1,9 +1,6 @@
-use crate::Error;
-use crate::{serialize::TypedSerialized, shared_key::SharedKey};
+use crate::{serialize::TypedSerialized, shared_key::SharedKey, EncryptedMessage, Error};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_encrypt_core::encrypt::{
-    encrypted_message::EncryptedMessage, plain_message_shared_key::PlainMessageSharedKey,
-};
+use serde_encrypt_core::encrypt::plain_message_shared_key::PlainMessageSharedKey;
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
