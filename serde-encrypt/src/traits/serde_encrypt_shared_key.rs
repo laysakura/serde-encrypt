@@ -6,9 +6,7 @@ use serde_encrypt_core::{
     error::Error,
 };
 
-use crate::shared_key::SharedKey;
-
-use super::{impl_detail, SerializedPlain};
+use crate::{serialize::TypedSerialized, shared_key::SharedKey};
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -48,6 +46,9 @@ use super::{impl_detail, SerializedPlain};
 /// - Encryption: XChaCha20
 /// - Message authentication: Poly1305 MAC
 pub trait SerdeEncryptSharedKey {
+    /// Serializer implementation
+    type S: TypedSerialized<T = Self>;
+
     /// Serialize and encrypt.
     ///
     /// # Failures
@@ -58,8 +59,8 @@ pub trait SerdeEncryptSharedKey {
     where
         Self: Serialize,
     {
-        let serial_plain = impl_detail::serialize(&self)?;
-        let plain_msg = PlainMessageSharedKey::from(serial_plain);
+        let serialized = Self::S::serialize(&self)?;
+        let plain_msg = PlainMessageSharedKey::from(serialized.into_vec());
         plain_msg.encrypt(shared_key)
     }
 
@@ -74,10 +75,10 @@ pub trait SerdeEncryptSharedKey {
         shared_key: &SharedKey,
     ) -> Result<Self, Error>
     where
-        Self: Sized + DeserializeOwned,
+        Self: DeserializeOwned,
     {
-        let serial_plain = Self::decrypt_ref(encrypted_message, shared_key)?;
-        serial_plain.deserialize()
+        let serialized = Self::decrypt_ref(encrypted_message, shared_key)?;
+        serialized.deserialize()
     }
 
     /// Just decrypts cipher-text. Returned data must be deserialized later.
@@ -90,11 +91,11 @@ pub trait SerdeEncryptSharedKey {
     fn decrypt_ref<'de>(
         encrypted_message: &EncryptedMessage,
         shared_key: &SharedKey,
-    ) -> Result<SerializedPlain<Self>, Error>
+    ) -> Result<Self::S, Error>
     where
-        Self: Sized + Deserialize<'de>,
+        Self: Deserialize<'de>,
     {
         let plain_msg = PlainMessageSharedKey::decrypt(encrypted_message, shared_key)?;
-        Ok(SerializedPlain::new(plain_msg.into()))
+        Ok(Self::S::new(plain_msg.into()))
     }
 }

@@ -7,7 +7,7 @@ use serde_encrypt_core::{
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
 };
 
-use super::{impl_detail, SerializedPlain};
+use crate::serialize::TypedSerialized;
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
@@ -41,7 +41,10 @@ use super::{impl_detail, SerializedPlain};
 /// - Public-key exchange: X25519
 /// - Encryption: XChaCha20
 /// - Message authentication: Poly1305 MAC
-pub trait SerdeEncryptPublicKey {
+pub trait SerdeEncryptPublicKey: Sized {
+    /// Serializer implementation
+    type S: TypedSerialized<T = Self>;
+
     /// Serialize and encrypt.
     ///
     /// # Failures
@@ -52,8 +55,8 @@ pub trait SerdeEncryptPublicKey {
     where
         Self: Serialize,
     {
-        let serial_plain = impl_detail::serialize(&self)?;
-        let plain_msg = PlainMessagePublicKey::from(serial_plain);
+        let serialized = Self::S::serialize(&self)?;
+        let plain_msg = PlainMessagePublicKey::from(serialized.into_vec());
         plain_msg.encrypt(combined_key)
     }
 
@@ -68,10 +71,10 @@ pub trait SerdeEncryptPublicKey {
         combined_key: &ReceiverCombinedKey,
     ) -> Result<Self, Error>
     where
-        Self: Sized + DeserializeOwned,
+        Self: DeserializeOwned,
     {
-        let serial_plain = Self::decrypt_ref(encrypted_message, combined_key)?;
-        serial_plain.deserialize()
+        let serialized = Self::decrypt_ref(encrypted_message, combined_key)?;
+        serialized.deserialize()
     }
 
     /// Just decrypts cipher-text. Returned data must be deserialized later.
@@ -84,11 +87,11 @@ pub trait SerdeEncryptPublicKey {
     fn decrypt_ref<'de>(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
-    ) -> Result<SerializedPlain<Self>, Error>
+    ) -> Result<Self::S, Error>
     where
-        Self: Sized + Deserialize<'de>,
+        Self: Deserialize<'de>,
     {
         let plain_msg = PlainMessagePublicKey::decrypt(encrypted_message, combined_key)?;
-        Ok(SerializedPlain::new(plain_msg.into()))
+        Ok(Self::S::new(plain_msg.into()))
     }
 }

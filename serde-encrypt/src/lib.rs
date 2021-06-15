@@ -7,5 +7,6 @@
 
 extern crate alloc;
 
+pub mod serialize;
 pub mod shared_key;
 pub mod traits;

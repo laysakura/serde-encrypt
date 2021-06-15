@@ -8,6 +8,7 @@
 mod test_util;
 
 use serde::{Deserialize, Serialize};
+use serde_encrypt::serialize::impls::CborSerializer;
 use serde_encrypt::shared_key::SharedKey;
 use serde_encrypt::traits::SerdeEncryptPublicKey;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
@@ -22,7 +23,9 @@ struct Message(String);
 fn test_serde_encrypt_public_key_in_a_process() {
     combined_keys_gen!(sender_combined_key, _x);
 
-    impl SerdeEncryptPublicKey for Message {}
+    impl SerdeEncryptPublicKey for Message {
+        type S = CborSerializer<Self>;
+    }
     assert_no_duplicate(
         || {
             let msg = Message("same message".into());
@@ -37,7 +40,9 @@ fn test_serde_encrypt_public_key_in_a_process() {
 fn test_serde_encrypt_shared_key_in_a_process() {
     let shared_key = SharedKey::generate();
 
-    impl SerdeEncryptSharedKey for Message {}
+    impl SerdeEncryptSharedKey for Message {
+        type S = CborSerializer<Self>;
+    }
     assert_no_duplicate(
         || {
             let msg = Message("same message".into());

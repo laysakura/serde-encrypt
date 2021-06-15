@@ -1,7 +1,7 @@
 //! Shows how to use SerdeEncryptPublicKey.
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::traits::SerdeEncryptPublicKey;
+use serde_encrypt::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey};
 use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
     error::Error,
@@ -17,7 +17,9 @@ struct Message {
     sender: String,
 }
 
-impl SerdeEncryptPublicKey for Message {}
+impl SerdeEncryptPublicKey for Message {
+    type S = CborSerializer<Self>;
+}
 
 fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> Result<Vec<u8>, Error> {
     let msg = Message {

@@ -1,7 +1,9 @@
 //! Shows how to use SerdeEncryptSharedKey.
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::{shared_key::SharedKey, traits::SerdeEncryptSharedKey};
+use serde_encrypt::{
+    serialize::impls::CborSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey,
+};
 use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage, error::Error, key::as_shared_key::AsSharedKey,
 };
@@ -12,7 +14,9 @@ struct Message {
     sender: String,
 }
 
-impl SerdeEncryptSharedKey for Message {}
+impl SerdeEncryptSharedKey for Message {
+    type S = CborSerializer<Self>;
+}
 
 fn alice_sends_secret_message(shared_key: &SharedKey) -> Result<Vec<u8>, Error> {
     let msg = Message {

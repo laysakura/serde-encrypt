@@ -1,7 +1,10 @@
 //! Shows how to use SerdeEncryptPublicKey for struct with reference fields.
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::traits::SerdeEncryptPublicKey;
+use serde_encrypt::{
+    serialize::{impls::CborSerializer, TypedSerialized},
+    traits::SerdeEncryptPublicKey,
+};
 use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
     error::Error,
@@ -23,7 +26,9 @@ struct Message<'a> {
     sender: &'a str,
 }
 
-impl<'a> SerdeEncryptPublicKey for Message<'a> {}
+impl<'a> SerdeEncryptPublicKey for Message<'a> {
+    type S = CborSerializer<Self>;
+}
 
 fn alice_sends_secret_message(combined_key: &SenderCombinedKey) -> Result<Vec<u8>, Error> {
     let msg = Message {

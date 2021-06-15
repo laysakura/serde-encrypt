@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 use serde_encrypt_core::key::as_shared_key::AsSharedKey;
 
-use crate::traits::SerdeEncryptPublicKey;
+use crate::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey};
 
 /// 32-byte key shared among sender and receiver secretly.
 ///
@@ -22,4 +22,6 @@ impl AsSharedKey for SharedKey {
     }
 }
 
-impl SerdeEncryptPublicKey for SharedKey {}
+impl SerdeEncryptPublicKey for SharedKey {
+    type S = CborSerializer<Self>;
+}

@@ -9,6 +9,7 @@ mod test_util;
 use alloc::{string::String, vec, vec::Vec};
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
+    serialize::impls::CborSerializer,
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
@@ -40,7 +41,9 @@ struct Users {
 fn test_serde_encrypt_public_key_nostd() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
-    impl SerdeEncryptPublicKey for Users {}
+    impl SerdeEncryptPublicKey for Users {
+        type S = CborSerializer<Self>;
+    }
 
     let msg = Users {
         users: vec![
@@ -67,7 +70,9 @@ fn test_serde_encrypt_public_key_nostd() -> Result<(), Error> {
 fn test_serde_encrypt_shared_key_nostd() -> Result<(), Error> {
     let shared_key = SharedKey::generate();
 
-    impl SerdeEncryptSharedKey for Users {}
+    impl SerdeEncryptSharedKey for Users {
+        type S = CborSerializer<Self>;
+    }
 
     let msg = Users {
         users: vec![
