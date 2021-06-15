@@ -116,9 +116,9 @@ _(*3) Random number generator._
 
 ### Serialization
 
-|               | `SerdeEncryptSharedKey`                               | `SerdeEncryptPublicKey`                               |
-| ------------- | ----------------------------------------------------- | ----------------------------------------------------- |
-| serialization | [CBOR](https://docs.rs/serde_cbor/0.11.1/serde_cbor/) | [CBOR](https://docs.rs/serde_cbor/0.11.1/serde_cbor/) |
+Crate users can choose and even implement by themselves serialize representations in design.
+
+Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is built-in.
 
 ### Use cases
 
