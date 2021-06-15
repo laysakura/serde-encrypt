@@ -13,7 +13,7 @@ use crate::random::global_rng;
 /// - shared key should be serialized and encrypted in order to be shared among peers
 /// - but this -core trait is serialization agnostic.
 ///
-/// So, implementators of this trait is expected to have `serde::{Serialize, Deserialize}` trait bounds.
+/// So, implementators of this trait is expected to have `serde::{Serialize, Deserialize}` and `SerdeSerializePublicKey` trait bounds.
 pub trait AsSharedKey {
     /// Constructor from secret bytes.
     fn from_array(key: [u8; 32]) -> Self
