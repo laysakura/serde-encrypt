@@ -1,4 +1,4 @@
-//! 
+//!
 
 use core::convert::TryInto;
 

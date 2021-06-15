@@ -9,7 +9,7 @@ use test_util::*;
 fn test_shared_key_distribution() {
     #[derive(PartialEq, Debug)]
     struct MySharedKey([u8; 32]);
-    
+
     impl AsSharedKey for MySharedKey {
         fn from_array(key: [u8; 32]) -> Self
         where
