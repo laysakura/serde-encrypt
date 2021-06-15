@@ -1,4 +1,4 @@
-//!
+//! no_std random number generator
 
 use core::convert::TryInto;
 
