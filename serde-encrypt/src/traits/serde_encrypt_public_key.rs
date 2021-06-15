@@ -35,7 +35,7 @@ use serde_encrypt_core::encrypt::plain_message_public_key::PlainMessagePublicKey
 /// - Public-key exchange: X25519
 /// - Encryption: XChaCha20
 /// - Message authentication: Poly1305 MAC
-pub trait SerdeEncryptPublicKey: Sized {
+pub trait SerdeEncryptPublicKey {
     /// Serializer implementation
     type S: TypedSerialized<T = Self>;
 
