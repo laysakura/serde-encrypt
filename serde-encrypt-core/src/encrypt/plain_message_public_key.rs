@@ -3,13 +3,14 @@
 use crate::{
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-    msg::EncryptedMessage,
     random::global_rng,
 };
 use alloc::vec::Vec;
 use chacha20poly1305::{aead::Payload, XNonce};
 use core::ops::DerefMut;
 use crypto_box::{aead::Aead, ChaChaBox};
+
+use super::encrypted_message::EncryptedMessage;
 
 /// Plain message structure serialized via serde.
 #[derive(Clone, Eq, PartialEq, Debug)]

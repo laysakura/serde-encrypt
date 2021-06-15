@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{shared_key::SharedKey, traits::SerdeEncryptSharedKey};
-use serde_encrypt_core::{error::Error, msg::EncryptedMessage};
+use serde_encrypt_core::{encrypt::encrypted_message::EncryptedMessage, error::Error};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Message {

@@ -20,12 +20,12 @@ use serde_encrypt::{
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
 use serde_encrypt_core::{
+    encrypt::encrypted_message::EncryptedMessage,
     error::Error,
     key::{
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
         key_pair::{ReceiverKeyPair, SenderKeyPair},
     },
-    msg::EncryptedMessage,
 };
 
 impl<'a> SerdeEncryptSharedKey for Message<'a> {}

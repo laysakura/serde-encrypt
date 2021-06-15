@@ -3,12 +3,12 @@
 use serde::{Deserialize, Serialize};
 use serde_encrypt::traits::SerdeEncryptPublicKey;
 use serde_encrypt_core::{
+    encrypt::encrypted_message::EncryptedMessage,
     error::Error,
     key::{
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
         key_pair::{ReceiverKeyPair, SenderKeyPair},
     },
-    msg::EncryptedMessage,
 };
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -1,6 +1,9 @@
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_encrypt_core::{
-    encrypt::plain_message_shared_key::PlainMessageSharedKey, error::Error, msg::EncryptedMessage,
+    encrypt::{
+        encrypted_message::EncryptedMessage, plain_message_shared_key::PlainMessageSharedKey,
+    },
+    error::Error,
 };
 
 use crate::shared_key::SharedKey;

@@ -10,6 +10,5 @@ extern crate alloc;
 pub mod encrypt;
 pub mod error;
 pub mod key;
-pub mod msg;
 
 pub(crate) mod random;

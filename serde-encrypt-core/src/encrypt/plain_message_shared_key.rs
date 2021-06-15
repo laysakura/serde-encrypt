@@ -2,12 +2,12 @@
 
 use core::ops::DerefMut;
 
-use crate::{
-    error::Error, key::shared_key_core::SharedKeyCore, msg::EncryptedMessage, random::global_rng,
-};
+use crate::{error::Error, key::shared_key_core::SharedKeyCore, random::global_rng};
 use alloc::{format, vec::Vec};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce};
 use crypto_box::aead::{Aead, NewAead};
+
+use super::encrypted_message::EncryptedMessage;
 
 /// Plain message structure serialized via serde.
 #[derive(Clone, Eq, PartialEq, Debug)]
