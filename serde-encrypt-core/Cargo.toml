@@ -2,20 +2,23 @@
 authors = ["Sho Nakatani <lay.sakura@gmail.com>"]
 categories = ["no-std", "cryptography", "encoding"]
 description = "Encrypts all the Serialize"
-documentation = "https://docs.rs/serde-encrypt"
+documentation = "https://docs.rs/serde-encrypt-core"
 edition = "2018"
 keywords = ["libsodium", "xsalsa20poly1305", "x25519", "serde", "serde-encrypt"] # up to 5 keywords, each keyword should have <= 20 chars
 license = "MIT OR Apache-2.0"
-name = "serde-encrypt"
+name = "serde-encrypt-core"
 readme = "TBD"
 repository = "https://github.com/laysakura/serde-encrypt"
 version = "0.2.0"
 
 [dependencies]
-serde-encrypt-core = {path = "../serde-encrypt-core", default-features = false}
+chacha20poly1305 = {version = "0.8", default-features = false, features = ["alloc", "xchacha20poly1305"]}
+crypto_box = {version = "0.6"}
 
-serde = {version = "1.0", default-features = false}
-serde_cbor = {version = "0.11", default-features = false, features = ["alloc"]}
+rand = {version = "0.8", default-features = false}
+rand_chacha = {version = "0.3", default-features = false}
+
+spin = {version = "0.9", default-features = false, features = ["spin_mutex", "lazy"]}
 
 [dev-dependencies]
 serde = {version = "1.0", default-features = false, features = ["derive", "alloc"]}# alloc for Vec, String
@@ -29,7 +32,7 @@ void = "1.0"
 [features]
 default = ["std"]
 std = [
-  "serde-encrypt-core/std",
-  "serde/std",
-  "serde_cbor/std",
+  "chacha20poly1305/std",
+  "rand_chacha/std",
+  "spin/std",
 ]

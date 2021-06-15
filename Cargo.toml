@@ -2,4 +2,5 @@
 
 members = [
   "serde-encrypt",
+  "serde-encrypt-core",
 ]

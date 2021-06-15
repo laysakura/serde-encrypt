@@ -25,6 +25,11 @@ pub struct EncryptedMessage {
 }
 
 impl EncryptedMessage {
+    /// Constructor
+    pub fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
+        Self { encrypted, nonce }
+    }
+
     /// Serialize this encrypted message into binary in order to send it to a remote receiver.
     pub fn serialize(mut self) -> Vec<u8> {
         let mut serialized: Vec<u8> = self.nonce.to_vec();
@@ -57,10 +62,6 @@ impl EncryptedMessage {
     /// Ref to encrypted message.
     pub fn encrypted(&self) -> &[u8] {
         &self.encrypted
-    }
-
-    pub(crate) fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
-        Self { encrypted, nonce }
     }
 }
 

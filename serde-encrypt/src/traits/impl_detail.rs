@@ -1,5 +1,3 @@
-pub(in crate::traits) mod nonce;
-
 mod serialize;
 
 pub use serialize::SerializedPlain;

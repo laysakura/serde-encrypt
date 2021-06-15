@@ -2,10 +2,10 @@
 
 mod test_util;
 
-use serde_encrypt::shared_key::SharedKey;
+use serde_encrypt_core::key::shared_key_core::SharedKeyCore;
 use test_util::*;
 
 #[test]
 fn test_shared_key_distribution() {
-    assert_no_duplicate(SharedKey::generate, 100);
+    assert_no_duplicate(SharedKeyCore::generate, 100);
 }

@@ -1,13 +1,11 @@
-use crate::{error::Error, key::shared_key::SharedKey, msg::EncryptedMessage};
-use alloc::format;
-use chacha20poly1305::XChaCha20Poly1305;
-use crypto_box::aead::{Aead, NewAead};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-
-use super::{
-    impl_detail::{self, nonce::generate_nonce},
-    SerializedPlain,
+use serde_encrypt_core::{
+    encrypt::plain_message_shared_key::PlainMessageSharedKey, error::Error, msg::EncryptedMessage,
 };
+
+use crate::shared_key::SharedKey;
+
+use super::{impl_detail, SerializedPlain};
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -57,19 +55,9 @@ pub trait SerdeEncryptSharedKey {
     where
         Self: Serialize,
     {
-        let nonce = generate_nonce();
-        let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
-
         let serial_plain = impl_detail::serialize(&self)?;
-
-        let encrypted = chacha.encrypt(&nonce, serial_plain.as_ref()).map_err(|e| {
-            Error::encryption_error(&format!(
-                "failed to encrypt serialized data by XChaCha20: {:?}",
-                e
-            ))
-        })?;
-
-        Ok(EncryptedMessage::new(encrypted, nonce.into()))
+        let plain_msg = PlainMessageSharedKey::from(serial_plain);
+        plain_msg.encrypt(&shared_key.to_shared_key_core())
     }
 
     /// Decrypt and deserialize into DeserializeOwned type.
@@ -103,18 +91,8 @@ pub trait SerdeEncryptSharedKey {
     where
         Self: Sized + Deserialize<'de>,
     {
-        let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
-
-        let nonce = encrypted_message.nonce();
-        let encrypted = encrypted_message.encrypted();
-
-        let serial_plain = chacha.decrypt(nonce.into(), encrypted).map_err(|e| {
-            Error::decryption_error(&format!(
-                "error on decryption of XChaCha20 cipher-text: {:?}",
-                e
-            ))
-        })?;
-
-        Ok(SerializedPlain::new(serial_plain))
+        let plain_msg =
+            PlainMessageSharedKey::decrypt(encrypted_message, &shared_key.to_shared_key_core())?;
+        Ok(SerializedPlain::new(plain_msg.into()))
     }
 }

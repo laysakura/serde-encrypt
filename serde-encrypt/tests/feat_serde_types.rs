@@ -12,10 +12,10 @@ use serde::{
     Deserialize, Deserializer, Serialize,
 };
 use serde_encrypt::{
-    error::{Error, ErrorKind},
-    key::shared_key::SharedKey,
+    shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
+use serde_encrypt_core::error::{Error, ErrorKind};
 use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 use void::Void;
 

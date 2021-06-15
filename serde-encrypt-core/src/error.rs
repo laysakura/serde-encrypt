@@ -39,19 +39,23 @@ impl Error {
         }
     }
 
-    pub(crate) fn serialization_error(reason: &str) -> Self {
+    /// Constructor
+    pub fn serialization_error(reason: &str) -> Self {
         Self::new(ErrorKind::SerializationError, reason)
     }
 
-    pub(crate) fn deserialization_error(reason: &str) -> Self {
+    /// Constructor
+    pub fn deserialization_error(reason: &str) -> Self {
         Self::new(ErrorKind::DeserializationError, reason)
     }
 
-    pub(crate) fn encryption_error(reason: &str) -> Self {
+    /// Constructor
+    pub fn encryption_error(reason: &str) -> Self {
         Self::new(ErrorKind::EncryptionError, reason)
     }
 
-    pub(crate) fn decryption_error(reason: &str) -> Self {
+    /// Constructor
+    pub fn decryption_error(reason: &str) -> Self {
         Self::new(ErrorKind::DecryptionError, reason)
     }
 }

@@ -1,14 +1,14 @@
 //! Shows how to use SerdeEncryptPublicKey for struct with reference fields.
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::{
+use serde_encrypt::traits::SerdeEncryptPublicKey;
+use serde_encrypt_core::{
     error::Error,
     key::{
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
         key_pair::{ReceiverKeyPair, SenderKeyPair},
     },
     msg::EncryptedMessage,
-    traits::SerdeEncryptPublicKey,
 };
 
 #[derive(Debug, Serialize, Deserialize)]

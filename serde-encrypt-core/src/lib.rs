@@ -7,5 +7,9 @@
 
 extern crate alloc;
 
-pub mod shared_key;
-pub mod traits;
+pub mod encrypt;
+pub mod error;
+pub mod key;
+pub mod msg;
+
+pub(crate) mod random;

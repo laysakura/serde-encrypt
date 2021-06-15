@@ -3,21 +3,14 @@
 use chacha20poly1305::Key as ChaChaKey;
 use core::{convert::TryInto, ops::DerefMut};
 use rand::Rng;
-use serde::{Deserialize, Serialize};
 
-use crate::{random::global_rng, traits::SerdeEncryptPublicKey};
+use crate::random::global_rng;
 
 /// 32-byte key shared among sender and receiver secretly.
-///
-/// It is a good practice to use [SerdeEncryptPublicKey](crate::traits::SerdeEncryptPublicKey)
-/// to exchange this shared key.
-#[derive(Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
-pub struct SharedKey([u8; 32]);
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
+pub struct SharedKeyCore([u8; 32]);
 
-// Enable key-exchange.
-impl SerdeEncryptPublicKey for SharedKey {}
-
-impl SharedKey {
+impl SharedKeyCore {
     /// Constructor from known secret bytes.
     pub fn from_array(key: [u8; 32]) -> Self {
         Self(key)
@@ -45,6 +38,11 @@ impl SharedKey {
         .expect("must be 32 bytes");
 
         Self(key)
+    }
+
+    /// Extract as raw array
+    pub fn into_array(self) -> [u8; 32] {
+        self.0
     }
 
     pub(crate) fn to_chacha_key(&self) -> &ChaChaKey {

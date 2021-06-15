@@ -9,10 +9,10 @@ mod test_util;
 use alloc::{string::String, vec, vec::Vec};
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
-    error::Error,
-    key::shared_key::SharedKey,
+    shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
+use serde_encrypt_core::error::Error;
 use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 
 #[derive(PartialEq, Debug, Serialize, Deserialize)]

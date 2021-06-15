@@ -1,7 +1,7 @@
-use crate::error::Error;
 use alloc::{format, vec::Vec};
 use core::marker::PhantomData;
 use serde::{Deserialize, Serialize};
+use serde_encrypt_core::error::Error;
 
 /// Serialized plain-text to hold determine lifetime of `serde::Deserialize<'de>`.
 #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]

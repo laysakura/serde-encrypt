@@ -1,18 +1,12 @@
-use crate::{
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde_encrypt_core::{
+    encrypt::plain_message_public_key::PlainMessagePublicKey,
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
     msg::EncryptedMessage,
 };
-use crypto_box::{
-    aead::{Aead, Payload},
-    ChaChaBox,
-};
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
-use super::{
-    impl_detail::{self, nonce::generate_nonce},
-    SerializedPlain,
-};
+use super::{impl_detail, SerializedPlain};
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
@@ -57,30 +51,9 @@ pub trait SerdeEncryptPublicKey {
     where
         Self: Serialize,
     {
-        let nonce = generate_nonce();
-        let sender_box = ChaChaBox::new(
-            combined_key.receiver_public_key().as_ref(),
-            combined_key.sender_private_key().as_ref(),
-        );
-
         let serial_plain = impl_detail::serialize(&self)?;
-
-        // TODO https://github.com/laysakura/serde-encrypt/issues/19
-        let aad = b"".as_ref();
-
-        let encrypted = sender_box
-            .encrypt(
-                &nonce,
-                Payload {
-                    msg: &serial_plain,
-                    aad,
-                },
-            )
-            .map_err(|_| {
-                Error::encryption_error("failed to encrypt serialized data into ChaChaBox")
-            })?;
-
-        Ok(EncryptedMessage::new(encrypted, nonce.into()))
+        let plain_msg = PlainMessagePublicKey::from(serial_plain);
+        plain_msg.encrypt(combined_key)
     }
 
     /// Decrypt and deserialize into DeserializeOwned type.
@@ -114,18 +87,7 @@ pub trait SerdeEncryptPublicKey {
     where
         Self: Sized + Deserialize<'de>,
     {
-        let receiver_box = ChaChaBox::new(
-            combined_key.sender_public_key().as_ref(),
-            combined_key.receiver_private_key().as_ref(),
-        );
-
-        let nonce = encrypted_message.nonce();
-        let encrypted = encrypted_message.encrypted();
-
-        let serial_plain = receiver_box
-            .decrypt(nonce.into(), encrypted)
-            .map_err(|_| Error::decryption_error("error on decryption of ChaChaBox"))?;
-
-        Ok(SerializedPlain::new(serial_plain))
+        let plain_msg = PlainMessagePublicKey::decrypt(encrypted_message, combined_key)?;
+        Ok(SerializedPlain::new(plain_msg.into()))
     }
 }

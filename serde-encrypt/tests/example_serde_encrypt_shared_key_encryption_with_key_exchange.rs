@@ -16,14 +16,16 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
+    shared_key::SharedKey,
+    traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
+};
+use serde_encrypt_core::{
     error::Error,
     key::{
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
         key_pair::{ReceiverKeyPair, SenderKeyPair},
-        shared_key::SharedKey,
     },
     msg::EncryptedMessage,
-    traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
 
 impl<'a> SerdeEncryptSharedKey for Message<'a> {}

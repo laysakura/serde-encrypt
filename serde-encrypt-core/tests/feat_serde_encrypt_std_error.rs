@@ -10,8 +10,8 @@ fn test_api_guidelines_c_good_err() {
     use std::fmt::Display;
 
     fn assert_error<T: std::error::Error + Send + Sync + 'static>() {}
-    assert_error::<serde_encrypt::error::Error>();
+    assert_error::<serde_encrypt_core::error::Error>();
 
     fn assert_display<T: Display>() {}
-    assert_display::<serde_encrypt::error::Error>();
+    assert_display::<serde_encrypt_core::error::Error>();
 }

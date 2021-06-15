@@ -8,7 +8,7 @@
 mod test_util;
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::key::shared_key::SharedKey;
+use serde_encrypt::shared_key::SharedKey;
 use serde_encrypt::traits::SerdeEncryptPublicKey;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
 use test_util::serde_encrypt_public_key::*;
