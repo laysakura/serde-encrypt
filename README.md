@@ -15,7 +15,7 @@
                Alice                                         Bob
 +-----------------------------------+        +-----------------------------------+
 | #[derive(Serialize, Deserialize)] |        | #[derive(Serialize, Deserialize)] |
-| struct Message {}                 |        | struct Message {}                 |
+| struct Message                    |        | struct Message                    |
 +-----------------------------------+        +-----------------------------------+
                  | .encrypt()                                  ^
                  v                                             | ::decrypt()
@@ -54,7 +54,9 @@ struct Message {
     sender: String,
 }
 
-impl SerdeEncryptSharedKey for Message {}
+impl SerdeEncryptSharedKey for Message {
+    type S = CborSerializer<Self>;  // you can specify serializer implementation (or implement it by yourself).
+}
 ```
 
 Then, you can serialize the `Message` into `Vec<u8>` in encrypted form.
