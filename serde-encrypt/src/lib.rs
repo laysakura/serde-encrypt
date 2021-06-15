@@ -13,7 +13,7 @@ pub mod traits;
 
 pub use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
-    error::Error,
+    error::{Error, ErrorKind},
     key::{
         as_shared_key::AsSharedKey,
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},

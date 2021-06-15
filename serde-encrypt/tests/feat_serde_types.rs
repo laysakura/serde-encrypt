@@ -15,9 +15,8 @@ use serde_encrypt::{
     serialize::{impls::CborSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
-    AsSharedKey,
+    AsSharedKey, Error, ErrorKind,
 };
-use serde_encrypt_core::error::{Error, ErrorKind};
 use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 use void::Void;
 

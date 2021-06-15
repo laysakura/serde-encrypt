@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 - Some `struct`s/`enum`s moved into differently named modules. Shows where into they are moved.
   - `serde_encrypt::Error`
+  - `serde_encrypt::ErrorKind`
   - `serde_encrypt::EncryptedMessages`
   - `serde_encrypt::SenderCombinedKey`
   - `serde_encrypt::ReceiverCombinedKey`
