@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 use serde_encrypt::{
     serialize::{impls::CborSerializer, TypedSerialized},
     traits::SerdeEncryptPublicKey,
-    EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPair, SenderCombinedKey,
-    SenderKeyPair,
+    EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPairCore, SenderCombinedKey,
+    SenderKeyPairCore,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -58,8 +58,8 @@ fn bob_reads_secret_message(
 
 #[test]
 fn test_serde_encrypt_public_key() -> Result<(), Error> {
-    let alice_key_pair = SenderKeyPair::generate();
-    let bob_key_pair = ReceiverKeyPair::generate();
+    let alice_key_pair = SenderKeyPairCore::generate();
+    let bob_key_pair = ReceiverKeyPairCore::generate();
 
     let alice_combined_key =
         SenderCombinedKey::new(alice_key_pair.private_key(), bob_key_pair.public_key());

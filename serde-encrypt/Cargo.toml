@@ -17,6 +17,14 @@ serde-encrypt-core = {path = "../serde-encrypt-core", default-features = false}
 serde = {version = "1.0", default-features = false}
 serde_cbor = {version = "0.11", default-features = false, features = ["alloc"]}
 
+rand_chacha = {version = "0.3", default-features = false}
+
+cfg-if = "1.0"
+
+# Lazy static options
+once_cell = {version = "1.8", optional = true}
+spin = {version = "0.9", default-features = false, features = ["spin_mutex", "lazy"]}# default (available w/o std)
+
 [dev-dependencies]
 serde = {version = "1.0", default-features = false, features = ["derive", "alloc"]}# alloc for Vec, String
 serde_json = {version = "1.0", default-features = false, features = ["alloc"]}
@@ -32,4 +40,5 @@ std = [
   "serde-encrypt-core/std",
   "serde/std",
   "serde_cbor/std",
+  "once_cell",
 ]

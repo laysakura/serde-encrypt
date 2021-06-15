@@ -11,12 +11,24 @@ pub mod serialize;
 pub mod shared_key;
 pub mod traits;
 
+mod random;
+
+cfg_if::cfg_if! {
+    if #[cfg(feature = "std")] {
+        use once_cell::sync::Lazy;
+        use std::{sync::{MutexGuard, Mutex}, ops::DerefMut};
+    } else {
+        use spin::{Lazy, MutexGuard, Mutex};
+        use core::ops::DerefMut;
+    }
+}
+
 pub use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
     error::{Error, ErrorKind},
     key::{
         as_shared_key::AsSharedKey,
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-        key_pair::{ReceiverKeyPair, SenderKeyPair},
+        key_pair::{ReceiverKeyPairCore, SenderKeyPairCore},
     },
 };
