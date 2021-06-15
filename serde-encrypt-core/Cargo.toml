@@ -20,15 +20,6 @@ rand_chacha = {version = "0.3", default-features = false}
 
 spin = {version = "0.9", default-features = false, features = ["spin_mutex", "lazy"]}
 
-[dev-dependencies]
-serde = {version = "1.0", default-features = false, features = ["derive", "alloc"]}# alloc for Vec, String
-serde_json = {version = "1.0", default-features = false, features = ["alloc"]}
-serde_repr = "0.1"
-
-pretty_assertions = "0.7"
-
-void = "1.0"
-
 [features]
 default = ["std"]
 std = [
