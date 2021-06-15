@@ -25,7 +25,7 @@ pub struct EncryptedMessage {
 }
 
 impl EncryptedMessage {
-    /// Constructor
+    #[doc(hidden)]
     pub fn new(encrypted: Vec<u8>, nonce: [u8; 24]) -> Self {
         Self { encrypted, nonce }
     }

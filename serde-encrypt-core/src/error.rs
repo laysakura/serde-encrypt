@@ -39,22 +39,22 @@ impl Error {
         }
     }
 
-    /// Constructor
+    #[doc(hidden)]
     pub fn serialization_error(reason: &str) -> Self {
         Self::new(ErrorKind::SerializationError, reason)
     }
 
-    /// Constructor
+    #[doc(hidden)]
     pub fn deserialization_error(reason: &str) -> Self {
         Self::new(ErrorKind::DeserializationError, reason)
     }
 
-    /// Constructor
+    #[doc(hidden)]
     pub fn encryption_error(reason: &str) -> Self {
         Self::new(ErrorKind::EncryptionError, reason)
     }
 
-    /// Constructor
+    #[doc(hidden)]
     pub fn decryption_error(reason: &str) -> Self {
         Self::new(ErrorKind::DecryptionError, reason)
     }
