@@ -17,6 +17,9 @@ cfg_if::cfg_if! {
     } else if #[cfg(feature = "use-spin")] {
         use spin::{Lazy, MutexGuard, Mutex};
         use core::ops::DerefMut;
+    } else if #[cfg(feature = "sgx")] {
+        use once_cell_sgx::sync::Lazy;
+        use sgx_tstd::{sync::{SgxMutexGuard as MutexGuard, SgxMutex as Mutex}, ops::DerefMut};
     } else {
         compile_error!("serde-encrypt-core crate cannot built without any of these feature flat: std, use-spin, sgx");
     }

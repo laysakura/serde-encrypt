@@ -8,7 +8,7 @@ use rand_chacha::{rand_core::SeedableRng, ChaCha12Rng};
 static GLOBAL_RNG: Lazy<Mutex<ChaCha12Rng>> =
     Lazy::new(|| Mutex::new(ChaCha12Rng::from_seed(gen_seed_mem_addr())));
 
-#[cfg(feature = "std")]
+#[cfg(any(feature = "std", feature = "sgx"))]
 pub(crate) fn global_rng() -> MutexGuard<'static, ChaCha12Rng> {
     GLOBAL_RNG.lock().expect("Panic occurred in another MutexGuard scope")
 }
