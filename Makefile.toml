@@ -14,33 +14,33 @@ cargo fmt --all
 [tasks.lint]
 script = ['''
 #!/usr/bin/env bash -eux
-RUSTFLAGS='-D warnings' cargo clippy --all-targets --all-features
+RUSTFLAGS='-D warnings' cargo clippy --workspace --all-targets --all-features
 ''']
 
 [tasks.build]
 script = ['''
 #!/usr/bin/env bash -eux
-RUSTFLAGS='-D warnings' cargo build --all-targets --all-features
+RUSTFLAGS='-D warnings' cargo build --workspace --all-targets --all-features
 ''']
 
 [tasks.test]
 script = ['''
 #!/usr/bin/env bash -eux
-cargo test --all-targets --all-features
+cargo test --workspace --all-targets --all-features
 ''']
 
 [tasks.doc]
 script = ['''
 #!/usr/bin/env bash -eux
 cargo clean --doc
-cargo doc --no-deps --all-features
+cargo doc --workspace --no-deps --all-features
 ''']
 
 [tasks.os-less-build]
 script = ['''
 #!/usr/bin/env bash -eux
 rustup target add aarch64-unknown-none
-RUSTFLAGS='-D warnings' cargo build --no-default-features --target=aarch64-unknown-none
+RUSTFLAGS='-D warnings' cargo build --workspace --no-default-features --target=aarch64-unknown-none
 ''']
 
 [tasks.lcov]
@@ -50,8 +50,8 @@ rm -rf target/debug/deps/${PROJ_NAME}-*
 export CARGO_INCREMENTAL=0
 export RUSTFLAGS="-Zprofile"
 
-cargo +nightly build --verbose
-cargo +nightly test --verbose
+cargo +nightly build --workspace --verbose
+cargo +nightly test --workspace --verbose
 
 grcov ./target/debug/deps -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info
 ''']
