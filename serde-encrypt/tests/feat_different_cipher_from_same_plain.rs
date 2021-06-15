@@ -12,7 +12,7 @@ use serde_encrypt::serialize::impls::CborSerializer;
 use serde_encrypt::shared_key::SharedKey;
 use serde_encrypt::traits::SerdeEncryptPublicKey;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
-use serde_encrypt_core::key::as_shared_key::AsSharedKey;
+use serde_encrypt::AsSharedKey;
 use test_util::serde_encrypt_public_key::*;
 use test_util::*;
 

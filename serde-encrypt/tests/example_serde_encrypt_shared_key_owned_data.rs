@@ -1,11 +1,7 @@
 //! Shows how to use SerdeEncryptSharedKey.
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::{
-    serialize::impls::CborSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey,
-    EncryptedMessage, Error,
-};
-use serde_encrypt_core::key::as_shared_key::AsSharedKey;
+use serde_encrypt::{AsSharedKey, EncryptedMessage, Error, serialize::impls::CborSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Message {

@@ -1,7 +1,7 @@
 //! serde-serializable shared key.
 
+use crate::AsSharedKey;
 use serde::{Deserialize, Serialize};
-use serde_encrypt_core::key::as_shared_key::AsSharedKey;
 
 use crate::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey};
 

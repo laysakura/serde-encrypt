@@ -8,13 +8,7 @@ mod test_util;
 
 use alloc::{string::String, vec, vec::Vec};
 use serde::{Deserialize, Serialize};
-use serde_encrypt::{
-    serialize::impls::CborSerializer,
-    shared_key::SharedKey,
-    traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
-    Error,
-};
-use serde_encrypt_core::key::as_shared_key::AsSharedKey;
+use serde_encrypt::{AsSharedKey, Error, serialize::impls::CborSerializer, shared_key::SharedKey, traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey}};
 use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 
 #[derive(PartialEq, Debug, Serialize, Deserialize)]

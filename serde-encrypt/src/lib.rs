@@ -15,6 +15,7 @@ pub use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
     error::Error,
     key::{
+        as_shared_key::AsSharedKey,
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
         key_pair::{ReceiverKeyPair, SenderKeyPair},
     },

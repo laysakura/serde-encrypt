@@ -19,7 +19,7 @@ use serde_encrypt::{
     serialize::{impls::CborSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
-    EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPair, SenderCombinedKey,
+    AsSharedKey, EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPair, SenderCombinedKey,
     SenderKeyPair,
 };
 
@@ -28,7 +28,7 @@ impl<'a> SerdeEncryptSharedKey for Message<'a> {
 }
 
 fn bob_generates_shared_key() -> SharedKey {
-    <SharedKey as serde_encrypt_core::key::as_shared_key::AsSharedKey>::generate()
+    SharedKey::generate()
 }
 
 fn bob_sends_shared_key(
