@@ -10,7 +10,9 @@ static GLOBAL_RNG: Lazy<Mutex<ChaCha12Rng>> =
 
 #[cfg(any(feature = "std", feature = "sgx"))]
 pub(crate) fn global_rng() -> MutexGuard<'static, ChaCha12Rng> {
-    GLOBAL_RNG.lock().expect("Panic occurred in another MutexGuard scope")
+    GLOBAL_RNG
+        .lock()
+        .expect("Panic occurred in another MutexGuard scope")
 }
 #[cfg(feature = "use-spin")]
 pub(crate) fn global_rng() -> MutexGuard<'static, ChaCha12Rng> {
