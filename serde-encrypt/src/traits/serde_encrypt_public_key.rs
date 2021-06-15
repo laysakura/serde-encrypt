@@ -1,10 +1,7 @@
 use crate::serialize::TypedSerialized;
-use crate::{EncryptedMessage, Error};
+use crate::{EncryptedMessage, Error, ReceiverCombinedKey, SenderCombinedKey};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_encrypt_core::{
-    encrypt::plain_message_public_key::PlainMessagePublicKey,
-    key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-};
+use serde_encrypt_core::encrypt::plain_message_public_key::PlainMessagePublicKey;
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
