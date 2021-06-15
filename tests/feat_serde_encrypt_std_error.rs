@@ -1,5 +1,6 @@
 //! serde_encrypt::error::Error implements std::error::Error in `std` feature.
-//! (This test crate is not no_std)
+
+#![cfg(feature = "std")]
 
 mod test_util;
 
