@@ -12,8 +12,9 @@ use serde_encrypt::{
     serialize::impls::CborSerializer,
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
+    Error,
 };
-use serde_encrypt_core::{error::Error, key::as_shared_key::AsSharedKey};
+use serde_encrypt_core::key::as_shared_key::AsSharedKey;
 use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 
 #[derive(PartialEq, Debug, Serialize, Deserialize)]

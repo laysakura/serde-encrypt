@@ -1,13 +1,12 @@
+use crate::serialize::TypedSerialized;
+use crate::Error;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_encrypt_core::{
     encrypt::{
         encrypted_message::EncryptedMessage, plain_message_public_key::PlainMessagePublicKey,
     },
-    error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
 };
-
-use crate::serialize::TypedSerialized;
 
 /// Public-key authenticated encryption for serde-serializable types.
 ///
@@ -49,8 +48,8 @@ pub trait SerdeEncryptPublicKey: Sized {
     ///
     /// # Failures
     ///
-    /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
-    /// - [EncryptionError](crate::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
+    /// - [SerializationError](serde_encrypt_core::error::ErrorKind::SerializationError) when failed to serialize message.
+    /// - [EncryptionError](serde_encrypt_core::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
     fn encrypt(&self, combined_key: &SenderCombinedKey) -> Result<EncryptedMessage, Error>
     where
         Self: Serialize,
@@ -64,8 +63,8 @@ pub trait SerdeEncryptPublicKey: Sized {
     ///
     /// # Failures
     ///
-    /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
-    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
+    /// - [DecryptionError](serde_encrypt_core::error::ErrorKind::DecryptionError) when failed to decrypt message.
+    /// - [DeserializationError](serde_encrypt_core::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
     fn decrypt_owned(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,
@@ -83,7 +82,7 @@ pub trait SerdeEncryptPublicKey: Sized {
     ///
     /// # Failures
     ///
-    /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
+    /// - [DecryptionError](serde_encrypt_core::error::ErrorKind::DecryptionError) when failed to decrypt message.
     fn decrypt_ref<'de>(
         encrypted_message: &EncryptedMessage,
         combined_key: &ReceiverCombinedKey,

@@ -1,12 +1,9 @@
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_encrypt_core::{
-    encrypt::{
-        encrypted_message::EncryptedMessage, plain_message_shared_key::PlainMessageSharedKey,
-    },
-    error::Error,
-};
-
+use crate::Error;
 use crate::{serialize::TypedSerialized, shared_key::SharedKey};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde_encrypt_core::encrypt::{
+    encrypted_message::EncryptedMessage, plain_message_shared_key::PlainMessageSharedKey,
+};
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -26,7 +23,7 @@ use crate::{serialize::TypedSerialized, shared_key::SharedKey};
 ///
 /// ## when sender and receiver does not hold shared key yet:
 ///
-/// First, message sender or receiver should generate [SharedKey](crate::key::shared_key::SharedKey).
+/// First, message sender or receiver should generate [SharedKey](crate::shared_key::SharedKey).
 ///
 /// And then sender or receiver who generated the key should give it to another using safe communication.
 /// [SerdeEncryptPublicKey](crate::traits::SerdeEncryptPublicKey) is recommended for it.
@@ -53,8 +50,8 @@ pub trait SerdeEncryptSharedKey {
     ///
     /// # Failures
     ///
-    /// - [SerializationError](crate::error::ErrorKind::SerializationError) when failed to serialize message.
-    /// - [EncryptionError](crate::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
+    /// - [SerializationError](serde_encrypt_core::error::ErrorKind::SerializationError) when failed to serialize message.
+    /// - [EncryptionError](serde_encrypt_core::error::ErrorKind::EncryptionError) when failed to encrypt serialized message.
     fn encrypt(&self, shared_key: &SharedKey) -> Result<EncryptedMessage, Error>
     where
         Self: Serialize,
@@ -68,8 +65,8 @@ pub trait SerdeEncryptSharedKey {
     ///
     /// # Failures
     ///
-    /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
-    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
+    /// - [DecryptionError](serde_encrypt_core::error::ErrorKind::DecryptionError) when failed to decrypt message.
+    /// - [DeserializationError](serde_encrypt_core::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
     fn decrypt_owned(
         encrypted_message: &EncryptedMessage,
         shared_key: &SharedKey,
@@ -87,7 +84,7 @@ pub trait SerdeEncryptSharedKey {
     ///
     /// # Failures
     ///
-    /// - [DecryptionError](crate::error::ErrorKind::DecryptionError) when failed to decrypt message.
+    /// - [DecryptionError](serde_encrypt_core::error::ErrorKind::DecryptionError) when failed to decrypt message.
     fn decrypt_ref<'de>(
         encrypted_message: &EncryptedMessage,
         shared_key: &SharedKey,

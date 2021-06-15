@@ -3,13 +3,10 @@
 use core::fmt;
 
 use serde::{de::DeserializeOwned, Serialize};
-use serde_encrypt::traits::SerdeEncryptPublicKey;
-use serde_encrypt_core::{
-    error::Error,
-    key::{
-        combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-        key_pair::{ReceiverKeyPair, SenderKeyPair},
-    },
+use serde_encrypt::{traits::SerdeEncryptPublicKey, Error};
+use serde_encrypt_core::key::{
+    combined_key::{ReceiverCombinedKey, SenderCombinedKey},
+    key_pair::{ReceiverKeyPair, SenderKeyPair},
 };
 
 #[macro_export]

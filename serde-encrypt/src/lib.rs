@@ -10,3 +10,5 @@ extern crate alloc;
 pub mod serialize;
 pub mod shared_key;
 pub mod traits;
+
+pub use serde_encrypt_core::error::Error;

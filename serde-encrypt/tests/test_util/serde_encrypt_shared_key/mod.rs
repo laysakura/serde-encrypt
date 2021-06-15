@@ -3,8 +3,7 @@
 use core::fmt;
 
 use serde::{de::DeserializeOwned, Serialize};
-use serde_encrypt::{shared_key::SharedKey, traits::SerdeEncryptSharedKey};
-use serde_encrypt_core::error::Error;
+use serde_encrypt::{shared_key::SharedKey, traits::SerdeEncryptSharedKey, Error};
 
 pub fn shared_key_enc_dec<T>(sender_msg: &T, shared_key: &SharedKey) -> Result<T, Error>
 where

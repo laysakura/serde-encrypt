@@ -1,9 +1,9 @@
 //! Serializer implementations.
 
+use crate::Error;
 use alloc::{format, vec::Vec};
 use core::marker::PhantomData;
 use serde::{Deserialize, Serialize};
-use serde_encrypt_core::error::Error;
 
 use super::TypedSerialized;
 
@@ -51,7 +51,7 @@ impl<T> TypedSerialized for CborSerializer<T> {
 
     /// # Failures
     ///
-    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
+    /// - [DeserializationError](serde_encrypt_core::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
     fn deserialize<'de>(&'de self) -> Result<Self::T, Error>
     where
         Self::T: Deserialize<'de>,

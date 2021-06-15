@@ -1,10 +1,9 @@
 //! Shows how to use SerdeEncryptPublicKey.
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey};
+use serde_encrypt::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey, Error};
 use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
-    error::Error,
     key::{
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
         key_pair::{ReceiverKeyPair, SenderKeyPair},

@@ -19,10 +19,10 @@ use serde_encrypt::{
     serialize::{impls::CborSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
+    Error,
 };
 use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
-    error::Error,
     key::{
         as_shared_key::AsSharedKey,
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},

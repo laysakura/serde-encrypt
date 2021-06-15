@@ -2,9 +2,9 @@
 
 pub mod impls;
 
+use crate::Error;
 use alloc::vec::Vec;
 use serde::{Deserialize, Serialize};
-use serde_encrypt_core::error::Error;
 
 /// Serialization abstract with type to serialize.
 ///
@@ -34,7 +34,7 @@ pub trait TypedSerialized {
 
     /// # Failures
     ///
-    /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
+    /// - [DeserializationError](serde_encrypt_core::error::ErrorKind::DeserializationError) when failed to deserialize decrypted message.
     fn deserialize<'de>(&'de self) -> Result<Self::T, Error>
     where
         Self::T: Deserialize<'de>;

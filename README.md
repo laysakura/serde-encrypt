@@ -138,7 +138,7 @@ serde-encrypt = {version = "(version)", default-features = false}
 
 Here is a list of what `std` featue brings to you.
 
-- `std::error::Error` trait implementation to `serde_encrypt::error::Error`.
+- `std::error::Error` trait implementation to `serde_encrypt::Error`.
 
 ## Changelog
 
