@@ -129,7 +129,9 @@ Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is bu
   - To exchange `SharedKey`.
   - Quickly sends/receive small amounts of messages without secret shared key.
 
-### std vs no_std
+### Feature flags
+
+TODO writes about both serde-encrypt & serde-encrypt-core
 
 This crate comes with `std` feature by default. To enable `no_std` mode, specify `default-features = false` in your `Cargo.toml`.
 

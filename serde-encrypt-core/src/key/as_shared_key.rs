@@ -1,10 +1,10 @@
 //! Keys for common key cryptosystem.
 
-use chacha20poly1305::Key as ChaChaKey;
-use core::{convert::TryInto, ops::DerefMut};
-use rand::Rng;
-
 use crate::random::global_rng;
+use crate::DerefMut;
+use chacha20poly1305::Key as ChaChaKey;
+use core::convert::TryInto;
+use rand::Rng;
 
 /// 32-byte key shared among sender and receiver secretly.
 ///
@@ -30,7 +30,7 @@ pub trait AsSharedKey {
     where
         Self: Sized,
     {
-        let mut rng = global_rng().lock();
+        let mut rng = global_rng();
 
         let r0: u64 = rng.deref_mut().gen();
         let r1: u64 = rng.deref_mut().gen();

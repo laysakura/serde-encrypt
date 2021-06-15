@@ -1,13 +1,11 @@
 //! Shared key encryption.
 
-use core::ops::DerefMut;
-
+use super::encrypted_message::EncryptedMessage;
+use crate::DerefMut;
 use crate::{error::Error, key::as_shared_key::AsSharedKey, random::global_rng};
 use alloc::{format, vec::Vec};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce};
 use crypto_box::aead::{Aead, NewAead};
-
-use super::encrypted_message::EncryptedMessage;
 
 /// Plain message structure serialized via serde.
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -52,7 +50,7 @@ impl PlainMessageSharedKey {
     }
 
     fn generate_nonce() -> XNonce {
-        let mut rng = global_rng().lock();
+        let mut rng = global_rng();
         crypto_box::generate_nonce(rng.deref_mut())
     }
 }

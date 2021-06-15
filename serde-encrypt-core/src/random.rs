@@ -1,16 +1,20 @@
-//! no_std random seed.
+//! RNG
 
-use core::convert::TryInto;
-
+use crate::{Lazy, Mutex, MutexGuard};
 use alloc::format;
+use core::convert::TryInto;
 use rand_chacha::{rand_core::SeedableRng, ChaCha12Rng};
-use spin::{Lazy, Mutex};
 
 static GLOBAL_RNG: Lazy<Mutex<ChaCha12Rng>> =
     Lazy::new(|| Mutex::new(ChaCha12Rng::from_seed(gen_seed_mem_addr())));
 
-pub(crate) fn global_rng() -> &'static Mutex<ChaCha12Rng> {
-    &*GLOBAL_RNG
+#[cfg(feature = "std")]
+pub(crate) fn global_rng() -> MutexGuard<'static, ChaCha12Rng> {
+    GLOBAL_RNG.lock().expect("Panic occurred in another MutexGuard scope")
+}
+#[cfg(feature = "use-spin")]
+pub(crate) fn global_rng() -> MutexGuard<'static, ChaCha12Rng> {
+    GLOBAL_RNG.lock()
 }
 
 /// Generate random seed from memory address.

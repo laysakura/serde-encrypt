@@ -1,5 +1,6 @@
 //! Shared key encryption.
 
+use crate::DerefMut;
 use crate::{
     error::Error,
     key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
@@ -7,7 +8,6 @@ use crate::{
 };
 use alloc::vec::Vec;
 use chacha20poly1305::{aead::Payload, XNonce};
-use core::ops::DerefMut;
 use crypto_box::{aead::Aead, ChaChaBox};
 
 use super::encrypted_message::EncryptedMessage;
@@ -58,7 +58,7 @@ impl PlainMessagePublicKey {
     }
 
     fn generate_nonce() -> XNonce {
-        let mut rng = global_rng().lock();
+        let mut rng = global_rng();
         crypto_box::generate_nonce(rng.deref_mut())
     }
 }
