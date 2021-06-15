@@ -2,7 +2,7 @@
 
 use core::ops::DerefMut;
 
-use crate::{error::Error, key::shared_key_core::SharedKeyCore, random::global_rng};
+use crate::{error::Error, key::as_shared_key::AsSharedKey, random::global_rng};
 use alloc::{format, vec::Vec};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce};
 use crypto_box::aead::{Aead, NewAead};
@@ -15,7 +15,10 @@ pub struct PlainMessageSharedKey(Vec<u8>);
 
 impl PlainMessageSharedKey {
     /// Encrypt into EncryptedMessage
-    pub fn encrypt(&self, shared_key: &SharedKeyCore) -> Result<EncryptedMessage, Error> {
+    pub fn encrypt<S>(&self, shared_key: &S) -> Result<EncryptedMessage, Error>
+    where
+        S: AsSharedKey,
+    {
         let nonce = Self::generate_nonce();
         let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
 
@@ -30,10 +33,10 @@ impl PlainMessageSharedKey {
     }
 
     /// Decrypt from EncryptedMessage
-    pub fn decrypt(
-        encrypted_message: &EncryptedMessage,
-        shared_key: &SharedKeyCore,
-    ) -> Result<Self, Error> {
+    pub fn decrypt<S>(encrypted_message: &EncryptedMessage, shared_key: &S) -> Result<Self, Error>
+    where
+        S: AsSharedKey,
+    {
         let nonce = encrypted_message.nonce();
         let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
 

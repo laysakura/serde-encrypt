@@ -12,7 +12,7 @@ use serde_encrypt::{
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
 };
-use serde_encrypt_core::error::Error;
+use serde_encrypt_core::{error::Error, key::as_shared_key::AsSharedKey};
 use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
 
 #[derive(PartialEq, Debug, Serialize, Deserialize)]

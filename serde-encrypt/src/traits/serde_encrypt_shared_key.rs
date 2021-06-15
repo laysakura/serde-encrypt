@@ -60,7 +60,7 @@ pub trait SerdeEncryptSharedKey {
     {
         let serial_plain = impl_detail::serialize(&self)?;
         let plain_msg = PlainMessageSharedKey::from(serial_plain);
-        plain_msg.encrypt(&shared_key.to_shared_key_core())
+        plain_msg.encrypt(shared_key)
     }
 
     /// Decrypt and deserialize into DeserializeOwned type.
@@ -94,8 +94,7 @@ pub trait SerdeEncryptSharedKey {
     where
         Self: Sized + Deserialize<'de>,
     {
-        let plain_msg =
-            PlainMessageSharedKey::decrypt(encrypted_message, &shared_key.to_shared_key_core())?;
+        let plain_msg = PlainMessageSharedKey::decrypt(encrypted_message, shared_key)?;
         Ok(SerializedPlain::new(plain_msg.into()))
     }
 }

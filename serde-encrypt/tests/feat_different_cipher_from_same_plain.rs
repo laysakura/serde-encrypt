@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 use serde_encrypt::shared_key::SharedKey;
 use serde_encrypt::traits::SerdeEncryptPublicKey;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
+use serde_encrypt_core::key::as_shared_key::AsSharedKey;
 use test_util::serde_encrypt_public_key::*;
 use test_util::*;
 

@@ -7,19 +7,29 @@ use rand::Rng;
 use crate::random::global_rng;
 
 /// 32-byte key shared among sender and receiver secretly.
-#[derive(Clone, Eq, PartialEq, Hash, Debug)]
-pub struct SharedKeyCore([u8; 32]);
+///
+/// The reason why this is not a struct but a trait is:
+///
+/// - shared key should be serialized and encrypted in order to be shared among peers
+/// - but this -core trait is serialization agnostic.
+///
+/// So, implementators of this trait is expected to have `serde::{Serialize, Deserialize}` trait bounds.
+pub trait AsSharedKey {
+    /// Constructor from secret bytes.
+    fn from_array(key: [u8; 32]) -> Self
+    where
+        Self: Sized;
 
-impl SharedKeyCore {
-    /// Constructor from known secret bytes.
-    pub fn from_array(key: [u8; 32]) -> Self {
-        Self(key)
-    }
+    /// Ref to 32-byte slice
+    fn as_slice(&self) -> &[u8];
 
     /// Generates secure random key.
     ///
     /// Random number generator which implements `CryptRng` is used internally.
-    pub fn generate() -> Self {
+    fn generate() -> Self
+    where
+        Self: Sized,
+    {
         let mut rng = global_rng().lock();
 
         let r0: u64 = rng.deref_mut().gen();
@@ -37,15 +47,11 @@ impl SharedKeyCore {
         .try_into()
         .expect("must be 32 bytes");
 
-        Self(key)
+        Self::from_array(key)
     }
 
-    /// Extract as raw array
-    pub fn into_array(self) -> [u8; 32] {
-        self.0
-    }
-
-    pub(crate) fn to_chacha_key(&self) -> &ChaChaKey {
-        ChaChaKey::from_slice(&self.0)
+    /// Makes `chacha20poly1305::Key`
+    fn to_chacha_key(&self) -> &ChaChaKey {
+        ChaChaKey::from_slice(self.as_slice())
     }
 }

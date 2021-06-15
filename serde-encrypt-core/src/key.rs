@@ -4,5 +4,5 @@
 pub mod combined_key;
 #[deny(missing_docs)]
 pub mod key_pair;
-#[deny(missing_docs)]
-pub mod shared_key_core;
+
+pub mod as_shared_key;
