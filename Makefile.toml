@@ -37,14 +37,17 @@ cargo doc --workspace --no-deps --all-features
 ''']
 
 [tasks.os-less-build]
-script = ['''
+script = [
+  '''
 #!/usr/bin/env bash -eux
 rustup target add aarch64-unknown-none
 RUSTFLAGS='-D warnings' cargo build --workspace --no-default-features --target=aarch64-unknown-none
-''']
+''',
+]
 
 [tasks.build-sgx]
-script = ['''
+script = [
+  '''
 #!/usr/bin/env bash -eux
 docker run --rm -v `pwd`:/root/serde-encrypt baiduxlab/sgx-rust:1804-1.1.3 bash -c '
     export PATH=/root/.cargo/bin:$PATH
@@ -52,11 +55,44 @@ docker run --rm -v `pwd`:/root/serde-encrypt baiduxlab/sgx-rust:1804-1.1.3 bash 
     rustup show
     RUSTFLAGS="-D warnings" cargo build --all-features
 '
-''']
+''',
+]
 
+[tasks.check-version]
+script = [
+  '''
+#!/usr/bin/env bash -eux
+TAG=$(git tag |tail -n1)
+
+SERDE_ENCRYPT_CORE_VERSION=$(grep '^version = ".*"$' serde-encrypt-core/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
+SERDE_ENCRYPT_VERSION=$(grep '^version = ".*"$' serde-encrypt/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
+SERDE_ENCRYPT_SGX_VERSION=$(grep '^version = ".*"$' serde-encrypt-sgx/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
+
+SERDE_ENCRYPT_DEP_CORE=$(grep '^serde-encrypt-core = .*$' serde-encrypt/Cargo.toml |sed -e 's|.*version = "=\([^"]*\)".*}$|\1|')
+SERDE_ENCRYPT_SGX_DEP_CORE=$(grep '^serde-encrypt-core = .*$' serde-encrypt-sgx/Cargo.toml |sed -e 's|.*version = "=\([^"]*\)".*}$|\1|')
+
+echo "Git tag: $TAG"
+
+echo "serde-encrypt-core package version: $SERDE_ENCRYPT_CORE_VERSION"
+test "$SERDE_ENCRYPT_CORE_VERSION" = "$TAG"
+
+echo "serde-encrypt package version: $SERDE_ENCRYPT_VERSION"
+test "$SERDE_ENCRYPT_VERSION" = "$TAG"
+
+echo "serde-encrypt-sgx package version: $SERDE_ENCRYPT_SGX_VERSION"
+test "$SERDE_ENCRYPT_SGX_VERSION" = "$TAG"
+
+echo "serde-encrypt depends on serde-encrypt-core version: $SERDE_ENCRYPT_DEP_CORE"
+test "$SERDE_ENCRYPT_DEP_CORE" = "$TAG"
+
+echo "serde-encrypt-sgx depends on serde-encrypt-core version: $SERDE_ENCRYPT_SGX_DEP_CORE"
+test "$SERDE_ENCRYPT_SGX_DEP_CORE" = "$TAG"
+''',
+]
 
 [tasks.lcov]
-script = ['''
+script = [
+  '''
 #!/usr/bin/env bash -eux
 rm -rf target/debug/deps/${PROJ_NAME}-*
 export CARGO_INCREMENTAL=0
@@ -66,4 +102,5 @@ cargo +nightly build --workspace --verbose
 cargo +nightly test --workspace --verbose
 
 grcov ./target/debug/deps -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info
-''']
+''',
+]
