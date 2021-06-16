@@ -58,12 +58,14 @@ script = [
   '''
 #!/usr/bin/env bash -eux
 rm -rf target/debug/deps/${PROJ_NAME}-*
+
 export CARGO_INCREMENTAL=0
-export RUSTFLAGS="-Zprofile"
+export RUSTFLAGS="-Zinstrument-coverage"
+export LLVM_PROFILE_FILE="${PROJ_NAME}-%p-%m.profraw"
 
 cargo +nightly build --workspace --verbose
 cargo +nightly test --workspace --verbose
 
-grcov ./target/debug/deps -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info
+grcov . -s . --binary-path ./target/debug/ -t lcov --branch --ignore-not-existing -o lcov.info
 ''',
 ]
