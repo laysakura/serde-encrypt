@@ -32,14 +32,13 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: publish cargo workspace crates to crate.io
-        uses: katyo/publish-crates@v1
-        with:
-          registry-token: ${{ secrets.CRATE_IO_SECRET }}
-          path: .
+      - name: Install cargo-workspace
+        run: cargo install cargo-workspaces
 
-      - name: publish serde-encrypt-sgx to crate.io
-        uses: katyo/publish-crates@v1
-        with:
-          registry-token: ${{ secrets.CRATE_IO_SECRET }}
-          path: ./serde-encrypt-sgx
+      - name: Publish cargo workspace crates to crate.io
+        run: cargo workspaces publish -y
+
+      - name: Publish serde-encrypt-sgx to crate.io
+        run: |
+          cd serde-encrypt-sgx
+          cargo workspaces publish -y
