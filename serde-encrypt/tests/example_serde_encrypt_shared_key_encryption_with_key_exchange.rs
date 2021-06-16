@@ -16,11 +16,12 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
+    key::key_pair::{ReceiverKeyPair, SenderKeyPair},
     serialize::{impls::CborSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
-    AsSharedKey, EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPairCore, SenderCombinedKey,
-    SenderKeyPairCore,
+    AsSharedKey, EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPairCore,
+    SenderCombinedKey, SenderKeyPairCore,
 };
 
 impl<'a> SerdeEncryptSharedKey for Message<'a> {
@@ -94,8 +95,8 @@ fn bob_reads_secret_message(
 #[test]
 fn test_serde_encrypt_public_key() -> Result<(), Error> {
     // public/private key generation to start key exchange
-    let alice_key_pair = ReceiverKeyPairCore::generate();
-    let bob_key_pair = SenderKeyPairCore::generate();
+    let alice_key_pair = ReceiverKeyPair::generate();
+    let bob_key_pair = SenderKeyPair::generate();
 
     let alice_combined_key =
         ReceiverCombinedKey::new(bob_key_pair.public_key(), alice_key_pair.private_key());

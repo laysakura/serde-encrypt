@@ -2,6 +2,7 @@
 
 use crypto_box::SecretKey;
 
+/// Message sender's private key
 #[derive(Clone, Debug)]
 pub struct SenderPrivateKey(SecretKey);
 
@@ -17,6 +18,7 @@ impl From<SecretKey> for SenderPrivateKey {
     }
 }
 
+/// Message receiver's private key
 #[derive(Clone, Debug)]
 pub struct ReceiverPrivateKey(SecretKey);
 

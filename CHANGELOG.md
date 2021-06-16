@@ -18,8 +18,6 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
   - `serde_encrypt::EncryptedMessages`
   - `serde_encrypt::SenderCombinedKey`
   - `serde_encrypt::ReceiverCombinedKey`
-  - `serde_encrypt::SenderKeyPair`
-  - `serde_encrypt::ReceiverKeyPair`
   - `serde_encrypt::AsSharedKey`
 
 ---

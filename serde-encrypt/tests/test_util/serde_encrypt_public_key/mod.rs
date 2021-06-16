@@ -4,8 +4,9 @@ use core::fmt;
 
 use serde::{de::DeserializeOwned, Serialize};
 use serde_encrypt::{
-    traits::SerdeEncryptPublicKey, Error, ReceiverCombinedKey, ReceiverKeyPairCore, SenderCombinedKey,
-    SenderKeyPairCore,
+    key::key_pair::{ReceiverKeyPair, SenderKeyPair},
+    traits::SerdeEncryptPublicKey,
+    Error, ReceiverCombinedKey, ReceiverKeyPairCore, SenderCombinedKey, SenderKeyPairCore,
 };
 
 #[macro_export]
@@ -17,15 +18,15 @@ macro_rules! combined_keys_gen {
     };
 }
 
-pub fn gen_key_pairs() -> (SenderKeyPairCore, ReceiverKeyPairCore) {
-    let sender_key_pair = SenderKeyPairCore::generate();
-    let receiver_key_pair = ReceiverKeyPairCore::generate();
+pub fn gen_key_pairs() -> (SenderKeyPair, ReceiverKeyPair) {
+    let sender_key_pair = SenderKeyPair::generate();
+    let receiver_key_pair = ReceiverKeyPair::generate();
     (sender_key_pair, receiver_key_pair)
 }
 
 pub fn mk_combined_keys<'s, 'r>(
-    sender_key_pair: &'s SenderKeyPairCore,
-    receiver_key_pair: &'r ReceiverKeyPairCore,
+    sender_key_pair: &'s SenderKeyPair,
+    receiver_key_pair: &'r ReceiverKeyPair,
 ) -> (SenderCombinedKey<'s, 'r>, ReceiverCombinedKey<'s, 'r>) {
     let sender_combined_key = SenderCombinedKey::new(
         sender_key_pair.private_key(),

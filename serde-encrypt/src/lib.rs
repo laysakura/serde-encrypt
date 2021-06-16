@@ -7,6 +7,8 @@
 
 extern crate alloc;
 
+pub mod encrypt;
+pub mod key;
 pub mod serialize;
 pub mod shared_key;
 pub mod traits;
@@ -16,7 +18,7 @@ mod random;
 cfg_if::cfg_if! {
     if #[cfg(feature = "std")] {
         use once_cell::sync::Lazy;
-        use std::{sync::{MutexGuard, Mutex}, ops::DerefMut};
+        use std::sync::{MutexGuard, Mutex};
     } else {
         use spin::{Lazy, MutexGuard, Mutex};
         use core::ops::DerefMut;
