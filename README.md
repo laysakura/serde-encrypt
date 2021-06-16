@@ -131,12 +131,7 @@ Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is bu
 
 ### [RUST SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk) support
 
-If your crate uses RUST SGX SDK, depend on `serde-encrypt-sgx` crate instead of `serde-encrypt`.
-
-```toml Cargo.toml
-[dependencies]
-serde-encrypt-sgx = {tag = "(git tag)", git = "https://github.com/laysakura/serde-encrypt.git"}
-```
+Use [serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate.
 
 ### Feature flags
 
