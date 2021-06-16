@@ -21,7 +21,6 @@ cfg_if::cfg_if! {
         use std::sync::{MutexGuard, Mutex};
     } else {
         use spin::{Lazy, MutexGuard, Mutex};
-        use core::ops::DerefMut;
     }
 }
 
