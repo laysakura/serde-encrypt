@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ---
 
-## [0.3.0] - 2021-06-16
+## [0.3.1] - 2021-06-16
 
 ### Added
 
