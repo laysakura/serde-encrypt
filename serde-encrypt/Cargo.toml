@@ -9,10 +9,10 @@ license = "MIT OR Apache-2.0"
 name = "serde-encrypt"
 readme = "../README.md"
 repository = "https://github.com/laysakura/serde-encrypt"
-version = "0.3.1"
+version = "0.3.2"
 
 [dependencies]
-serde-encrypt-core = {version = "0.3.1", path = "../serde-encrypt-core", default-features = false}
+serde-encrypt-core = {version = "0.3.2", path = "../serde-encrypt-core", default-features = false}
 
 serde = {version = "1.0", default-features = false}
 serde_cbor = {version = "0.11", default-features = false, features = ["alloc"]}
