@@ -139,6 +139,44 @@ Use [serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate.
   - `std::error::Error` trait implementation to `serde_encrypt::Error`.
   - Random number generator is created via [`SeedableRng::from_entropy()`](https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html#method.from_entropy), which is considered to be more secure in OS-available environments.
 
+## Implementation
+
+### Crates
+
+`serde-encrypt` is a cargo workspace project and two crates are inside:
+
+- `serde-encrypt-core`
+  - Encryption / Decryption implementations.
+  - Traits for serialization / deserialization.
+  - Traits for RNG (Random Number Generator) singleton.
+- `serde-encrypt` (depends on `serde-encrypt-core`)
+  - Serialization / Deserialization impls.
+  - RNG singleton impls.
+
+Also, `[serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate` is available in separate repository.
+It's in the same layer as `serde-encrypt`.
+
+In order to use serde with Rust SGX SDK, people should use forked version [serde-sgx](https://github.com/mesalock-linux/serde-sgx/).
+Also, Rust SGX SDK compiles with only old version of rustc ([nightly-2020-10-25, currently](https://github.com/apache/incubator-teaclave-sgx-sdk/blob/ed9e7cce4fd40efd7a256d5c4be1c5f00778a5bb/dockerfile/Dockerfile.1804.nightly#L34)),
+even simple no_std crate cannot build sometimes (e.g. [spin crate](https://docs.rs/spin) cannot).
+
+It is another choice to make `serde-encrypt-sgx` inside this repository using feature flags but it breaks `cargo build --all-features` in latest rustc.
+
+### Encryption
+
+[crypto_box crate](https://docs.rs/crypto_box) is used both for public-key encryption and shared-key encryption.
+
+> Pure Rust implementation of the crypto_box public-key authenticated encryption scheme from NaCl-family libraries (e.g. libsodium, TweetNaCl) which combines the X25519 Diffie-Hellman function and the XSalsa20Poly1305 authenticated encryption cipher into an Elliptic Curve Integrated Encryption Scheme (ECIES).
+
+### Serialization
+
+`struct`s and `enum`s to encrypt are serialized before encrypted.
+[CborSerializer](https://docs.rs/serde-encrypt/0.3.2/serde_encrypt/serialize/impls/struct.CborSerializer.html), which uses [serde_cbor crate](https://docs.rs/serde_cbor) for implementation,
+is a single built-in serializer.
+
+Users can implement [TypedSerialized trait](https://docs.rs/serde-encrypt/0.3.2/serde_encrypt/serialize/trait.TypedSerialized.html) by themselves
+to get better serialization.
+
 ## Changelog
 
 See [CHANGELOG.md](https://github.com/laysakura/serde-encrypt/blob/master/CHANGELOG.md).
