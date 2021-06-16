@@ -22,7 +22,7 @@ jobs:
         rust:
           - nightly
           - stable
-          - 1.51.0  # MSRV
+          - 1.49.0  # MSRV
         make:
           - name: format
             task: format
@@ -42,25 +42,25 @@ jobs:
           - rust: nightly
             make:
               name: format
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: format
           - rust: nightly
             make:
               name: lint
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: lint
           - rust: nightly
             make:
               name: doc
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: doc
           - rust: stable
             make:
               name: codecov
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: codecov
     env:

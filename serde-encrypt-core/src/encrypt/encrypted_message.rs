@@ -44,14 +44,19 @@ impl EncryptedMessage {
     /// - [DeserializationError](crate::error::ErrorKind::DeserializationError) when:
     ///   - binary data does not have nonce.
     pub fn deserialize(mut serialized_encrypted_message: Vec<u8>) -> Result<Self, Error> {
-        (serialized_encrypted_message.len() >= NONCE_SIZE).then(|| {
+        if serialized_encrypted_message.len() >= NONCE_SIZE {
             let encrypted = serialized_encrypted_message.split_off(NONCE_SIZE);
-            Self {
+            Ok(Self {
                 encrypted,
-                nonce: serialized_encrypted_message.try_into().expect("length already checked"),
-            }
-        }).ok_or_else(||
-            Error::decryption_error("binary data to decrypt (and then deserialize) does not seem to have nonce data"))
+                nonce: serialized_encrypted_message
+                    .try_into()
+                    .expect("length already checked"),
+            })
+        } else {
+            Err(Error::decryption_error(
+                "binary data to decrypt (and then deserialize) does not seem to have nonce data",
+            ))
+        }
     }
 
     /// Ref to XChaCha20 nonce (192-bit / 24-byte) used to create this encrypted message.
