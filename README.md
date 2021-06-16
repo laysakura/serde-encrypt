@@ -131,18 +131,9 @@ Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is bu
 
 ### Feature flags
 
-TODO writes about both serde-encrypt & serde-encrypt-core
-
-This crate comes with `std` feature by default. To enable `no_std` mode, specify `default-features = false` in your `Cargo.toml`.
-
-```toml Cargo.toml
-[dependencies]
-serde-encrypt = {version = "(version)", default-features = false}
-```
-
-Here is a list of what `std` featue brings to you.
-
-- `std::error::Error` trait implementation to `serde_encrypt::Error`.
+- `std` (`serde-encrypt` [default] ; `serde-encrypt-core` [default])
+  - `std::error::Error` trait implementation to `serde_encrypt::Error`.
+  - Random number generator is created via [`SeedableRng::from_entropy()`](https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html#method.from_entropy), which is considered to be more secure in OS-available environments.
 
 ## Changelog
 
