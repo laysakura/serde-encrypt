@@ -68,8 +68,8 @@ SERDE_ENCRYPT_CORE_VERSION=$(grep '^version = ".*"$' serde-encrypt-core/Cargo.to
 SERDE_ENCRYPT_VERSION=$(grep '^version = ".*"$' serde-encrypt/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
 SERDE_ENCRYPT_SGX_VERSION=$(grep '^version = ".*"$' serde-encrypt-sgx/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
 
-SERDE_ENCRYPT_DEP_CORE=$(grep '^serde-encrypt-core = .*$' serde-encrypt/Cargo.toml |sed -e 's|.*version = "=\([^"]*\)".*}$|\1|')
-SERDE_ENCRYPT_SGX_DEP_CORE=$(grep '^serde-encrypt-core = .*$' serde-encrypt-sgx/Cargo.toml |sed -e 's|.*version = "=\([^"]*\)".*}$|\1|')
+SERDE_ENCRYPT_DEP_CORE=$(grep '^serde-encrypt-core = .*$' serde-encrypt/Cargo.toml |sed -e 's|.*version = "\([^"]*\)".*}$|\1|')
+SERDE_ENCRYPT_SGX_DEP_CORE=$(grep '^serde-encrypt-core = .*$' serde-encrypt-sgx/Cargo.toml |sed -e 's|.*version = "\([^"]*\)".*}$|\1|')
 
 echo "Git tag: $TAG"
 
