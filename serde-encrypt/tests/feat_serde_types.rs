@@ -17,7 +17,7 @@ use serde_encrypt::{
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
     AsSharedKey, Error, ErrorKind,
 };
-use test_util::{serde_encrypt_public_key::*, serde_encrypt_shared_key::*};
+use test_util::*;
 use void::Void;
 
 #[test]
