@@ -59,3 +59,15 @@ impl Error {
         Self::new(ErrorKind::DecryptionError, reason)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use alloc::format;
+
+    #[test]
+    fn test_display() {
+        let e = Error::serialization_error("x");
+        let _s = format!("{}", e);
+    }
+}
