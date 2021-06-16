@@ -1,4 +1,4 @@
-//! serde-encrypt encrypts/decrypts any `strct`s and `enum`s that implements `serde::{Serialize, Deserialize`}.
+//! serde-encrypt encrypts/decrypts any `strct`s and `enum`s that implement `serde::{Serialize, Deserialize`}.
 //!
 //! See [README.md](https://github.com/laysakura/serde-encrypt) for basic usage and implementation details.
 
