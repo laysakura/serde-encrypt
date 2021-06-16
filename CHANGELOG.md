@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ### Added
 
-- [`serde-encrypt-sgx` crate](https://github.com/laysakura/serde-encrypt-sgx) for crates using [RUST SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk).
+- [`serde-encrypt-sgx` crate](https://github.com/laysakura/serde-encrypt-sgx) for crates using [Rust SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk).
 
 - Minimum Supported Rust Version decreases to 1.49.0.
 
