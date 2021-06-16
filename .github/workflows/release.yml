@@ -32,17 +32,11 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: publish serde-encrypt-core to crate.io
+      - name: publish cargo workspace crates to crate.io
         uses: katyo/publish-crates@v1
         with:
           registry-token: ${{ secrets.CRATE_IO_SECRET }}
-          path: ./serde-encrypt-core
-
-      - name: publish serde-encrypt to crate.io
-        uses: katyo/publish-crates@v1
-        with:
-          registry-token: ${{ secrets.CRATE_IO_SECRET }}
-          path: ./serde-encrypt
+          path: .
 
       - name: publish serde-encrypt-sgx to crate.io
         uses: katyo/publish-crates@v1
