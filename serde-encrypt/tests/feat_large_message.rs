@@ -27,7 +27,7 @@ fn test_serde_encrypt_public_key_large_message() {
         type S = CborSerializer<Self>;
     }
 
-    let msg = Message([42u8; SIZE].to_vec());
+    let msg = Message(vec![42u8; SIZE]);
     public_key_enc_dec_assert_eq(&msg, &sender_combined_key, &receiver_combined_key).unwrap();
 }
 
@@ -39,6 +39,6 @@ fn test_serde_encrypt_shared_key_large_message() {
         type S = CborSerializer<Self>;
     }
 
-    let msg = Message([42u8; SIZE].to_vec());
+    let msg = Message(vec![42u8; SIZE]);
     shared_key_enc_dec_assert_eq(&msg, &shared_key).unwrap();
 }
