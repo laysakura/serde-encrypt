@@ -129,7 +129,7 @@ Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is bu
   - To exchange `SharedKey`.
   - Quickly sends/receive small amounts of messages without secret shared key.
 
-### [RUST SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk) support
+### [Rust SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk) support
 
 Use [serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate.
 
