@@ -135,7 +135,7 @@ If your crate uses RUST SGX SDK, depend on `serde-encrypt-sgx` crate instead of 
 
 ```toml Cargo.toml
 [dependencies]
-serde-encrypt-sgx = "(version)"
+serde-encrypt-sgx = {tag = "(git tag)", git = "https://github.com/laysakura/serde-encrypt.git"}
 ```
 
 ### Feature flags
