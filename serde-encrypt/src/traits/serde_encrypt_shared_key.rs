@@ -1,6 +1,9 @@
-use crate::{serialize::TypedSerialized, shared_key::SharedKey, EncryptedMessage, Error};
+use crate::{
+    encrypt::plain_message_shared_key::PlainMessageSharedKey, serialize::TypedSerialized,
+    shared_key::SharedKey, EncryptedMessage, Error,
+};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_encrypt_core::encrypt::plain_message_shared_key::PlainMessageSharedKey;
+use serde_encrypt_core::encrypt::plain_message_shared_key::PlainMessageSharedKeyCore;
 
 /// Shared-key authenticated encryption for serde-serializable types.
 ///
@@ -54,7 +57,7 @@ pub trait SerdeEncryptSharedKey {
         Self: Serialize,
     {
         let serialized = Self::S::serialize(&self)?;
-        let plain_msg = PlainMessageSharedKey::from(serialized.into_vec());
+        let plain_msg = PlainMessageSharedKey::new(serialized.into_vec());
         plain_msg.encrypt(shared_key)
     }
 
@@ -90,6 +93,6 @@ pub trait SerdeEncryptSharedKey {
         Self: Deserialize<'de>,
     {
         let plain_msg = PlainMessageSharedKey::decrypt(encrypted_message, shared_key)?;
-        Ok(Self::S::new(plain_msg.into()))
+        Ok(Self::S::new(plain_msg.into_vec()))
     }
 }

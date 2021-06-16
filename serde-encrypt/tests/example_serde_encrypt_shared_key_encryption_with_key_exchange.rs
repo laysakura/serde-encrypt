@@ -16,11 +16,12 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
+    key::key_pair::{ReceiverKeyPair, SenderKeyPair},
     serialize::{impls::CborSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
-    AsSharedKey, EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPair, SenderCombinedKey,
-    SenderKeyPair,
+    AsSharedKey, EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPairCore,
+    SenderCombinedKey, SenderKeyPairCore,
 };
 
 impl<'a> SerdeEncryptSharedKey for Message<'a> {

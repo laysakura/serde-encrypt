@@ -2,10 +2,11 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
+    key::key_pair::{ReceiverKeyPair, SenderKeyPair},
     serialize::{impls::CborSerializer, TypedSerialized},
     traits::SerdeEncryptPublicKey,
-    EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPair, SenderCombinedKey,
-    SenderKeyPair,
+    EncryptedMessage, Error, ReceiverCombinedKey, ReceiverKeyPairCore, SenderCombinedKey,
+    SenderKeyPairCore,
 };
 
 #[derive(Debug, Serialize, Deserialize)]

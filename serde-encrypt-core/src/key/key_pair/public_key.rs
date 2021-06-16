@@ -2,6 +2,7 @@
 
 use crypto_box::PublicKey;
 
+/// Message sender's public key
 #[derive(Clone, Debug)]
 pub struct SenderPublicKey(PublicKey);
 
@@ -17,6 +18,7 @@ impl From<PublicKey> for SenderPublicKey {
     }
 }
 
+/// Message receiver's public key
 #[derive(Clone, Debug)]
 pub struct ReceiverPublicKey(PublicKey);
 

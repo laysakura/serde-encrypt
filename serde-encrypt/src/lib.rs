@@ -7,9 +7,22 @@
 
 extern crate alloc;
 
+pub mod encrypt;
+pub mod key;
 pub mod serialize;
 pub mod shared_key;
 pub mod traits;
+
+mod random;
+
+cfg_if::cfg_if! {
+    if #[cfg(feature = "std")] {
+        use once_cell::sync::Lazy;
+        use std::sync::{MutexGuard, Mutex};
+    } else {
+        use spin::{Lazy, MutexGuard, Mutex};
+    }
+}
 
 pub use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
@@ -17,6 +30,6 @@ pub use serde_encrypt_core::{
     key::{
         as_shared_key::AsSharedKey,
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-        key_pair::{ReceiverKeyPair, SenderKeyPair},
+        key_pair::{ReceiverKeyPairCore, SenderKeyPairCore},
     },
 };

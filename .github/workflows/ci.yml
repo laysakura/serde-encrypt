@@ -22,7 +22,7 @@ jobs:
         rust:
           - nightly
           - stable
-          - 1.51.0  # MSRV
+          - 1.49.0  # MSRV
         make:
           - name: format
             task: format
@@ -38,31 +38,40 @@ jobs:
           - name: os-less-build
             task: os-less-build
             rust-free: true  # Rust is installed inside task
+          - name: build-sgx
+            task: build-sgx
+            rust-free: true  # Rust is inside sgx-rust docker image
         exclude:
           - rust: nightly
             make:
               name: format
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: format
           - rust: nightly
             make:
               name: lint
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: lint
           - rust: nightly
             make:
               name: doc
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: doc
           - rust: stable
             make:
               name: codecov
-          - rust: 1.51.0
+          - rust: 1.49.0
             make:
               name: codecov
+          - rust: nightly
+            make:
+              name: build-sgx
+          - rust: 1.49.0
+            make:
+              name: build-sgx
     env:
       RUST_BACKTRACE: full
       CACHE_RESET_KEY: 20210611-01

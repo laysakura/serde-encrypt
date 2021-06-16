@@ -3,7 +3,7 @@
 [![crates.io](https://img.shields.io/crates/v/serde-encrypt.svg)](https://crates.io/crates/serde-encrypt)
 [![Crates.io](https://img.shields.io/crates/d/serde-encrypt?label=cargo%20installs)](https://crates.io/crates/serde-encrypt)
 [![docs.rs](https://img.shields.io/badge/API%20doc-docs.rs-blueviolet)](https://docs.rs/serde-encrypt)
-![MSRV](https://img.shields.io/badge/rustc-1.51+-lightgray.svg)
+![MSRV](https://img.shields.io/badge/rustc-1.49+-lightgray.svg)
 [![ci](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/laysakura/serde-encrypt/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/laysakura/serde-encrypt/branch/main/graph/badge.svg?token=XI0IR5QVU3)](https://codecov.io/gh/laysakura/serde-encrypt)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-MIT)
@@ -129,18 +129,20 @@ Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is bu
   - To exchange `SharedKey`.
   - Quickly sends/receive small amounts of messages without secret shared key.
 
-### std vs no_std
+### [RUST SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk) support
 
-This crate comes with `std` feature by default. To enable `no_std` mode, specify `default-features = false` in your `Cargo.toml`.
+If your crate uses RUST SGX SDK, depend on `serde-encrypt-sgx` crate instead of `serde-encrypt`.
 
 ```toml Cargo.toml
 [dependencies]
-serde-encrypt = {version = "(version)", default-features = false}
+serde-encrypt-sgx = "(version)"
 ```
 
-Here is a list of what `std` featue brings to you.
+### Feature flags
 
-- `std::error::Error` trait implementation to `serde_encrypt::Error`.
+- `std` (`serde-encrypt` [default] ; `serde-encrypt-core` [default])
+  - `std::error::Error` trait implementation to `serde_encrypt::Error`.
+  - Random number generator is created via [`SeedableRng::from_entropy()`](https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html#method.from_entropy), which is considered to be more secure in OS-available environments.
 
 ## Changelog
 

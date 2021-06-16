@@ -4,3 +4,9 @@ members = [
   "serde-encrypt",
   "serde-encrypt-core",
 ]
+
+exclude = [
+  # If adding this to workspace, `cargo xxx --workspace` command must compile rust-sgx-sdk,
+  # which requires old version of nightly rustc.
+  "serde-encrypt-sgx",
+]

@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Added
+
+- `serde-encrypt-sgx` crate for crates using [RUST SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk).
+
+- Minimum Supported Rust Version decreases to 1.49.0.
+
 ### Changed
 
 - `serde-encrypt` crate is split into `serde-encrypt-core` (no dependencies to serde) and `serde-encrypt` (serde dependent layer). Users should depend only on `serde-encrypt` (structures from `-core` are re-exported).
@@ -18,8 +24,6 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
   - `serde_encrypt::EncryptedMessages`
   - `serde_encrypt::SenderCombinedKey`
   - `serde_encrypt::ReceiverCombinedKey`
-  - `serde_encrypt::SenderKeyPair`
-  - `serde_encrypt::ReceiverKeyPair`
   - `serde_encrypt::AsSharedKey`
 
 ---

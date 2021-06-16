@@ -4,8 +4,9 @@ use core::fmt;
 
 use serde::{de::DeserializeOwned, Serialize};
 use serde_encrypt::{
-    traits::SerdeEncryptPublicKey, Error, ReceiverCombinedKey, ReceiverKeyPair, SenderCombinedKey,
-    SenderKeyPair,
+    key::key_pair::{ReceiverKeyPair, SenderKeyPair},
+    traits::SerdeEncryptPublicKey,
+    Error, ReceiverCombinedKey, ReceiverKeyPairCore, SenderCombinedKey, SenderKeyPairCore,
 };
 
 #[macro_export]

@@ -14,13 +14,21 @@ jobs:
       - name: Check Git tag vs crate version
         run: |
           TAG=${GITHUB_REF/refs\/tags\//}
+
           SERDE_ENCRYPT_CORE_VERSION=$(grep '^version = ".*"$' serde-encrypt-core/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
           SERDE_ENCRYPT_VERSION=$(grep '^version = ".*"$' serde-encrypt/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
+          SERDE_ENCRYPT_SGX_VERSION=$(grep '^version = ".*"$' serde-encrypt-sgx/Cargo.toml |sed -e 's|.*"\(.*\)"|\1|')
+
           echo "Git tag: $TAG"
+
           echo "serde-encrypt-core package version: $SERDE_ENCRYPT_CORE_VERSION"
           test "$SERDE_ENCRYPT_CORE_VERSION" = "$TAG"
+
           echo "serde-encrypt package version: $SERDE_ENCRYPT_VERSION"
           test "$SERDE_ENCRYPT_VERSION" = "$TAG"
+
+          echo "serde-encrypt-sgx package version: $SERDE_ENCRYPT_SGX_VERSION"
+          test "$SERDE_ENCRYPT_SGX_VERSION" = "$TAG"
 
       - name: Install stable Rust
         uses: actions-rs/toolchain@v1
@@ -28,7 +36,14 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: publish to crate.io
+      - name: publish workspace crates to crate.io
         uses: katyo/publish-crates@v1
         with:
           registry-token: ${{ secrets.CRATE_IO_SECRET }}
+          path: .
+
+      - name: publish serde-encrypt-sgx to crate.io
+        uses: katyo/publish-crates@v1
+        with:
+          registry-token: ${{ secrets.CRATE_IO_SECRET }}
+          path: ./serde-encrypt-sgx

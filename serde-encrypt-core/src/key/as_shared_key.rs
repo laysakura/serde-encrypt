@@ -1,10 +1,9 @@
 //! Keys for common key cryptosystem.
 
+use crate::random::RngSingleton;
 use chacha20poly1305::Key as ChaChaKey;
 use core::{convert::TryInto, ops::DerefMut};
-use rand::Rng;
-
-use crate::random::global_rng;
+use rand::RngCore;
 
 /// 32-byte key shared among sender and receiver secretly.
 ///
@@ -15,6 +14,9 @@ use crate::random::global_rng;
 ///
 /// So, implementators of this trait is expected to have `serde::{Serialize, Deserialize}` and `SerdeSerializePublicKey` trait bounds.
 pub trait AsSharedKey {
+    /// RNG singleton
+    type R: RngSingleton;
+
     /// Constructor from secret bytes.
     fn from_array(key: [u8; 32]) -> Self
     where
@@ -30,12 +32,12 @@ pub trait AsSharedKey {
     where
         Self: Sized,
     {
-        let mut rng = global_rng().lock();
+        let mut rng = Self::R::instance();
 
-        let r0: u64 = rng.deref_mut().gen();
-        let r1: u64 = rng.deref_mut().gen();
-        let r2: u64 = rng.deref_mut().gen();
-        let r3: u64 = rng.deref_mut().gen();
+        let r0 = rng.deref_mut().next_u64();
+        let r1 = rng.deref_mut().next_u64();
+        let r2 = rng.deref_mut().next_u64();
+        let r3 = rng.deref_mut().next_u64();
 
         let key = [
             r0.to_le_bytes(),

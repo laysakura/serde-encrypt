@@ -1,14 +1,8 @@
-//! serde-serializable shared key.
-
 use crate::{random::RngSingletonImpl, AsSharedKey};
 use serde::{Deserialize, Serialize};
 
 use crate::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey};
 
-/// 32-byte key shared among sender and receiver secretly.
-///
-/// It is a good practice to use [SerdeEncryptPublicKey](crate::traits::SerdeEncryptPublicKey)
-/// to exchange this shared key.
 #[derive(Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
 pub struct SharedKey([u8; 32]);
 

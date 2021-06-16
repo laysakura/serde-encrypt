@@ -2,6 +2,10 @@
 
 extern crate alloc;
 
+mod random;
+
+pub use random::TestRngSingleton;
+
 use alloc::vec::Vec;
 use core::fmt::Debug;
 

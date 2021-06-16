@@ -11,6 +11,8 @@ fn test_shared_key_distribution() {
     struct MySharedKey([u8; 32]);
 
     impl AsSharedKey for MySharedKey {
+        type R = TestRngSingleton;
+
         fn from_array(key: [u8; 32]) -> Self
         where
             Self: Sized,

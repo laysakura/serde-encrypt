@@ -43,6 +43,18 @@ rustup target add aarch64-unknown-none
 RUSTFLAGS='-D warnings' cargo build --workspace --no-default-features --target=aarch64-unknown-none
 ''']
 
+[tasks.build-sgx]
+script = ['''
+#!/usr/bin/env bash -eux
+docker run --rm -v `pwd`:/root/serde-encrypt baiduxlab/sgx-rust:1804-1.1.3 bash -c '
+    export PATH=/root/.cargo/bin:$PATH
+    cd /root/serde-encrypt/serde-encrypt-sgx
+    rustup show
+    RUSTFLAGS="-D warnings" cargo build --all-features
+'
+''']
+
+
 [tasks.lcov]
 script = ['''
 #!/usr/bin/env bash -eux

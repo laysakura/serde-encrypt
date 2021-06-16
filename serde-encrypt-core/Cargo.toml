@@ -18,12 +18,13 @@ crypto_box = {version = "0.6"}
 rand = {version = "0.8", default-features = false}
 rand_chacha = {version = "0.3", default-features = false}
 
+[dev-dependencies]
 spin = {version = "0.9", default-features = false, features = ["spin_mutex", "lazy"]}
 
 [features]
 default = ["std"]
+
 std = [
   "chacha20poly1305/std",
   "rand_chacha/std",
-  "spin/std",
 ]
