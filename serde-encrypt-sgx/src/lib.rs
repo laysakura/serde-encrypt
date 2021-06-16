@@ -11,10 +11,18 @@
 #![no_std]
 
 extern crate alloc;
+extern crate sgx_tstd as std;
 
+pub mod encrypt;
+pub mod key;
 pub mod serialize;
 pub mod shared_key;
 pub mod traits;
+
+mod random;
+
+use once_cell::sync::Lazy;
+use std::sync::{SgxMutex as Mutex, SgxMutexGuard as MutexGuard};
 
 pub use serde_encrypt_core::{
     encrypt::encrypted_message::EncryptedMessage,
@@ -22,6 +30,6 @@ pub use serde_encrypt_core::{
     key::{
         as_shared_key::AsSharedKey,
         combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-        key_pair::{ReceiverKeyPair, SenderKeyPair},
+        key_pair::{ReceiverKeyPairCore, SenderKeyPairCore},
     },
 };

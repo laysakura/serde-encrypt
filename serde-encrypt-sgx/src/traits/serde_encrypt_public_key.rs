@@ -1,7 +1,8 @@
+use crate::encrypt::plain_message_public_key::PlainMessagePublicKey;
 use crate::serialize::TypedSerialized;
 use crate::{EncryptedMessage, Error, ReceiverCombinedKey, SenderCombinedKey};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_encrypt_core::encrypt::plain_message_public_key::PlainMessagePublicKey;
+use serde_encrypt_core::encrypt::plain_message_public_key::PlainMessagePublicKeyCore;
 
 pub trait SerdeEncryptPublicKey {
     type S: TypedSerialized<T = Self>;
@@ -11,7 +12,7 @@ pub trait SerdeEncryptPublicKey {
         Self: Serialize,
     {
         let serialized = Self::S::serialize(&self)?;
-        let plain_msg = PlainMessagePublicKey::from(serialized.into_vec());
+        let plain_msg = PlainMessagePublicKey::new(serialized.into_vec());
         plain_msg.encrypt(combined_key)
     }
 
@@ -34,6 +35,6 @@ pub trait SerdeEncryptPublicKey {
         Self: Deserialize<'de>,
     {
         let plain_msg = PlainMessagePublicKey::decrypt(encrypted_message, combined_key)?;
-        Ok(Self::S::new(plain_msg.into()))
+        Ok(Self::S::new(plain_msg.into_vec()))
     }
 }

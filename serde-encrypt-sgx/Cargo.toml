@@ -14,10 +14,15 @@ version = "0.2.0"
 [dependencies]
 serde-encrypt-core = {path = "../serde-encrypt-core", default-features = false}
 
-serde = {git = "https://github.com/mesalock-linux/serde-sgx.git", default-features = false}
-serde_cbor = {git = "https://github.com/mesalock-linux/cbor-sgx.git", default-features = false, features = ["alloc"]}
+sgx_tstd = {rev = "v1.1.3", git = "https://github.com/apache/teaclave-sgx-sdk.git"}
+
+serde = {git = "https://github.com/mesalock-linux/serde-sgx.git", features = ["derive"]}
+serde_cbor = {git = "https://github.com/mesalock-linux/cbor-sgx.git"}
+
+rand_chacha = {version = "0.3", default-features = false}
+rand_core = {version = "0.6", default-features = false, features = ["getrandom"]}# from_entropy()
+
+once_cell = {git = "https://github.com/mesalock-linux/once_cell-sgx"}
 
 [dev-dependencies]
 serde = {git = "https://github.com/mesalock-linux/serde-sgx.git", default-features = false, eatures = ["derive", "alloc"]}# alloc for Vec, String
-
-pretty_assertions = "0.7"
