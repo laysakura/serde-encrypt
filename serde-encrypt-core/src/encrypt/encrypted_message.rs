@@ -68,6 +68,12 @@ impl EncryptedMessage {
     pub fn encrypted(&self) -> &[u8] {
         &self.encrypted
     }
+
+    /// Payload size in bytes.
+    #[allow(clippy::len_without_is_empty)]
+    pub fn len(&self) -> usize {
+        self.encrypted().len() + self.nonce().len()
+    }
 }
 
 #[cfg(test)]

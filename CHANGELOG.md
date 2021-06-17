@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Added
+
+- `EncryptedMessage::len()` function to return cipher-text's payload size.
+
 ## [0.3.2] - 2021-06-16
 
 ### Added
