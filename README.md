@@ -118,7 +118,12 @@ _(*3) Random number generator._
 
 Crate users can choose and even implement by themselves serialize representations in design.
 
-Currently only `CborSerializer` (ref: [CBOR](https://docs.rs/serde_cbor/)) is built-in.
+Currently, the following serializers are built-in.
+
+- `BincodeSerializer` (only `std` feature)
+  - Would be the best choice for `std`.
+- `CborSerializer`
+  - Single available choice in `serde-encrypt-sgx`.
 
 ### Use cases
 
@@ -138,6 +143,7 @@ Use [serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate.
 - `std` (`serde-encrypt` [default] ; `serde-encrypt-core` [default])
   - `std::error::Error` trait implementation to `serde_encrypt::Error`.
   - Random number generator is created via [`SeedableRng::from_entropy()`](https://rust-random.github.io/rand/rand_core/trait.SeedableRng.html#method.from_entropy), which is considered to be more secure in OS-available environments.
+  - `BincodeSerializer` available.
 
 ## Changelog
 

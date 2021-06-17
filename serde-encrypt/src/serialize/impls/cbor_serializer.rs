@@ -3,7 +3,7 @@ use alloc::{format, vec::Vec};
 use core::marker::PhantomData;
 use serde::{Deserialize, Serialize};
 
-/// CBOR serializer
+/// [CBOR](https://docs.rs/serde_cbor) serializer
 #[derive(Debug)]
 pub struct CborSerializer<T> {
     serialized: Vec<u8>,

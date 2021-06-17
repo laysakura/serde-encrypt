@@ -3,7 +3,7 @@ use alloc::{format, vec::Vec};
 use core::marker::PhantomData;
 use serde::{Deserialize, Serialize};
 
-/// bincode serializer
+/// [bincode](https://docs.rs/bincode) serializer
 #[derive(Debug)]
 pub struct BincodeSerializer<T> {
     serialized: Vec<u8>,
