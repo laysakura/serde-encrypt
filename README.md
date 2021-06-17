@@ -45,6 +45,8 @@ serde-encrypt = {version = "(version)", default-features = false}  # If you need
 
 ## Example
 
+Good first example from [shared key encryption test](https://github.com/laysakura/serde-encrypt/blob/main/serde-encrypt/tests/example_serde_encrypt_shared_key_owned_data.rs).
+
 If you and your peer already have shared-key, just implement `SerdeEncryptSharedKey` trait to your `Serialize` and `Deserialize` data types.
 
 ```rust
