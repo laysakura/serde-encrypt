@@ -1,4 +1,4 @@
-use crate::{Error, serialize::TypedSerialized};
+use crate::{serialize::TypedSerialized, Error};
 use alloc::{format, vec::Vec};
 use core::marker::PhantomData;
 use serde::{Deserialize, Serialize};
@@ -58,5 +58,25 @@ impl<T> TypedSerialized for CborSerializer<T> {
                 e
             ))
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cbor_serializer() -> Result<(), Error> {
+        #[derive(PartialEq, Debug, Serialize, Deserialize)]
+        struct Message(i32);
+
+        let msg = Message(42);
+
+        let serialized_msg = CborSerializer::serialize(&msg)?;
+        let deserialized_msg = serialized_msg.deserialize()?;
+
+        assert_eq!(msg, deserialized_msg);
+
+        Ok(())
     }
 }
