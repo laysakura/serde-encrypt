@@ -114,7 +114,7 @@ _(*2) "Number used once": to make encryption non-deterministic. Although nonce f
 
 _(*3) Random number generator._
 
-### Serialization
+### Serializer
 
 Crate users can choose and even implement by themselves serialize representations in design.
 
@@ -179,10 +179,9 @@ It is another choice to make `serde-encrypt-sgx` inside this repository using fe
 ### Serialization
 
 `struct`s and `enum`s to encrypt are serialized before encrypted.
-[CborSerializer](https://docs.rs/serde-encrypt/0.3.2/serde_encrypt/serialize/impls/struct.CborSerializer.html), which uses [serde_cbor crate](https://docs.rs/serde_cbor) for implementation,
-is a single built-in serializer.
+Built-in serializers are listed [here](#serializer).
 
-Users can implement [TypedSerialized trait](https://docs.rs/serde-encrypt/0.3.2/serde_encrypt/serialize/trait.TypedSerialized.html) by themselves
+Users can also implement [TypedSerialized trait](https://docs.rs/serde-encrypt/0.3.2/serde_encrypt/serialize/trait.TypedSerialized.html) by themselves
 to get better serialization.
 
 ## Changelog
