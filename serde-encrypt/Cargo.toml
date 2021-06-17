@@ -14,6 +14,8 @@ version = "0.3.2"
 [dependencies]
 serde-encrypt-core = {version = "0.3.2", path = "../serde-encrypt-core", default-features = false}
 
+bincode = {version = "1.3", optional = true}
+postcard = {version = "0.7", default-features = false, features = ["alloc"]}
 serde = {version = "1.0", default-features = false}
 serde_cbor = {version = "0.11", default-features = false, features = ["alloc"]}
 
@@ -40,6 +42,7 @@ default = ["std"]
 std = [
   "serde-encrypt-core/std",
   "serde/std",
+  "bincode",
   "serde_cbor/std",
   "once_cell",
   "rand_chacha/std",

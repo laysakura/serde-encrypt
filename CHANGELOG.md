@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Added
+
+- New built-in serializers:
+  - `PostcardSerializer`, which uses [`postcard` crate](https://docs.rs/postcard) for serialization.
+  - `BincodeSerializer` for `std` feature, which uses [`bincode` crate](https://docs.rs/bincode) for serialization.
+
+- `EncryptedMessage::len()` function to return cipher-text's payload size.
+
 ## [0.3.2] - 2021-06-16
 
 ### Added
