@@ -1,5 +1,8 @@
 //! Serializer implementations.
 
+mod postcard_serializer;
+pub use postcard_serializer::PostcardSerializer;
+
 mod cbor_serializer;
 pub use cbor_serializer::CborSerializer;
 

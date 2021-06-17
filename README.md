@@ -122,6 +122,8 @@ Currently, the following serializers are built-in.
 
 - `BincodeSerializer` (only `std` feature)
   - Would be the best choice for `std`.
+- `PostcardSerializer`
+  - Would be the best choice for no_std.
 - `CborSerializer`
   - Single available choice in `serde-encrypt-sgx`.
 
