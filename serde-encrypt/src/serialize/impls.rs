@@ -1,5 +1,11 @@
 //! Serializer implementations.
 
-mod cbor;
+mod cbor_serializer;
+pub use cbor_serializer::CborSerializer;
 
-pub use cbor::CborSerializer;
+cfg_if::cfg_if! {
+    if #[cfg(feature = "std")] {
+        mod bincode_serializer;
+        pub use bincode_serializer::BincodeSerializer;
+    }
+}
