@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
-## [0.4.0] - 2021-06-17
+## [v0.4.0] - 2021-06-17
 
 ### Added
 
@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 - `EncryptedMessage::len()` function to return cipher-text's payload size.
 
-## [0.3.2] - 2021-06-16
+## [v0.3.2] - 2021-06-16
 
 ### Added
 
@@ -38,14 +38,14 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
   - `serde_encrypt::ReceiverCombinedKey`
   - `serde_encrypt::AsSharedKey`
 
-## [0.2.0] - 2021-06-14
+## [v0.2.0] - 2021-06-14
 
 ### Added
 
 - `EncryptedMessage::nonce()` getter method.
 - `EncryptedMessage::encrypted()` getter method.
 
-## [0.1.1] - 2021-06-14
+## [v0.1.1] - 2021-06-14
 
 ### Added
 
@@ -58,9 +58,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 [Semantic Versioning]: https://semver.org/
 
 <!-- Versions -->
-[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.4.0...HEAD
 [Released]: https://github.com/laysakura/serde-encrypt/releases
-[0.4.0]: https://github.com/laysakura/serde-encrypt/compare/0.3.2...0.4.0
-[0.3.2]: https://github.com/laysakura/serde-encrypt/compare/0.1.1...0.3.2
-[0.2.0]: https://github.com/laysakura/serde-encrypt/compare/0.1.1...0.2.0
-[0.1.1]: https://github.com/laysakura/serde-encrypt/releases/0.1.1
+[v0.4.0]: https://github.com/laysakura/serde-encrypt/compare/v0.3.2...v0.4.0
+[v0.3.2]: https://github.com/laysakura/serde-encrypt/compare/0.2.0...v0.3.2
+[v0.2.0]: https://github.com/laysakura/serde-encrypt/compare/0.1.1...0.2.0
+[v0.1.1]: https://github.com/laysakura/serde-encrypt/releases/0.1.1
