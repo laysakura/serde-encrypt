@@ -161,7 +161,7 @@ Use [serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate.
   - Serialization / Deserialization impls.
   - RNG singleton impls.
 
-Also, `[serde-encrypt-sgx](https://github.com/laysakura/serde-encrypt-sgx) crate` is available in separate repository.
+[`serde-encrypt-sgx` crate](https://github.com/laysakura/serde-encrypt-sgx) is also available in separate repository.
 It's in the same layer as `serde-encrypt`.
 
 In order to use serde with Rust SGX SDK, people should use forked version [serde-sgx](https://github.com/mesalock-linux/serde-sgx/).
