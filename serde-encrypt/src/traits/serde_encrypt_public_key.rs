@@ -25,11 +25,11 @@ use serde_encrypt_core::encrypt::plain_message_public_key::PlainMessagePublicKey
 ///
 /// ## Encrypting owned data
 ///
-/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_public_key_owned_data.rs).
+/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/serde-encrypt/tests/example_serde_encrypt_public_key_owned_data.rs).
 ///
 /// ## Encrypting struct with reference fields
 ///
-/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_public_key_struct_with_reference.rs).
+/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/serde-encrypt/tests/example_serde_encrypt_public_key_struct_with_reference.rs).
 ///
 /// # Algorithm
 ///

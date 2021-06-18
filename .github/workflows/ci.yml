@@ -32,6 +32,11 @@ jobs:
             task: build test
           - name: doc
             task: doc
+          - name: deadlink
+            task: deadlink
+            rust-free: true
+            install-cargo-deadlinks: true
+            install-mlc: true
           - name: codecov
             task: lcov
             install-grcov: true
@@ -60,6 +65,12 @@ jobs:
           - rust: 1.49.0
             make:
               name: doc
+          - rust: nightly
+            make:
+              name: deadlink
+          - rust: 1.49.0
+            make:
+              name: deadlink
           - rust: stable
             make:
               name: codecov
@@ -103,23 +114,45 @@ jobs:
       - name: Install cargo-make
         env:
           BASE_URL: https://github.com/sagiegurari/cargo-make/releases/download
-          CARGO_MAKE_VERSION: 0.33.0
+          VERSION: 0.34.0
         run: |
-          CARGO_MAKE_FILE_BASE=cargo-make-v${CARGO_MAKE_VERSION}-x86_64-unknown-linux-musl
+          FILE_BASE=cargo-make-v${VERSION}-x86_64-unknown-linux-musl
           mkdir -p ${HOME}/.local/bin
-          curl -L "${BASE_URL}/${CARGO_MAKE_VERSION}/${CARGO_MAKE_FILE_BASE}.zip" --output /tmp/cargo-make.zip
+          curl -L "${BASE_URL}/${VERSION}/${FILE_BASE}.zip" --output /tmp/cargo-make.zip
           unzip /tmp/cargo-make.zip -d /tmp/cargo-make
-          mv -f /tmp/cargo-make/${CARGO_MAKE_FILE_BASE}/cargo-make $HOME/.local/bin/cargo-make
+          mv -f /tmp/cargo-make/${FILE_BASE}/cargo-make $HOME/.local/bin/cargo-make
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install cargo-deadlinks
+        if: ${{ matrix.make.install-cargo-deadlinks }}
+        env:
+          BASE_URL: https://github.com/deadlinks/cargo-deadlinks/releases/download
+          VERSION: 0.8.0
+        run: |
+          FILE_BASE=cargo-deadlinks-linux
+          curl -L "${BASE_URL}/${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/cargo-deadlinks
+          chmod +x $HOME/.local/bin/cargo-deadlinks
+          cargo deadlinks --version
+
+      - name: Install mlc
+        if: ${{ matrix.make.install-mlc }}
+        env:
+          BASE_URL: https://github.com/becheran/mlc/releases/download
+          VERSION: 0.14.3
+        run: |
+          FILE_BASE=mlc-x86_64-linux
+          curl -L "${BASE_URL}/v${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/mlc
+          chmod +x $HOME/.local/bin/mlc
+          mlc --version
 
       - name: Install grcov
         if: ${{ matrix.make.install-grcov }}
         env:
           BASE_URL: https://github.com/mozilla/grcov/releases/download
-          GRCOV_VERSION: 0.8.0
+          VERSION: 0.8.0
         run: |
-          GRCOV_FILE_BASE=grcov-linux-x86_64
-          curl -L "${BASE_URL}/v${GRCOV_VERSION}/${GRCOV_FILE_BASE}.tar.bz2" --output /tmp/grcov.tar.bz2
+          FILE_BASE=grcov-linux-x86_64
+          curl -L "${BASE_URL}/v${VERSION}/${FILE_BASE}.tar.bz2" --output /tmp/grcov.tar.bz2
           tar xvf /tmp/grcov.tar.bz2 --directory=$HOME/.local/bin/
           grcov --version
 

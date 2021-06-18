@@ -32,11 +32,11 @@ use serde_encrypt_core::encrypt::plain_message_shared_key::PlainMessageSharedKey
 ///
 /// ## Encrypting owned data with already-shared key
 ///
-/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_owned_data.rs).
+/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/serde-encrypt/tests/example_serde_encrypt_shared_key_owned_data.rs).
 ///
 /// ## Generate and exchange shared key and encrypt struct with reference fields
 ///
-/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/tests/example_serde_encrypt_shared_key_encryption_with_key_exchange.rs).
+/// See [this example](https://github.com/laysakura/serde-encrypt/blob/main/serde-encrypt/tests/example_serde_encrypt_shared_key_encryption_with_key_exchange.rs).
 ///
 /// # Algorithm
 ///

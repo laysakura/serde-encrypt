@@ -36,6 +36,13 @@ cargo clean --doc
 cargo doc --workspace --no-deps --all-features
 ''']
 
+[tasks.deadlink]
+script = ['''
+#!/usr/bin/env bash -eux
+cargo deadlinks --check-http
+mlc --ignore-path target
+''']
+
 [tasks.os-less-build]
 script = [
   '''
