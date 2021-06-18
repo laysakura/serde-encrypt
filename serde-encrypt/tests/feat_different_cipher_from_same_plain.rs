@@ -8,7 +8,7 @@
 mod test_util;
 
 use serde::{Deserialize, Serialize};
-use serde_encrypt::serialize::impls::CborSerializer;
+use serde_encrypt::serialize::impls::BincodeSerializer;
 use serde_encrypt::shared_key::SharedKey;
 use serde_encrypt::traits::SerdeEncryptPublicKey;
 use serde_encrypt::traits::SerdeEncryptSharedKey;
@@ -24,7 +24,7 @@ fn test_serde_encrypt_public_key_in_a_process() {
     combined_keys_gen!(sender_combined_key, _x);
 
     impl SerdeEncryptPublicKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     assert_no_duplicate(
         || {
@@ -41,7 +41,7 @@ fn test_serde_encrypt_shared_key_in_a_process() {
     let shared_key = SharedKey::generate();
 
     impl SerdeEncryptSharedKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     assert_no_duplicate(
         || {

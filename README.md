@@ -57,7 +57,7 @@ struct Message {
 }
 
 impl SerdeEncryptSharedKey for Message {
-    type S = CborSerializer<Self>;  // you can specify serializer implementation (or implement it by yourself).
+    type S = BincodeSerializer<Self>;  // you can specify serializer implementation (or implement it by yourself).
 }
 ```
 

@@ -12,7 +12,7 @@ use serde::{
     Deserialize, Deserializer, Serialize,
 };
 use serde_encrypt::{
-    serialize::{impls::CborSerializer, TypedSerialized},
+    serialize::{impls::BincodeSerializer, TypedSerialized},
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
     AsSharedKey, Error, ErrorKind,
@@ -28,10 +28,10 @@ fn test_unit_struct() -> Result<(), Error> {
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Unit;
     impl SerdeEncryptPublicKey for Unit {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Unit {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Unit;
@@ -48,10 +48,10 @@ fn test_primitive_type_fixed_len() -> Result<(), Error> {
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct I32(i32);
     impl SerdeEncryptPublicKey for I32 {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for I32 {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = I32(42);
@@ -68,10 +68,10 @@ fn test_primitive_type_unbound_len() -> Result<(), Error> {
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct MyString(String);
     impl SerdeEncryptPublicKey for MyString {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for MyString {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = MyString("MyString".to_string());
@@ -88,10 +88,10 @@ fn test_tuple_struct() -> Result<(), Error> {
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Tuple(i16, i32, i64);
     impl SerdeEncryptPublicKey for Tuple {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Tuple {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Tuple(42, 4242, 424242);
@@ -124,10 +124,10 @@ fn test_enum() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -172,10 +172,10 @@ fn test_enum_tagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -220,10 +220,10 @@ fn test_enum_adjacently_tagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -268,10 +268,10 @@ fn test_enum_untagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -304,10 +304,10 @@ fn test_skip_deserializing() -> Result<(), Error> {
         c: i32,
     }
     impl SerdeEncryptPublicKey for Struct {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Struct {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Struct {
@@ -359,10 +359,10 @@ fn test_skip_deserializing_and_custom_default() -> Result<(), Error> {
         "/".to_string()
     }
     impl SerdeEncryptPublicKey for Request {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Request {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     /// Timeout in seconds.
@@ -435,10 +435,10 @@ fn test_flatten() -> Result<(), Error> {
         pagination: Pagination,
     }
     impl SerdeEncryptPublicKey for Users {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Users {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Users {
@@ -470,7 +470,7 @@ fn test_struct_with_reference_shared_key() -> Result<(), Error> {
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Str<'a>(&'a str);
     impl<'a> SerdeEncryptSharedKey for Str<'a> {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Str("Str");
@@ -490,7 +490,7 @@ fn test_struct_with_reference_public_key() -> Result<(), Error> {
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
     struct Str<'a>(&'a str);
     impl<'a> SerdeEncryptPublicKey for Str<'a> {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Str("Str");
@@ -519,10 +519,10 @@ fn test_serialize_enum_as_number() -> Result<(), Error> {
         Seven = 7,
     }
     impl SerdeEncryptPublicKey for SmallPrime {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for SmallPrime {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_two = SmallPrime::Two;
@@ -548,10 +548,10 @@ fn test_serialize_field_as_camel_case() -> Result<(), Error> {
         last_name: String,
     }
     impl SerdeEncryptPublicKey for Person {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Person {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Person {
@@ -575,10 +575,10 @@ fn test_skip_serializing_without_default() -> Result<(), Error> {
         hash: String,
     }
     impl SerdeEncryptPublicKey for Resource {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Resource {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_with_metadata = Resource {
@@ -614,10 +614,10 @@ fn test_skip_serializing_if() -> Result<(), Error> {
         metadata: Map<String, String>,
     }
     impl SerdeEncryptPublicKey for Resource {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Resource {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg_with_metadata = Resource {
@@ -690,10 +690,10 @@ fn test_remote_crate() -> Result<(), Error> {
     }
 
     impl SerdeEncryptPublicKey for Process {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Process {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Process {
@@ -763,10 +763,10 @@ fn test_remote_crate_with_priv_fields() -> Result<(), Error> {
         wall_time: Duration,
     }
     impl SerdeEncryptPublicKey for Process {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Process {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Process {
@@ -837,10 +837,10 @@ fn test_remote_crate_with_helper() -> Result<(), Error> {
         wall_time: Helper,
     }
     impl SerdeEncryptPublicKey for Process {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Process {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     let msg = Process {
@@ -870,10 +870,10 @@ fn test_string_or_struct() -> Result<(), Error> {
         build: Build,
     }
     impl SerdeEncryptPublicKey for Service {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Service {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
@@ -982,10 +982,10 @@ fn test_convert_error_types() -> Result<(), Error> {
     }
 
     impl SerdeEncryptPublicKey for Resource {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Resource {
-        type S = CborSerializer<Self>;
+        type S = BincodeSerializer<Self>;
     }
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
