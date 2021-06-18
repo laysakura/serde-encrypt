@@ -130,6 +130,7 @@ jobs:
         run: |
           FILE_BASE=cargo-deadlinks-linux
           curl -L "${BASE_URL}/${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/cargo-deadlinks
+          chmod +x $HOME/.local/bin/cargo-deadlinks
           cargo deadlinks --version
 
       - name: Install grcov
