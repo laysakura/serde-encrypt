@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
-    serialize::impls::CborSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey,
+    serialize::impls::BincodeSerializer, shared_key::SharedKey, traits::SerdeEncryptSharedKey,
     AsSharedKey, EncryptedMessage, Error,
 };
 
@@ -13,7 +13,7 @@ struct Message {
 }
 
 impl SerdeEncryptSharedKey for Message {
-    type S = CborSerializer<Self>;
+    type S = BincodeSerializer<Self>;
 }
 
 fn alice_sends_secret_message(shared_key: &SharedKey) -> Result<Vec<u8>, Error> {

@@ -3,7 +3,7 @@
 use crate::{random::RngSingletonImpl, AsSharedKey};
 use serde::{Deserialize, Serialize};
 
-use crate::{serialize::impls::CborSerializer, traits::SerdeEncryptPublicKey};
+use crate::traits::SerdeEncryptPublicKey;
 
 /// 32-byte key shared among sender and receiver secretly.
 ///
@@ -24,6 +24,16 @@ impl AsSharedKey for SharedKey {
     }
 }
 
-impl SerdeEncryptPublicKey for SharedKey {
-    type S = CborSerializer<Self>;
+cfg_if::cfg_if! {
+    if #[cfg(feature = "std")] {
+        use crate::serialize::impls::BincodeSerializer;
+        impl SerdeEncryptPublicKey for SharedKey {
+            type S = BincodeSerializer<Self>;
+        }
+    } else {
+        use crate::serialize::impls::PostcardSerializer;
+        impl SerdeEncryptPublicKey for SharedKey {
+            type S = PostcardSerializer<Self>;
+        }
+    }
 }
