@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Fixed
+
+- Documentation about serializers. Although `BincodeSerializer` or `PostcardSerializer` show better performance, `CborSerializer` serializes more complex serde types.
+
 ## [v0.4.1] - 2021-06-19
 
 ### Fixed
