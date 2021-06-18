@@ -6,9 +6,13 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Changed
+
+- `SharedKey` serializer - `BincodeSerializer` for std; `PostcardSerilizer` for no_std. [#94](https://github.com/laysakura/serde-encrypt/pull/90)
+
 ### Fixed
 
-- Documentation about serializers. Although `BincodeSerializer` or `PostcardSerializer` show better performance, `CborSerializer` serializes more complex serde types.
+- Documentation about serializers. Although `BincodeSerializer` or `PostcardSerializer` show better performance, `CborSerializer` serializes more complex serde types. [#94](https://github.com/laysakura/serde-encrypt/pull/90)
 
 ## [v0.4.1] - 2021-06-19
 
