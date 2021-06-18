@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+## [v0.4.1] - 2021-06-19
+
+### Fixed
+
+- Dead links in documents. [#90](https://github.com/laysakura/serde-encrypt/pull/90), [#93](https://github.com/laysakura/serde-encrypt/pull/93)
+
 ## [v0.4.0] - 2021-06-17
 
 ### Added
@@ -58,8 +64,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 [Semantic Versioning]: https://semver.org/
 
 <!-- Versions -->
-[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.4.1...HEAD
 [Released]: https://github.com/laysakura/serde-encrypt/releases
+[v0.4.1]: https://github.com/laysakura/serde-encrypt/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/laysakura/serde-encrypt/compare/v0.3.2...v0.4.0
 [v0.3.2]: https://github.com/laysakura/serde-encrypt/compare/0.2.0...v0.3.2
 [v0.2.0]: https://github.com/laysakura/serde-encrypt/compare/0.1.1...0.2.0
