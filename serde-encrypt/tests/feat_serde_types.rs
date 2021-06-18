@@ -12,7 +12,10 @@ use serde::{
     Deserialize, Deserializer, Serialize,
 };
 use serde_encrypt::{
-    serialize::{impls::BincodeSerializer, TypedSerialized},
+    serialize::{
+        impls::{BincodeSerializer, CborSerializer},
+        TypedSerialized,
+    },
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
     AsSharedKey, Error, ErrorKind,
@@ -172,10 +175,12 @@ fn test_enum_tagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = BincodeSerializer<Self>;
+        // [NG] BincodeSerializer for tagged enum: https://github.com/bincode-org/bincode/issues/272
+        // [NG] PostcardSerializer emits `WontImplement` err: https://github.com/jamesmunns/postcard/blob/96db753865b195948fcbd9c69815028adee9579c/src/de/deserializer.rs#L126
+        type S = CborSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = BincodeSerializer<Self>;
+        type S = CborSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -220,10 +225,12 @@ fn test_enum_adjacently_tagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = BincodeSerializer<Self>;
+        // [NG] BincodeSerializer for tagged enum: https://github.com/bincode-org/bincode/issues/272
+        // [NG] PostcardSerializer emits `WontImplement` err: https://github.com/jamesmunns/postcard/blob/96db753865b195948fcbd9c69815028adee9579c/src/de/deserializer.rs#L126
+        type S = CborSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = BincodeSerializer<Self>;
+        type S = CborSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -268,10 +275,12 @@ fn test_enum_untagged() -> Result<(), Error> {
         },
     }
     impl SerdeEncryptPublicKey for Message {
-        type S = BincodeSerializer<Self>;
+        // [NG] BincodeSerializer for tagged enum: https://github.com/bincode-org/bincode/issues/272
+        // [NG] PostcardSerializer emits `WontImplement` err: https://github.com/jamesmunns/postcard/blob/96db753865b195948fcbd9c69815028adee9579c/src/de/deserializer.rs#L126
+        type S = CborSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Message {
-        type S = BincodeSerializer<Self>;
+        type S = CborSerializer<Self>;
     }
 
     let msg_request = Message::Request {
@@ -435,10 +444,12 @@ fn test_flatten() -> Result<(), Error> {
         pagination: Pagination,
     }
     impl SerdeEncryptPublicKey for Users {
-        type S = BincodeSerializer<Self>;
+        // [NG] BincodeSerializer for #[flatten]: https://github.com/bincode-org/bincode/issues/245
+        // [NG] PostcardSerializer for #[flatten]: https://github.com/jamesmunns/postcard/issues/29
+        type S = CborSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Users {
-        type S = BincodeSerializer<Self>;
+        type S = CborSerializer<Self>;
     }
 
     let msg = Users {
@@ -870,10 +881,12 @@ fn test_string_or_struct() -> Result<(), Error> {
         build: Build,
     }
     impl SerdeEncryptPublicKey for Service {
-        type S = BincodeSerializer<Self>;
+        // [NG] BincodeSerializer emits DeserializeAnyNotSupported err
+        // [NG] PostcardSerializer emits `WontImplement` err: https://github.com/jamesmunns/postcard/blob/96db753865b195948fcbd9c69815028adee9579c/src/de/deserializer.rs#L126
+        type S = CborSerializer<Self>;
     }
     impl SerdeEncryptSharedKey for Service {
-        type S = BincodeSerializer<Self>;
+        type S = CborSerializer<Self>;
     }
 
     #[derive(PartialEq, Debug, Serialize, Deserialize)]
