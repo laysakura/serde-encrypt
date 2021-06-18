@@ -40,6 +40,7 @@ cargo doc --workspace --no-deps --all-features
 script = ['''
 #!/usr/bin/env bash -eux
 cargo deadlinks --check-http
+mlc --ignore-path target
 ''']
 
 [tasks.os-less-build]

@@ -36,6 +36,7 @@ jobs:
             task: deadlink
             rust-free: true
             install-cargo-deadlinks: true
+            install-mlc: true
           - name: codecov
             task: lcov
             install-grcov: true
@@ -132,6 +133,17 @@ jobs:
           curl -L "${BASE_URL}/${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/cargo-deadlinks
           chmod +x $HOME/.local/bin/cargo-deadlinks
           cargo deadlinks --version
+
+      - name: Install mlc
+        if: ${{ matrix.make.install-mlc }}
+        env:
+          BASE_URL: https://github.com/becheran/mlc/releases/download
+          VERSION: 0.8.0
+        run: |
+          FILE_BASE=mlc
+          curl -L "${BASE_URL}/v${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/${FILE_BASE}
+          chmod +x $HOME/.local/bin/${FILE_BASE}
+          mlc --version
 
       - name: Install grcov
         if: ${{ matrix.make.install-grcov }}
