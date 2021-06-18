@@ -140,9 +140,9 @@ jobs:
           BASE_URL: https://github.com/becheran/mlc/releases/download
           VERSION: 0.14.3
         run: |
-          FILE_BASE=mlc
-          curl -L "${BASE_URL}/v${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/${FILE_BASE}
-          chmod +x $HOME/.local/bin/${FILE_BASE}
+          FILE_BASE=mlc-x86_64-linux
+          curl -L "${BASE_URL}/v${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/mlc
+          chmod +x $HOME/.local/bin/mlc
           mlc --version
 
       - name: Install grcov
