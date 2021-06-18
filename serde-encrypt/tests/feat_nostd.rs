@@ -9,7 +9,7 @@ mod test_util;
 use alloc::{string::String, vec, vec::Vec};
 use serde::{Deserialize, Serialize};
 use serde_encrypt::{
-    serialize::impls::CborSerializer,
+    serialize::impls::PostcardSerializer,
     shared_key::SharedKey,
     traits::{SerdeEncryptPublicKey, SerdeEncryptSharedKey},
     AsSharedKey, Error,
@@ -33,7 +33,7 @@ struct User {
 struct Users {
     users: Vec<User>,
 
-    #[serde(flatten)]
+    // #[serde(flatten)]: https://github.com/jamesmunns/postcard/issues/29
     pagination: Pagination,
 }
 
@@ -42,7 +42,7 @@ fn test_serde_encrypt_public_key_nostd() -> Result<(), Error> {
     combined_keys_gen!(sender_combined_key, receiver_combined_key);
 
     impl SerdeEncryptPublicKey for Users {
-        type S = CborSerializer<Self>;
+        type S = PostcardSerializer<Self>;
     }
 
     let msg = Users {
@@ -71,7 +71,7 @@ fn test_serde_encrypt_shared_key_nostd() -> Result<(), Error> {
     let shared_key = SharedKey::generate();
 
     impl SerdeEncryptSharedKey for Users {
-        type S = CborSerializer<Self>;
+        type S = PostcardSerializer<Self>;
     }
 
     let msg = Users {
