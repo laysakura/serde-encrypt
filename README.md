@@ -123,11 +123,13 @@ Crate users can choose and even implement by themselves serialize representation
 Currently, the following serializers are built-in.
 
 - `BincodeSerializer` (only `std` feature)
-  - Would be the best choice for `std`.
+  - Best choice for `std` to reduce message size in most cases.
 - `PostcardSerializer`
-  - Would be the best choice for no_std.
+  - Best choice for no_std to reduce message size in most cases.
 - `CborSerializer`
+  - Has large message size but deals with complex serde types. See [Encrypts/Decrypts complex serde types example](https://github.com/laysakura/serde-encrypt/blob/main/serde-encrypt/tests/feat_serde_types.rs) to check kind of serde types only `CborSerializer` can serialize.
   - Single available choice in `serde-encrypt-sgx`.
+    - Both bincode and postcard crates cannot compile with Rust SGX SDK
 
 ### Use cases
 
