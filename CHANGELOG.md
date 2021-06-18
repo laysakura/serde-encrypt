@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+## [v0.5.0] - 2021-06-19
+
 ### Changed
 
 - `SharedKey` serializer - `BincodeSerializer` for std; `PostcardSerilizer` for no_std. [#94](https://github.com/laysakura/serde-encrypt/pull/90)
@@ -72,8 +74,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 [Semantic Versioning]: https://semver.org/
 
 <!-- Versions -->
-[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.5.0...HEAD
 [Released]: https://github.com/laysakura/serde-encrypt/releases
+[v0.5.0]: https://github.com/laysakura/serde-encrypt/compare/v0.4.1...v0.5.0
 [v0.4.1]: https://github.com/laysakura/serde-encrypt/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/laysakura/serde-encrypt/compare/v0.3.2...v0.4.0
 [v0.3.2]: https://github.com/laysakura/serde-encrypt/compare/0.2.0...v0.3.2
