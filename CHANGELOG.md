@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+### Added
+
+- `SerdeEncryptSharedKeyDeterministic` for deterministic encryption. [#95](https://github.com/laysakura/serde-encrypt/pull/95)
+
 ## [v0.5.0] - 2021-06-19
 
 ### Changed

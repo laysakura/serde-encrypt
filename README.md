@@ -93,24 +93,24 @@ After your peer gets the binary, he or she can decrypt and deserialize it to `Me
 
 ### Feature comparison
 
-|                       | `SerdeEncryptSharedKey` | `SerdeEncryptPublicKey` |
-| --------------------- | ----------------------- | ----------------------- |
-| (a)symmetric?         | symmetric               | asymmetric              |
-| deterministic? _(*1)_ | no                      | no                      |
-| performance           | high                    | low                     |
+|                       | `SerdeEncryptSharedKey` | `SerdeEncryptSharedKeyDeterministic` | `SerdeEncryptPublicKey` |
+| --------------------- | ----------------------- | ------------------------------------ | ----------------------- |
+| (a)symmetric?         | symmetric               | symmetric                            | asymmetric              |
+| deterministic? _(*1)_ | no                      | yes                                  | no                      |
+| performance           | high                    | high                                 | low                     |
 
-_(*1) Deterministic encryptions always produce the same cipher-text from a given plain-text. Usable for equal-matching in cipher-text (e.g. RDBMS's encrypted index eq-search)._
+_(*1) Deterministic encryptions always produce the same cipher-text from a given plain-text. More vulnerable but useful for equal-matching in cipher-text (e.g. RDBMS's encrypted index eq-search)._
 
 ### Encryption algorithm
 
-|                      | `SerdeEncryptSharedKey`                                                                                    | `SerdeEncryptPublicKey`                                                              |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| key exchange         | -                                                                                                          | X25519                                                                               |
-| encryption           | XChaCha20                                                                                                  | XChaCha20                                                                            |
-| message auth         | Poly1305                                                                                                   | Poly1305                                                                             |
-| nonce _(*2)_         | XSalsa20 (random 24-byte)                                                                                  | XSalsa20 (random 24-byte)                                                            |
-| Rng _(*3)_ for nonce | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html)                       | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html) |
-| Implementation       | [XChaCha20Poly1305](https://docs.rs/chacha20poly1305/0.8.0/chacha20poly1305/struct.XChaCha20Poly1305.html) | [ChaChaBox](https://docs.rs/crypto_box/0.6.0/crypto_box/struct.ChaChaBox.html)       |
+|                      | `SerdeEncryptSharedKey`                                                                                    | `SerdeEncryptSharedKeyDeterministic`                                                                       | `SerdeEncryptPublicKey`                                                              |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| key exchange         | -                                                                                                          | -                                                                                                          | X25519                                                                               |
+| encryption           | XChaCha20                                                                                                  | XChaCha20                                                                                                  | XChaCha20                                                                            |
+| message auth         | Poly1305                                                                                                   | Poly1305                                                                                                   | Poly1305                                                                             |
+| nonce _(*2)_         | XSalsa20 (random 24-byte)                                                                                  | Fixed 24-byte                                                                                              | XSalsa20 (random 24-byte)                                                            |
+| Rng _(*3)_ for nonce | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html)                       | -                                                                                                          | [ChaCha20Rng](https://docs.rs/rand_chacha/0.3.1/rand_chacha/struct.ChaCha12Rng.html) |
+| Implementation       | [XChaCha20Poly1305](https://docs.rs/chacha20poly1305/0.8.0/chacha20poly1305/struct.XChaCha20Poly1305.html) | [XChaCha20Poly1305](https://docs.rs/chacha20poly1305/0.8.0/chacha20poly1305/struct.XChaCha20Poly1305.html) | [ChaChaBox](https://docs.rs/crypto_box/0.6.0/crypto_box/struct.ChaChaBox.html)       |
 
 _(*2) "Number used once": to make encryption non-deterministic. Although nonce for each encryption is not secret, nonce among different encryption must be different in order for attackers to get harder to guess plain-text._
 
@@ -133,10 +133,13 @@ Currently, the following serializers are built-in.
 
 ### Use cases
 
-- `SerdeEncryptedSharedKey`
+- `SerdeEncryptSharedKey`
   - Both message sender and receiver already hold shared key.
   - Needs shared-key exchange via any safe way but wants high-speed encryption/decryption (e.g. communicates large amounts of messages).
-- `SerdeEncryptedSharedKey`
+- `SerdeEncryptSharedKeyDeterministic`
+  - Only when you need deterministic encryption for equal-matching in cipher-text.
+  - Note that this is more vulnerable than `SerdeEncryptSharedKey` because, for example, attackers can find repeated patterns in cipher-text and then guess repeated patterns in plain-text.
+- `SerdeEncryptPublicKey`
   - To exchange `SharedKey`.
   - Quickly sends/receive small amounts of messages without secret shared key.
 
