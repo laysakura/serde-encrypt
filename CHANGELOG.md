@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
+## [v0.6.0] - 2021-06-22
+
 ### Added
 
 - `SerdeEncryptSharedKeyDeterministic` for deterministic encryption. [#95](https://github.com/laysakura/serde-encrypt/pull/95)
@@ -78,8 +80,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 [Semantic Versioning]: https://semver.org/
 
 <!-- Versions -->
-[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/laysakura/serde-encrypt/compare/v0.6.0...HEAD
 [Released]: https://github.com/laysakura/serde-encrypt/releases
+[v0.6.0]: https://github.com/laysakura/serde-encrypt/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/laysakura/serde-encrypt/compare/v0.4.1...v0.5.0
 [v0.4.1]: https://github.com/laysakura/serde-encrypt/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/laysakura/serde-encrypt/compare/v0.3.2...v0.4.0
