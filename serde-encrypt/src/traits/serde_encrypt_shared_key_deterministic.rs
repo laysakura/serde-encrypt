@@ -3,7 +3,7 @@ use crate::{
     serialize::TypedSerialized, shared_key::SharedKey, EncryptedMessage, Error,
 };
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use serde_encrypt_core::encrypt::plain_message_shared_key_deterministic::PlainMessageSharedKeyDeterministicCore;
+use serde_encrypt_core::encrypt::plain_message_shared_key::PlainMessageSharedKeyDeterministicCore;
 
 /// Shared-key authenticated **deterministic** encryption for serde-serializable types.
 ///

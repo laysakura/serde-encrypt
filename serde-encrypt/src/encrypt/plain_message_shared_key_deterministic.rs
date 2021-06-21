@@ -1,7 +1,7 @@
 //! Shared key deterministic encryption
 
 use alloc::vec::Vec;
-use serde_encrypt_core::encrypt::plain_message_shared_key_deterministic::PlainMessageSharedKeyDeterministicCore;
+use serde_encrypt_core::encrypt::plain_message_shared_key::PlainMessageSharedKeyDeterministicCore;
 
 /// Plain message structure serialized via serde.
 #[derive(Clone, Eq, PartialEq, Debug)]

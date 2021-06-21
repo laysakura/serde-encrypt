@@ -1,11 +1,12 @@
 //! Shared key deterministic encryption.
 
-use super::encrypted_message::EncryptedMessage;
+use crate::{
+    encrypt::encrypted_message::EncryptedMessage, error::Error, key::as_shared_key::AsSharedKey,
+};
+use alloc::vec::Vec;
+use chacha20poly1305::XNonce;
 
-use crate::{error::Error, key::as_shared_key::AsSharedKey};
-use alloc::{format, vec::Vec};
-use chacha20poly1305::{XChaCha20Poly1305, XNonce};
-use crypto_box::aead::{Aead, NewAead};
+use super::{decrypt, encrypt};
 
 const FIXED_NONCE: [u8; 24] = [255; 24];
 
@@ -28,16 +29,7 @@ pub trait PlainMessageSharedKeyDeterministicCore {
         S: AsSharedKey,
     {
         let nonce = Self::generate_nonce();
-        let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
-
-        let encrypted = chacha.encrypt(&nonce, self.as_slice()).map_err(|e| {
-            Error::encryption_error(&format!(
-                "failed to encrypt serialized data by XChaCha20: {:?}",
-                e
-            ))
-        })?;
-
-        Ok(EncryptedMessage::new(encrypted, nonce.into()))
+        encrypt(self.as_slice(), shared_key, nonce)
     }
 
     /// Decrypt from EncryptedMessage
@@ -46,17 +38,7 @@ pub trait PlainMessageSharedKeyDeterministicCore {
         Self: Sized,
         S: AsSharedKey,
     {
-        let nonce = encrypted_message.nonce();
-        let chacha = XChaCha20Poly1305::new(shared_key.to_chacha_key());
-
-        let encrypted = encrypted_message.encrypted();
-
-        let plain = chacha.decrypt(nonce.into(), encrypted).map_err(|e| {
-            Error::decryption_error(&format!(
-                "error on decryption of XChaCha20 cipher-text: {:?}",
-                e
-            ))
-        })?;
+        let plain = decrypt(encrypted_message, shared_key)?;
         Ok(Self::new(plain))
     }
 
