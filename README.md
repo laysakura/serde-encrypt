@@ -9,6 +9,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-MIT)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://github.com/laysakura/serde-encrypt/blob/master/LICENSE-APACHE)
 
+![serde-encrypt logo](https://user-images.githubusercontent.com/498788/122903416-58946580-d38a-11eb-836d-58ef02128334.png)
+
 🔐 **Encrypts all the `Serialize`.**
 
 ```text
