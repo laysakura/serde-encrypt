@@ -43,7 +43,7 @@ pub trait PlainMessageSharedKeyDeterministicCore {
     }
 
     /// Generate fixed nonce to enable eq-match in cipher-text.
-    /// Note that is more vulnerable than generating random nonce (which [PlainMessageSharedKey](super::plain_message_shared_key::PlainMessageSharedKey) does).
+    /// Note that is more vulnerable than generating random nonce (which [PlainMessageSharedKeyCore](crate::encrypt::plain_message_shared_key::PlainMessageSharedKeyCore) does).
     fn generate_nonce() -> XNonce {
         *XNonce::from_slice(&FIXED_NONCE)
     }
