@@ -35,7 +35,7 @@
 
 serde-encrypt encrypts/decrypts any `struct`s and `enum`s that implements `serde::{Serialize, Deserialize`}.
 
-serde-encrypt supports both **shared-key encryption** (XChaCha20-Poly1305) and **public-key encryption** (XChaCha20-Poly1305 with X25513 key-exchange), both of which are considered to be secure enough.
+serde-encrypt supports both **shared-key encryption** (XChaCha20-Poly1305) and **public-key encryption** (XChaCha20-Poly1305 with X25519 key-exchange), both of which are considered to be secure enough.
 
 serde-encrypt is optionally available in **no_std** environments.
 
