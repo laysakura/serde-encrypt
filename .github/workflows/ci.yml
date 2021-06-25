@@ -68,7 +68,7 @@ jobs:
           - rust: nightly
             make:
               name: deadlink
-          - rust: 1.49.0
+          - rust: stable  # better to exclude MSRV but 1.53.0 fails. See: https://github.com/deadlinks/cargo-deadlinks/issues/147
             make:
               name: deadlink
           - rust: stable
