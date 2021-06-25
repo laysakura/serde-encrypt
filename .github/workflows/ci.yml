@@ -133,6 +133,7 @@ jobs:
           curl -L "${BASE_URL}/${VERSION}/${FILE_BASE}" --output $HOME/.local/bin/cargo-deadlinks
           chmod +x $HOME/.local/bin/cargo-deadlinks
           cargo deadlinks --version
+          rustup override set 1.52.1  # FIXME: https://github.com/deadlinks/cargo-deadlinks/issues/147
 
       - name: Install mlc
         if: ${{ matrix.make.install-mlc }}
