@@ -76,7 +76,7 @@ Then, you can serialize the `Message` into `Vec<u8>` in encrypted form.
     let serialized_encrypted_message: Vec<u8> = encrypted_message.serialize()?;
 ```
 
-After your peer gets the binary, he or she can decrypt and deserialize it to `Message`.
+After your peer gets the binary, they can decrypt and deserialize it to `Message`.
 
 ```rust
     let shared_key = [0u8; 32];  // or your peer reads from filesystem?
