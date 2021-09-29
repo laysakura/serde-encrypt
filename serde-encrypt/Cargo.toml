@@ -33,7 +33,7 @@ serde = {version = "1.0", default-features = false, features = ["derive", "alloc
 serde_json = {version = "1.0", default-features = false, features = ["alloc"]}
 serde_repr = "0.1"
 
-pretty_assertions = "0.7"
+pretty_assertions = "1.0"
 
 void = "1.0"
 
