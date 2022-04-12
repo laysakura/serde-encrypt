@@ -73,16 +73,22 @@ Then, you can serialize the `Message` into `Vec<u8>` in encrypted form.
         sender: "Alice".to_string(),
     };
     let encrypted_message = msg.encrypt(&shared_key)?;
-    let serialized_encrypted_message: Vec<u8> = encrypted_message.serialize()?;
+
+    // Alternative: 
+    // let _: Vec<u8> = EncryptedMessage::serialize(encrypted_message);
+    let serialized_encrypted_message: Vec<u8> = encrypted_message.serialize();
 ```
 
 After your peer gets the binary, they can decrypt and deserialize it to `Message`.
 
 ```rust
-    let shared_key = [0u8; 32];  // or your peer reads from filesystem?
+    // Alternative:
+    // let shared_key = SharedKey::from([0u8; 32]);
+    const shared_key: SharedKey = SharedKey([0u8; 32]); // or your peer reads from elsewhere.
+    
 
     let encrypted_message = EncryptedMessage::deserialize(serialized_encrypted_message)?;
-    let msg = Message::decrypt_owned(&encrypted_message, &shared_key)
+    let msg = Message::decrypt_owned(&encrypted_message, &shared_key);
 ```
 
 ### Further examples...
