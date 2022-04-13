@@ -49,7 +49,7 @@ pub trait SerdeEncryptSharedKeyDeterministic {
     where
         Self: Serialize,
     {
-        let serialized = Self::S::serialize(&self)?;
+        let serialized = Self::S::serialize(self)?;
         let plain_msg = PlainMessageSharedKeyDeterministic::new(serialized.into_vec());
         plain_msg.encrypt(shared_key)
     }

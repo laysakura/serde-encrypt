@@ -31,11 +31,11 @@ impl<'s, 'r> SenderCombinedKey<'s, 'r> {
     }
 
     pub(crate) fn sender_private_key(&self) -> &SenderPrivateKey {
-        &self.sender_private_key
+        self.sender_private_key
     }
 
     pub(crate) fn receiver_public_key(&self) -> &ReceiverPublicKey {
-        &self.receiver_public_key
+        self.receiver_public_key
     }
 }
 
@@ -61,10 +61,10 @@ impl<'s, 'r> ReceiverCombinedKey<'s, 'r> {
     }
 
     pub(crate) fn receiver_private_key(&self) -> &ReceiverPrivateKey {
-        &self.receiver_private_key
+        self.receiver_private_key
     }
 
     pub(crate) fn sender_public_key(&self) -> &SenderPublicKey {
-        &self.sender_public_key
+        self.sender_public_key
     }
 }
