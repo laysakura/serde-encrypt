@@ -74,8 +74,6 @@ Then, you can serialize the `Message` into `Vec<u8>` in encrypted form.
     };
     let encrypted_message = msg.encrypt(&shared_key)?;
 
-    // Alternative: 
-    // let _: Vec<u8> = EncryptedMessage::serialize(encrypted_message);
     let serialized_encrypted_message: Vec<u8> = encrypted_message.serialize();
 ```
 

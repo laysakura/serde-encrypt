@@ -10,11 +10,17 @@ use crate::traits::SerdeEncryptPublicKey;
 /// It is a good practice to use [SerdeEncryptPublicKey](crate::traits::SerdeEncryptPublicKey)
 /// to exchange this shared key.
 #[derive(Clone, Eq, PartialEq, Hash, Debug, Serialize, Deserialize)]
-pub struct SharedKey(pub [u8; 32]);
+pub struct SharedKey([u8; 32]);
 
-impl From<[u8; 32]> for SharedKey {
-    fn from(data: [u8; 32]) -> Self {
-        Self(data)
+impl SharedKey {
+    /// Build SharedKey from static `[u8; 32]` data at compile time.
+    pub const fn new_const(data: &[u8; 32]) -> Self {
+        Self(*data)
+    }
+
+    /// Build SharedKey from `[u8; 32]` data.
+    pub fn new(data: &[u8; 32]) -> Self {
+        Self(*data)
     }
 }
 
@@ -46,6 +52,7 @@ cfg_if::cfg_if! {
 
 #[cfg(test)]
 mod test {
+    use std::convert::TryInto;
     use super::*;
 
     #[test]
@@ -53,10 +60,19 @@ mod test {
         const STATIC_ARRAY: [u8; 32] = [1, 1, 4, 5, 1, 4,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        const SHAREDKEY_CONST: SharedKey = SharedKey(STATIC_ARRAY);
+        let runtime_array: [u8; 32] = Vec::from(STATIC_ARRAY).try_into().unwrap();
 
-        let shared_key = SharedKey::from(STATIC_ARRAY);
+        // Building SharedKey directly from static_array only works in the same mod.
+        const SHAREDKEY_CONST_INTERNAL: SharedKey = SharedKey(STATIC_ARRAY);
 
-        assert_eq!(shared_key, SHAREDKEY_CONST);
+        // Test `const fn new`, which build SharedKey in compile time
+        const SHARED_KEY_CONST: SharedKey = SharedKey::new_const(&STATIC_ARRAY);
+
+        // Test `fn new`, which build SharedKey in runtime.
+        let shared_key = SharedKey::new(&runtime_array);
+
+        assert_eq!(shared_key, SHAREDKEY_CONST_INTERNAL);
+        assert_eq!(SHARED_KEY_CONST, SHAREDKEY_CONST_INTERNAL);
     }
 }
+
