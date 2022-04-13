@@ -45,7 +45,7 @@ fn alice_receives_shared_key(
     combined_key: &ReceiverCombinedKey,
 ) -> Result<SharedKey, Error> {
     let encrypted_shared_key = EncryptedMessage::deserialize(encrypted_serialized_shared_key)?;
-    SharedKey::decrypt_owned(&encrypted_shared_key, &combined_key)
+    SharedKey::decrypt_owned(&encrypted_shared_key, combined_key)
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -78,7 +78,7 @@ fn bob_reads_secret_message(
 ) -> Result<(), Error> {
     let encrypted_message = EncryptedMessage::deserialize(encrypted_serialized)?;
 
-    let decrypted = Message::decrypt_ref(&encrypted_message, &shared_key)?;
+    let decrypted = Message::decrypt_ref(&encrypted_message, shared_key)?;
     let revealed_message = decrypted.deserialize()?;
 
     // Note that you cannot return `revealed_message` from this function

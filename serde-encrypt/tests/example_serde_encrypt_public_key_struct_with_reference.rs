@@ -43,7 +43,7 @@ fn bob_reads_secret_message(
 ) -> Result<(), Error> {
     let encrypted_message = EncryptedMessage::deserialize(encrypted_serialized)?;
 
-    let decrypted = Message::decrypt_ref(&encrypted_message, &combined_key)?;
+    let decrypted = Message::decrypt_ref(&encrypted_message, combined_key)?;
     let revealed_message = decrypted.deserialize()?;
 
     // Note that you cannot return `revealed_message` from this function

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/serde-encrypt-core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serde-encrypt-core/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/serde-encrypt/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serde-encrypt/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
