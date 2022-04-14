@@ -14,13 +14,13 @@ pub struct SharedKey([u8; 32]);
 
 impl SharedKey {
     /// Build SharedKey from static `[u8; 32]` data at compile time.
-    pub const fn new_const(data: &[u8; 32]) -> Self {
-        Self(*data)
+    pub const fn new_const(data: [u8; 32]) -> Self {
+        Self(data)
     }
 
     /// Build SharedKey from `[u8; 32]` data.
-    pub fn new(data: &[u8; 32]) -> Self {
-        Self(*data)
+    pub fn new(data: [u8; 32]) -> Self {
+        Self(data)
     }
 }
 
@@ -66,13 +66,12 @@ mod test {
         const SHAREDKEY_CONST_INTERNAL: SharedKey = SharedKey(STATIC_ARRAY);
 
         // Test `const fn new`, which build SharedKey in compile time
-        const SHARED_KEY_CONST: SharedKey = SharedKey::new_const(&STATIC_ARRAY);
+        const SHARED_KEY_CONST: SharedKey = SharedKey::new_const(STATIC_ARRAY);
 
         // Test `fn new`, which build SharedKey in runtime.
-        let shared_key = SharedKey::new(&runtime_array);
+        let shared_key = SharedKey::new(runtime_array);
 
         assert_eq!(shared_key, SHAREDKEY_CONST_INTERNAL);
         assert_eq!(SHARED_KEY_CONST, SHAREDKEY_CONST_INTERNAL);
     }
 }
-

@@ -66,24 +66,22 @@ impl SerdeEncryptSharedKey for Message {
 Then, you can serialize the `Message` into `Vec<u8>` in encrypted form.
 
 ```rust
-    let shared_key = [0u8; 32];  // or read from your filesystem?
+    // Alternative:
+    // const SHARED_KEY: SharedKey = SharedKey::new_const([0u8; 32]); 
+    let shared_key = SharedKey::new([0u8; 32]); // or your peer reads from elsewhere.
 
     let msg = Message {
         content: "I ❤️ you.".to_string(),
         sender: "Alice".to_string(),
     };
     let encrypted_message = msg.encrypt(&shared_key)?;
-
     let serialized_encrypted_message: Vec<u8> = encrypted_message.serialize();
 ```
 
 After your peer gets the binary, they can decrypt and deserialize it to `Message`.
 
 ```rust
-    // Alternative:
-    // let shared_key = SharedKey::from([0u8; 32]);
-    const shared_key: SharedKey = SharedKey([0u8; 32]); // or your peer reads from elsewhere.
-    
+    let shared_key = SharedKey::new([0u8; 32]);
 
     let encrypted_message = EncryptedMessage::deserialize(serialized_encrypted_message)?;
     let msg = Message::decrypt_owned(&encrypted_message, &shared_key);
