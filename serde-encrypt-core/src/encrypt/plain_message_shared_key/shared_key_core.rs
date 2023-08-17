@@ -6,6 +6,7 @@ use crate::{error::Error, key::as_shared_key::AsSharedKey};
 use alloc::vec::Vec;
 use chacha20poly1305::XNonce;
 use core::ops::DerefMut;
+use rand_chacha::rand_core::RngCore;
 
 use super::{decrypt, encrypt};
 
@@ -47,6 +48,8 @@ pub trait PlainMessageSharedKeyCore {
     /// Generate random nonce which is large enough (24-byte) to rarely conflict.
     fn generate_nonce() -> XNonce {
         let mut rng = Self::R::instance();
-        crypto_box::generate_nonce(rng.deref_mut())
+        let mut nonce = XNonce::default();
+        rng.deref_mut().fill_bytes(&mut nonce);
+        nonce
     }
 }

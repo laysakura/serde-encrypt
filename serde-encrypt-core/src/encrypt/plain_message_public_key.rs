@@ -2,11 +2,7 @@
 
 use core::ops::DerefMut;
 
-use crate::{
-    error::Error,
-    key::combined_key::{ReceiverCombinedKey, SenderCombinedKey},
-    random::RngSingleton,
-};
+use crate::{error::Error, key::combined_key::{ReceiverCombinedKey, SenderCombinedKey}, random, random::RngSingleton};
 use alloc::vec::Vec;
 use chacha20poly1305::{aead::Payload, XNonce};
 use crypto_box::{aead::Aead, ChaChaBox};
@@ -80,7 +76,6 @@ pub trait PlainMessagePublicKeyCore {
 
     /// Generate random nonce which is large enough (24-byte) to rarely conflict.
     fn generate_nonce() -> XNonce {
-        let mut rng = Self::R::instance();
-        crypto_box::generate_nonce(rng.deref_mut())
+        random::generate_nonce(&mut Self::R::instance().deref_mut())
     }
 }
