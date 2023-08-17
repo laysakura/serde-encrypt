@@ -2,8 +2,8 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::{AsSharedKey, random::RngSingletonImpl};
 use crate::traits::SerdeEncryptPublicKey;
+use crate::{random::RngSingletonImpl, AsSharedKey};
 
 /// 32-byte key shared among sender and receiver secretly.
 ///
@@ -52,13 +52,15 @@ cfg_if::cfg_if! {
 
 #[cfg(test)]
 mod test {
-    use std::convert::TryInto;
     use super::*;
+    use std::convert::TryInto;
 
     #[test]
     fn build_sharedkey_from_array() {
-        const STATIC_ARRAY: [u8; 32] = [1, 1, 4, 5, 1, 4,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const STATIC_ARRAY: [u8; 32] = [
+            1, 1, 4, 5, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0,
+        ];
 
         let runtime_array: [u8; 32] = Vec::from(STATIC_ARRAY).try_into().unwrap();
 

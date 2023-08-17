@@ -10,7 +10,7 @@ use super::encrypted_message::EncryptedMessage;
 use crate::{error::Error, key::as_shared_key::AsSharedKey};
 use alloc::{format, vec::Vec};
 use chacha20poly1305::{XChaCha20Poly1305, XNonce};
-use crypto_box::aead::{Aead, NewAead};
+use crypto_box::aead::{Aead, KeyInit};
 
 /// Encrypt into EncryptedMessage
 fn encrypt<S>(

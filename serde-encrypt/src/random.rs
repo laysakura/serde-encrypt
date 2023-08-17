@@ -6,18 +6,18 @@ use alloc::format;
 use core::convert::TryInto;
 
 use crate::{Lazy, Mutex, MutexGuard};
-use rand_chacha::ChaCha12Rng;
+use rand_chacha::ChaCha20Rng;
 use rand_core::SeedableRng;
 use serde_encrypt_core::random::RngSingleton;
 
-static GLOBAL_RNG: Lazy<Mutex<ChaCha12Rng>> =
-    Lazy::new(|| Mutex::new(RngSingletonImpl::chacha12_rng()));
+static GLOBAL_RNG: Lazy<Mutex<ChaCha20Rng>> =
+    Lazy::new(|| Mutex::new(RngSingletonImpl::chacha20_rng()));
 
 /// RNG singleton implementation
 #[derive(Clone, Debug)]
 pub struct RngSingletonImpl;
 impl RngSingleton for RngSingletonImpl {
-    type D = MutexGuard<'static, ChaCha12Rng>;
+    type D = MutexGuard<'static, ChaCha20Rng>;
 
     #[cfg(feature = "std")]
     fn instance() -> Self::D {
@@ -32,13 +32,13 @@ impl RngSingleton for RngSingletonImpl {
 }
 impl RngSingletonImpl {
     #[cfg(feature = "std")]
-    fn chacha12_rng() -> ChaCha12Rng {
-        ChaCha12Rng::from_entropy()
+    fn chacha20_rng() -> ChaCha20Rng {
+        ChaCha20Rng::from_entropy()
     }
 
     #[cfg(not(feature = "std"))]
-    fn chacha12_rng() -> ChaCha12Rng {
-        ChaCha12Rng::from_seed(Self::gen_seed())
+    fn chacha20_rng() -> ChaCha20Rng {
+        ChaCha20Rng::from_seed(Self::gen_seed())
     }
 
     #[cfg(not(feature = "std"))]
